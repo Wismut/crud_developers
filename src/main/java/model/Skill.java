@@ -1,4 +1,4 @@
-package crud.developers.model;
+package model;
 
 public class Skill {
     private Long id;
