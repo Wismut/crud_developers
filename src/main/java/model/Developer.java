@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Developer {
@@ -19,6 +20,14 @@ public class Developer {
 
     public Developer(String firstName, String lastName, Specialty specialty, List<Skill> skills) {
         this(null, firstName, lastName, specialty, skills);
+    }
+
+    public Developer(String firstName, String lastName) {
+        this(firstName, lastName, null, Collections.emptyList());
+    }
+
+    public Developer(Long id, String firstName, String lastName) {
+        this(id, firstName, lastName, null, Collections.emptyList());
     }
 
     public Long getId() {

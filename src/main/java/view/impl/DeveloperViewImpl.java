@@ -49,14 +49,13 @@ public class DeveloperViewImpl implements DeveloperView {
             System.out.println("Type lastName");
             String lastName = MainView.getReader().readLine();
             System.out.println("Type skill ids");
-            List<Long> skillIds = Arrays.stream(MainView.getReader().readLine().split(DELIMITER))
-                    .mapToLong(Long::parseLong)
-                    .boxed()
-                    .collect(Collectors.toList());
-            System.out.println("Type specialty id");
-            Long specialtyId = Long.parseLong(MainView.getReader().readLine());
-            new Developer(firstName, lastName, new Specialty());
-            System.out.println("New developer with firstName = '" + firstName + "' and id = " + savedPost.getId() + " was successfully saved");
+//            List<Long> skillIds = Arrays.stream(MainView.getReader().readLine().split(DELIMITER))
+//                    .mapToLong(Long::parseLong)
+//                    .boxed()
+//                    .collect(Collectors.toList());
+            Developer developer = new Developer(firstName, lastName);
+            Developer savedDeveloper = developerController.save(developer);
+            System.out.println("New developer with firstName = '" + firstName + "' and id = " + savedDeveloper.getId() + " was successfully saved");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("New developer with firstName = '" + firstName + "' wasn't saved");
@@ -72,14 +71,10 @@ public class DeveloperViewImpl implements DeveloperView {
             String firstName = MainView.getReader().readLine();
             System.out.println("Type new lastName");
             String lastName = MainView.getReader().readLine();
-            System.out.println("Type new specialty id");
-            String specialty = MainView.getReader().readLine();
-            System.out.println("Type new skill ids");
             Developer developer = new Developer(Long.parseLong(id),
                     firstName,
-                    lastName,
-                    );
-            developerController.update(developer);
+                    lastName);
+            Developer updatedDeveloper = developerController.update(developer);
             System.out.println("Developer with id = " + id + " was successfully updated");
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,43 +85,43 @@ public class DeveloperViewImpl implements DeveloperView {
     private void getOneByIdAndPrint() {
         String id = null;
         try {
-            System.out.println("Type post id");
+            System.out.println("Type developer id");
             id = MainView.getReader().readLine();
-            Optional<Post> post = developerController.getById(Long.parseLong(id));
+            Optional<Developer> post = developerController.getById(Long.parseLong(id));
             if (post.isPresent()) {
                 System.out.println(post);
             } else {
-                System.out.println("Post with id = " + id + " wasn't found");
+                System.out.println("Developer with id = " + id + " wasn't found");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Post with id = " + id + " wasn't found");
+            System.out.println("Developer with id = " + id + " wasn't found");
         }
     }
 
     private void getAllByContentAndPrint() {
-        String contentPart = null;
+        String specialityName = null;
         try {
             System.out.println("Type content");
-            contentPart = MainView.getReader().readLine();
-            List<Post> post = developerController.getAllByContentPart(contentPart);
+            specialityName = MainView.getReader().readLine();
+            List<Developer> post = developerController.getAllBySpeciality(specialityName);
             if (!post.isEmpty()) {
                 System.out.println(post);
             } else {
-                System.out.println("Posts with content '" + contentPart + "' wasn't found");
+                System.out.println("Developers with speciality '" + specialityName + "' wasn't found");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Posts with content '" + contentPart + "' wasn't found");
+            System.out.println("Developers with speciality '" + specialityName + "' wasn't found");
         }
     }
 
     void getAllAndPrint() {
-        List<Post> posts = developerController.getAll();
+        List<Developer> posts = developerController.getAll();
         if (posts.isEmpty()) {
-            System.out.println("Posts list is empty");
+            System.out.println("Developer list is empty");
         } else {
-            System.out.println("Posts:");
+            System.out.println("Developers:");
             posts.forEach(System.out::println);
         }
     }
