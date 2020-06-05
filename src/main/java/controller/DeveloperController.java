@@ -7,7 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class DeveloperController {
-    private DeveloperService developerService;
+    private final DeveloperService developerService;
+
+    public DeveloperController(DeveloperService developerService) {
+        this.developerService = developerService;
+    }
 
     public void deleteById(Long id) {
         developerService.deleteById(id);

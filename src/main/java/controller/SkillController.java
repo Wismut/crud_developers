@@ -7,7 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class SkillController {
-    private SkillService skillService;
+    private final SkillService skillService;
+
+    public SkillController(SkillService skillService) {
+        this.skillService = skillService;
+    }
 
     public void deleteById(Long id) {
 
@@ -26,6 +30,10 @@ public class SkillController {
     }
 
     public List<Skill> getAll() {
+        return null;
+    }
+
+    public Optional<Skill> getByName(String name) {
         return null;
     }
 }

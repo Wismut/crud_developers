@@ -6,13 +6,13 @@ import controller.DeveloperController;
 import controller.SkillController;
 import controller.SpecialtyController;
 import model.Developer;
-import model.Specialty;
 import view.DeveloperView;
 import view.View;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static repository.GenericRepository.DELIMITER;
@@ -48,11 +48,18 @@ public class DeveloperViewImpl implements DeveloperView {
             firstName = MainView.getReader().readLine();
             System.out.println("Type lastName");
             String lastName = MainView.getReader().readLine();
-            System.out.println("Type skill ids");
-//            List<Long> skillIds = Arrays.stream(MainView.getReader().readLine().split(DELIMITER))
-//                    .mapToLong(Long::parseLong)
-//                    .boxed()
-//                    .collect(Collectors.toList());
+            System.out.println("Type skill names");
+            List<Long> skillIds = Arrays.stream(MainView.getReader().readLine().split(DELIMITER))
+                    .mapToLong(s -> {
+                        skillController.getByName(s)
+                    }
+                            .boxed()
+                            .collect(Collectors.toList());
+            skillIds.forEach(id -> {
+
+            });
+            System.out.println("Type specialty name");
+            String specialtyName = MainView.getReader().readLine();
             Developer developer = new Developer(firstName, lastName);
             Developer savedDeveloper = developerController.save(developer);
             System.out.println("New developer with firstName = '" + firstName + "' and id = " + savedDeveloper.getId() + " was successfully saved");
