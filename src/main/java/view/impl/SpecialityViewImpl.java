@@ -2,10 +2,8 @@ package view.impl;
 
 
 import command.Command;
-import controller.UserController;
-import model.Post;
-import model.Region;
-import model.User;
+import controller.SpecialtyController;
+import model.Specialty;
 import repository.GenericRepository;
 import view.SpecialityView;
 
@@ -15,47 +13,37 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SpecialityViewImpl implements SpecialityView {
-    private final UserController userController;
+    private final SpecialtyController specialtyController;
 
-    public SpecialityViewImpl(UserController userController) {
-        this.userController = userController;
+    public SpecialityViewImpl(SpecialtyController specialtyController) {
+        this.specialtyController = specialtyController;
     }
 
     private void deleteAndPrint() {
         String id = null;
         try {
-            System.out.println("Type user id");
+            System.out.println("Type specialty id");
             id = MainView.getReader().readLine();
-            userController.deleteById(Long.parseLong(id));
-            System.out.println("User with id = " + id + " was deleted");
+            specialtyController.deleteById(Long.parseLong(id));
+            System.out.println("Specialty with id = " + id + " was deleted");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("User with id = " + id + " wasn't deleted");
+            System.out.println("Specialty with id = " + id + " wasn't deleted");
         }
     }
 
     private void saveAndPrint() {
         try {
-            System.out.println("Type firstName");
-            String firstName = MainView.getReader().readLine();
-            System.out.println("Type lastName");
-            String lastName = MainView.getReader().readLine();
-            System.out.println("Type posts ids within comma");
-            String postsIds = MainView.getReader().readLine();
-            List<Post> posts = Arrays.stream(postsIds.split(GenericRepository.DELIMITER))
-                    .map(s -> new Post(Long.parseLong(s)))
-                    .collect(Collectors.toList());
-            System.out.println("Type region id");
-            Long regionId = Long.parseLong(MainView.getReader().readLine());
-            Region region = new Region(regionId, null);
-            User user = userController.save(new User(firstName,
-                    lastName,
-                    posts,
-                    region));
-            System.out.println("New user with id = " + user.getId() + " was saved successfully");
+            System.out.println("Type name");
+            String name = MainView.getReader().readLine();
+            System.out.println("Type description");
+            String description = MainView.getReader().readLine();
+            Specialty specialty = specialtyController.save(new Specialty(name,
+                    description));
+            System.out.println("New specialty with id = " + specialty.getId() + " was saved successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("New user wasn't saved");
+            System.out.println("New specialty wasn't saved");
         }
     }
 
@@ -64,27 +52,17 @@ public class SpecialityViewImpl implements SpecialityView {
         try {
             System.out.println("Type id");
             id = MainView.getReader().readLine();
-            System.out.println("Type firstName");
-            String firstName = MainView.getReader().readLine();
-            System.out.println("Type lastName");
-            String lastName = MainView.getReader().readLine();
-            System.out.println("Type posts ids within comma");
-            String postsIds = MainView.getReader().readLine();
-            List<Post> posts = Arrays.stream(postsIds.split(GenericRepository.DELIMITER))
-                    .map(s -> new Post(Long.parseLong(s)))
-                    .collect(Collectors.toList());
-            System.out.println("Type region id");
-            Long regionId = Long.parseLong(MainView.getReader().readLine());
-            Region region = new Region(regionId, null);
-            userController.update(new User(Long.parseLong(id),
-                    firstName,
-                    lastName,
-                    posts,
-                    region));
-            System.out.println("User with id = " + id + " was updated successfully");
+            System.out.println("Type new name");
+            String name = MainView.getReader().readLine();
+            System.out.println("Type new description");
+            String description = MainView.getReader().readLine();
+            specialtyController.update(new Specialty(Long.parseLong(id),
+                    name,
+                    description));
+            System.out.println("Specialty with id = " + id + " was updated successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("User with id = " + id + " wasn't updated");
+            System.out.println("Specialty with id = " + id + " wasn't updated");
         }
     }
 
@@ -93,20 +71,20 @@ public class SpecialityViewImpl implements SpecialityView {
         try {
             System.out.println("Type id");
             id = MainView.getReader().readLine();
-            Optional<User> user = userController.getById(Long.parseLong(id));
+            Optional<Specialty> user = specialtyController.getById(Long.parseLong(id));
             System.out.println(user);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("User with id = " + id + " wasn't found");
+            System.out.println("Specialty with id = " + id + " wasn't found");
         }
     }
 
     private void getAllAndPrint() {
-        List<User> users = userController.getAll();
+        List<Specialty> users = specialtyController.getAll();
         if (users.isEmpty()) {
-            System.out.println("Users list is empty");
+            System.out.println("Specialty list is empty");
         } else {
-            System.out.println("Users:");
+            System.out.println("Specialties:");
             users.forEach(System.out::println);
         }
     }

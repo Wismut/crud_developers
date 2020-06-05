@@ -9,6 +9,10 @@ public class Skill {
         this.name = name;
     }
 
+    public Skill(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

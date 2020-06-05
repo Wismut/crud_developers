@@ -1,6 +1,7 @@
 package service;
 
 import model.Specialty;
+import repository.SkillRepository;
 import repository.SpecialtyRepository;
 
 import java.util.List;

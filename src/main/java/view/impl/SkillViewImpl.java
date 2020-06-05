@@ -3,6 +3,7 @@ package view.impl;
 
 import command.Command;
 import controller.SkillController;
+import model.Skill;
 import view.SkillView;
 
 import java.util.List;
@@ -33,11 +34,11 @@ public class SkillViewImpl implements SkillView {
         try {
             System.out.println("Type name");
             name = MainView.getReader().readLine();
-            Region region = skillController.save(new Region(name));
-            System.out.println("New region with name " + region.getName() + " id = " + region.getId() + " was successfully saved");
+            Skill skill = skillController.save(new Skill(name));
+            System.out.println("New skill with name " + skill.getName() + " id = " + skill.getId() + " was successfully saved");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("New region with name = " + name + " wasn't saved");
+            System.out.println("New skill with name = " + name + " wasn't saved");
         }
     }
 
@@ -48,12 +49,12 @@ public class SkillViewImpl implements SkillView {
             id = MainView.getReader().readLine();
             System.out.println("Type new name");
             String name = MainView.getReader().readLine();
-            skillController.update(new Region(Long.parseLong(id),
+            skillController.update(new Skill(Long.parseLong(id),
                     name));
-            System.out.println("Region with id = " + id + " was updated");
+            System.out.println("Skill with id = " + id + " was updated");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Region with id = " + id + " wasn't updated");
+            System.out.println("Skill with id = " + id + " wasn't updated");
         }
     }
 
@@ -62,26 +63,25 @@ public class SkillViewImpl implements SkillView {
         try {
             System.out.println("Type id");
             id = MainView.getReader().readLine();
-            Optional<Region> region = skillController.getById(Long.parseLong(id));
+            Optional<Skill> region = skillController.getById(Long.parseLong(id));
             if (region.isPresent()) {
                 System.out.println(region);
             } else {
-                System.out.println("Region with id = " + id + " wasn't found");
+                System.out.println("Skill with id = " + id + " wasn't found");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Region with id = " + id + " wasn't found");
+            System.out.println("Skill with id = " + id + " wasn't found");
         }
     }
 
     private void getAllAndPrint() {
-        List<Region> regions = skillController.getAll();
+        List<Skill> regions = skillController.getAll();
         if (regions.isEmpty()) {
-            System.out.println("Regions list is empty");
+            System.out.println("Skills list is empty");
         } else {
-            System.out.println("Regions:");
-            regions.stream()
-                    .forEach(System.out::println);
+            System.out.println("Skills:");
+            regions.forEach(System.out::println);
         }
     }
 
