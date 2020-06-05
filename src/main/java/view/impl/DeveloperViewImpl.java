@@ -3,19 +3,29 @@ package view.impl;
 
 import command.Command;
 import controller.DeveloperController;
+import controller.SkillController;
+import controller.SpecialtyController;
+import model.Developer;
+import model.Specialty;
 import view.DeveloperView;
 import view.View;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static repository.GenericRepository.DELIMITER;
 
 public class DeveloperViewImpl implements DeveloperView {
     private final DeveloperController developerController;
+    private final SkillController skillController;
+    private final SpecialtyController specialtyController;
 
-    public DeveloperViewImpl(DeveloperController developerController) {
+    public DeveloperViewImpl(DeveloperController developerController, SkillController skillController, SpecialtyController specialtyController) {
         this.developerController = developerController;
+        this.skillController = skillController;
+        this.specialtyController = specialtyController;
     }
 
     private void deleteAndPrint() {
@@ -38,10 +48,18 @@ public class DeveloperViewImpl implements DeveloperView {
             firstName = MainView.getReader().readLine();
             System.out.println("Type lastName");
             String lastName = MainView.getReader().readLine();
-            System.out.println("New post with firstName = '" + firstName + "' and id = " + savedPost.getId() + " was successfully saved");
+            System.out.println("Type skill ids");
+            List<Long> skillIds = Arrays.stream(MainView.getReader().readLine().split(DELIMITER))
+                    .mapToLong(Long::parseLong)
+                    .boxed()
+                    .collect(Collectors.toList());
+            System.out.println("Type specialty id");
+            Long specialtyId = Long.parseLong(MainView.getReader().readLine());
+            new Developer(firstName, lastName, new Specialty());
+            System.out.println("New developer with firstName = '" + firstName + "' and id = " + savedPost.getId() + " was successfully saved");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("New post with firstName = '" + firstName + "' wasn't saved");
+            System.out.println("New developer with firstName = '" + firstName + "' wasn't saved");
         }
     }
 
@@ -50,21 +68,22 @@ public class DeveloperViewImpl implements DeveloperView {
         try {
             System.out.println("Type id");
             id = MainView.getReader().readLine();
-            System.out.println("Type new content");
-            String content = MainView.getReader().readLine();
-            System.out.println("Type new created date and time in the format " + LOCALDATETIME_PATTERN);
-            String created = MainView.getReader().readLine();
-            System.out.println("Type new updated date and time in the format " + LOCALDATETIME_PATTERN);
-            String updated = MainView.getReader().readLine();
-            Post post = new Post(Long.parseLong(id),
-                    content,
-                    LocalDateTime.parse(created, DateTimeFormatter.ofPattern(LOCALDATETIME_PATTERN)),
-                    LocalDateTime.parse(updated, DateTimeFormatter.ofPattern(LOCALDATETIME_PATTERN)));
-            developerController.update(post);
-            System.out.println("Post with id = " + id + " was successfully updated");
+            System.out.println("Type new firstName");
+            String firstName = MainView.getReader().readLine();
+            System.out.println("Type new lastName");
+            String lastName = MainView.getReader().readLine();
+            System.out.println("Type new specialty id");
+            String specialty = MainView.getReader().readLine();
+            System.out.println("Type new skill ids");
+            Developer developer = new Developer(Long.parseLong(id),
+                    firstName,
+                    lastName,
+                    );
+            developerController.update(developer);
+            System.out.println("Developer with id = " + id + " was successfully updated");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Post with id = " + id + " wasn't updated");
+            System.out.println("Developer with id = " + id + " wasn't updated");
         }
     }
 

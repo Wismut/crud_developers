@@ -17,6 +17,10 @@ public class Developer {
         this.skills = skills;
     }
 
+    public Developer(String firstName, String lastName, Specialty specialty, List<Skill> skills) {
+        this(null, firstName, lastName, specialty, skills);
+    }
+
     public Long getId() {
         return id;
     }
