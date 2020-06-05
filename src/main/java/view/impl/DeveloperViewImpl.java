@@ -2,8 +2,7 @@ package view.impl;
 
 
 import command.Command;
-import controller.PostController;
-import model.Post;
+import controller.DeveloperController;
 import view.DeveloperView;
 import view.View;
 
@@ -13,45 +12,36 @@ import java.util.List;
 import java.util.Optional;
 
 public class DeveloperViewImpl implements DeveloperView {
-    private final PostController postController;
-    public static final String LOCALDATETIME_PATTERN = "yyyy-MM-dd HH:mm";
+    private final DeveloperController developerController;
 
-    public DeveloperViewImpl(PostController postController) {
-        this.postController = postController;
+    public DeveloperViewImpl(DeveloperController developerController) {
+        this.developerController = developerController;
     }
 
     private void deleteAndPrint() {
         String id = null;
         try {
-            System.out.println("Type post id");
+            System.out.println("Type developer id");
             id = MainView.getReader().readLine();
-            postController.deleteById(Long.parseLong(id));
-            System.out.println("Post with id = " + id + " was successfully deleted");
+            developerController.deleteById(Long.parseLong(id));
+            System.out.println("Developer with id = " + id + " was successfully deleted");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Post with id = " + id + " wasn't deleted");
+            System.out.println("Developer with id = " + id + " wasn't deleted");
         }
     }
 
     private void saveAndPrint() {
-        String content = null;
+        String firstName = null;
         try {
-            System.out.println("Type content");
-            content = MainView.getReader().readLine();
-            System.out.println("Type created date and time in the format " + LOCALDATETIME_PATTERN);
-            System.out.println("For example " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(LOCALDATETIME_PATTERN)));
-            String created = MainView.getReader().readLine();
-            System.out.println("Type updated date and time in the format " + LOCALDATETIME_PATTERN);
-            System.out.println("For example " + LocalDateTime.now().format(DateTimeFormatter.ofPattern(LOCALDATETIME_PATTERN)));
-            String updated = MainView.getReader().readLine();
-            Post post = new Post(content,
-                    LocalDateTime.parse(created, DateTimeFormatter.ofPattern(LOCALDATETIME_PATTERN)),
-                    LocalDateTime.parse(updated, DateTimeFormatter.ofPattern(LOCALDATETIME_PATTERN)));
-            Post savedPost = postController.save(post);
-            System.out.println("New post with content = '" + content + "' and id = " + savedPost.getId() + " was successfully saved");
+            System.out.println("Type firstName");
+            firstName = MainView.getReader().readLine();
+            System.out.println("Type lastName");
+            String lastName = MainView.getReader().readLine();
+            System.out.println("New post with firstName = '" + firstName + "' and id = " + savedPost.getId() + " was successfully saved");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("New post with content = '" + content + "' wasn't saved");
+            System.out.println("New post with firstName = '" + firstName + "' wasn't saved");
         }
     }
 
@@ -70,7 +60,7 @@ public class DeveloperViewImpl implements DeveloperView {
                     content,
                     LocalDateTime.parse(created, DateTimeFormatter.ofPattern(LOCALDATETIME_PATTERN)),
                     LocalDateTime.parse(updated, DateTimeFormatter.ofPattern(LOCALDATETIME_PATTERN)));
-            postController.update(post);
+            developerController.update(post);
             System.out.println("Post with id = " + id + " was successfully updated");
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,7 +73,7 @@ public class DeveloperViewImpl implements DeveloperView {
         try {
             System.out.println("Type post id");
             id = MainView.getReader().readLine();
-            Optional<Post> post = postController.getById(Long.parseLong(id));
+            Optional<Post> post = developerController.getById(Long.parseLong(id));
             if (post.isPresent()) {
                 System.out.println(post);
             } else {
@@ -100,7 +90,7 @@ public class DeveloperViewImpl implements DeveloperView {
         try {
             System.out.println("Type content");
             contentPart = MainView.getReader().readLine();
-            List<Post> post = postController.getAllByContentPart(contentPart);
+            List<Post> post = developerController.getAllByContentPart(contentPart);
             if (!post.isEmpty()) {
                 System.out.println(post);
             } else {
@@ -113,7 +103,7 @@ public class DeveloperViewImpl implements DeveloperView {
     }
 
     void getAllAndPrint() {
-        List<Post> posts = postController.getAll();
+        List<Post> posts = developerController.getAll();
         if (posts.isEmpty()) {
             System.out.println("Posts list is empty");
         } else {
