@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - preConditions:
+      - runningAs:
+          username: root
+  - changeSet:
+      id: users-table-1
+      author: root
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+                    unique: true
+  - changeSet:
+      id: users-table-2
+      author: root
+      changes:
+        - addAutoIncrement:
+            columnDataType: int
+            columnName: id
+            tableName: users
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: age
+                  type: smallint
+        - renameColumn:
+            tableName: users
+            oldColumnName: name
+            newColumnName: fullname
+            columnDataType: varchar(100)
