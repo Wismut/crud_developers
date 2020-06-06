@@ -14,11 +14,11 @@ public class SkillController {
     }
 
     public void deleteById(Long id) {
-
+        skillService.deleteBy(id);
     }
 
     public Skill save(Skill skill) {
-        return null;
+        return skillService.save(skill);
     }
 
     public void update(Skill skill) {

@@ -7,25 +7,29 @@ import java.util.List;
 import java.util.Optional;
 
 public class SpecialtyService {
-    private SpecialtyRepository specialtyRepository;
+    private final SpecialtyRepository specialtyRepository;
+
+    public SpecialtyService(SpecialtyRepository specialtyRepository) {
+        this.specialtyRepository = specialtyRepository;
+    }
 
     public Specialty save(Specialty specialty) {
-        return null;
+        return specialtyRepository.save(specialty);
     }
 
     public Specialty update(Specialty specialty) {
-        return null;
+        return specialtyRepository.update(specialty);
     }
 
     public void deleteBy(Long id) {
-
+        specialtyRepository.deleteBy(id);
     }
 
     public List<Specialty> getAll() {
-        return null;
+        return specialtyRepository.getAll();
     }
 
     public Optional<Specialty> getById(Long id) {
-        return null;
+        return specialtyRepository.getById(id);
     }
 }

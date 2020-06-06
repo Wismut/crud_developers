@@ -5,31 +5,34 @@ import repository.DeveloperRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DeveloperService {
     private DeveloperRepository developerRepository;
 
     public void deleteById(Long id) {
-
+        developerRepository.deleteBy(id);
     }
 
     public Developer update(Developer developer) {
-        return null;
+        return developerRepository.update(developer);
     }
 
     public Developer save(Developer developer) {
-        return null;
+        return developerRepository.save(developer);
     }
 
     public Optional<Developer> getById(Long id) {
-        return null;
+        return developerRepository.getById(id);
     }
 
     public List<Developer> getAllBySpeciality(String specialityName) {
-        return null;
+        return developerRepository.getAll().stream()
+                .filter(d -> d.getSpecialty().getName().equalsIgnoreCase(specialityName))
+                .collect(Collectors.toList());
     }
 
     public List<Developer> getAll() {
-        return null;
+        return developerRepository.getAll();
     }
 }
