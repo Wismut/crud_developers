@@ -95,4 +95,15 @@ databaseChangeLog:
       changes:
         - addUniqueConstraint:
             columnNames: developer_id, skill_id
+            constraintName: developer_skill_unique_key
             tableName: developer_skill
+  - changeSet:
+      id: developer-table-6
+      author: root
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: specialty_id
+            baseTableName: developers
+            constraintName: fk_developers_specialties
+            referencedColumnNames: id
+            referencedTableName: specialties
