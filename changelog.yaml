@@ -12,10 +12,10 @@ databaseChangeLog:
               - column:
                   name: id
                   type: int
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
-                    autoIncrement: true
               - column:
                   name: first_name
                   type: varchar(50)
@@ -32,15 +32,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
   - changeSet:
-      id: developers-table-2
-      author: root
-      changes:
-        - addAutoIncrement:
-            columnDataType: int
-            columnName: id
-            tableName: developers
-  - changeSet:
-      id: skills-table-3
+      id: skills-table-2
       author: root
       changes:
         - createTable:
@@ -56,5 +48,44 @@ databaseChangeLog:
               - column:
                   name: name
                   type: varchar(50)
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: specialties-table-3
+      author: root
+      changes:
+        - createTable:
+            tableName: specialties
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(50)
+  - changeSet:
+      id: developer_skill-table-4
+      author: root
+      changes:
+        - createTable:
+            tableName: developer_skill
+            columns:
+              - column:
+                  name: developer_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: skill_id
+                  type: int
                   constraints:
                     nullable: false
