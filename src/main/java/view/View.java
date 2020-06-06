@@ -7,13 +7,9 @@ import view.impl.MainView;
 import java.io.IOException;
 
 public interface View {
-    String USER_NUMBER = "1";
-    String POST_NUMBER = "2";
-    String REGION_NUMBER = "3";
-    String USER_LETTER = "u";
-    String POST_LETTER = "p";
-    String REGION_LETTER = "r";
-
+    String DEVELOPER_NUMBER = "1";
+    String SKILL_NUMBER = "2";
+    String SPECIALTY_NUMBER = "3";
     String SAVE_COMMAND_LETTER = "s";
     String GET_BY_ID_COMMAND_LETTER = "g";
     String DELETE_COMMAND_LETTER = "d";

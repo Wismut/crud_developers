@@ -11,7 +11,7 @@ import java.util.*;
 
 public class ComponentFactory {
     private static final Map<Class, Object> componentByClass = new HashMap<>();
-    private static final String[] layouts = {"repository", "controller", "view\\impl"};
+    private static final String[] layouts = {"repository\\impl", "service", "controller", "view\\impl"};
 
     static {
         try {

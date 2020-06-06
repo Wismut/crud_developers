@@ -23,9 +23,9 @@ public class MainView {
         try {
             String type;
             do {
-                System.out.println("Type " + View.USER_NUMBER + " or " + View.USER_LETTER + " if you want to work with users info");
-                System.out.println("Type " + View.POST_NUMBER + " or " + View.POST_LETTER + " if you want to work with posts info");
-                System.out.println("Type " + View.REGION_NUMBER + " or " + View.REGION_LETTER + " if you want to work with regions info");
+                System.out.println("Type " + View.DEVELOPER_NUMBER + " if you want to work with developers info");
+                System.out.println("Type " + View.SKILL_NUMBER + " if you want to work with skills info");
+                System.out.println("Type " + View.SPECIALTY_NUMBER + " if you want to work with specialties info");
                 System.out.println("Type q for quit");
                 type = reader.readLine();
                 if ("q".equals(type)) {

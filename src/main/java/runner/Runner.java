@@ -1,9 +1,10 @@
 package runner;
 
-import repository.connectionpool.ConnectionUtil;
+import view.impl.MainView;
 
 public class Runner {
     public static void main(String[] args) {
-        new ConnectionUtil();
+        MainView mainView = new MainView();
+        mainView.run();
     }
 }

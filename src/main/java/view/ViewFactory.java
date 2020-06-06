@@ -9,15 +9,12 @@ import view.impl.SpecialityViewImpl;
 public class ViewFactory {
     public static View create(String type) {
         switch (type) {
-            case View.USER_NUMBER:
-            case View.USER_LETTER:
-                return ComponentFactory.getBy(SpecialityViewImpl.class);
-            case View.POST_NUMBER:
-            case View.POST_LETTER:
+            case View.DEVELOPER_NUMBER:
                 return ComponentFactory.getBy(DeveloperViewImpl.class);
-            case View.REGION_NUMBER:
-            case View.REGION_LETTER:
+            case View.SKILL_NUMBER:
                 return ComponentFactory.getBy(SkillViewImpl.class);
+            case View.SPECIALTY_NUMBER:
+                return ComponentFactory.getBy(SpecialityViewImpl.class);
             default:
                 return null;
         }

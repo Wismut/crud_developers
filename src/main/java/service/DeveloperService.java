@@ -8,7 +8,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DeveloperService {
-    private DeveloperRepository developerRepository;
+    private final DeveloperRepository developerRepository;
+
+    public DeveloperService(DeveloperRepository developerRepository) {
+        this.developerRepository = developerRepository;
+    }
 
     public void deleteById(Long id) {
         developerRepository.deleteBy(id);
