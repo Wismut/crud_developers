@@ -73,7 +73,7 @@ databaseChangeLog:
                   name: description
                   type: varchar(50)
   - changeSet:
-      id: developer_skill-table-4
+      id: developer-skill-table-4
       author: root
       changes:
         - createTable:
@@ -89,3 +89,10 @@ databaseChangeLog:
                   type: int
                   constraints:
                     nullable: false
+  - changeSet:
+      id: developer-skill-table-5
+      author: root
+      changes:
+        - addUniqueConstraint:
+            columnNames: developer_id, skill_id
+            tableName: developer_skill
