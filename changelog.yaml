@@ -3,15 +3,53 @@ databaseChangeLog:
       - runningAs:
           username: root
   - changeSet:
-      id: users-table-1
+      id: developers-table-1
       author: root
       changes:
         - createTable:
-            tableName: users
+            tableName: developers
             columns:
               - column:
                   name: id
                   type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    autoIncrement: true
+              - column:
+                  name: first_name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: specialty_id
+                  type: int
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: developers-table-2
+      author: root
+      changes:
+        - addAutoIncrement:
+            columnDataType: int
+            columnName: id
+            tableName: developers
+  - changeSet:
+      id: skills-table-3
+      author: root
+      changes:
+        - createTable:
+            tableName: skills
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -20,28 +58,3 @@ databaseChangeLog:
                   type: varchar(50)
                   constraints:
                     nullable: false
-              - column:
-                  name: email
-                  type: varchar(128)
-                  constraints:
-                    nullable: false
-                    unique: true
-  - changeSet:
-      id: users-table-2
-      author: root
-      changes:
-        - addAutoIncrement:
-            columnDataType: int
-            columnName: id
-            tableName: users
-        - addColumn:
-            tableName: users
-            columns:
-              - column:
-                  name: age
-                  type: smallint
-        - renameColumn:
-            tableName: users
-            oldColumnName: name
-            newColumnName: fullname
-            columnDataType: varchar(100)
