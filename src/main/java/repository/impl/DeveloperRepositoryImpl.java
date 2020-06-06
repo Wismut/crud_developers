@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class DeveloperRepositoryImpl implements DeveloperRepository {
     @Override
-    public Optional<Developer> getById(Long aLong) {
+    public Optional<Developer> getById(Long id) {
         return Optional.empty();
     }
 
@@ -18,17 +18,17 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
     }
 
     @Override
-    public Developer save(Developer entity) {
+    public Developer save(Developer developer) {
         return null;
     }
 
     @Override
-    public void deleteBy(Long aLong) {
+    public void deleteBy(Long id) {
 
     }
 
     @Override
-    public Developer update(Developer entity) {
+    public Developer update(Developer developer) {
         return null;
     }
 }

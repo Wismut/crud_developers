@@ -18,17 +18,17 @@ public class SkillRepositoryImpl implements SkillRepository {
     }
 
     @Override
-    public Skill save(Skill entity) {
+    public Skill save(Skill skill) {
         return null;
     }
 
     @Override
-    public void deleteBy(Long aLong) {
+    public void deleteBy(Long id) {
 
     }
 
     @Override
-    public Skill update(Skill entity) {
+    public Skill update(Skill skill) {
         return null;
     }
 }

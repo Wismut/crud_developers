@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class SpecialtyRepositoryImpl implements SpecialtyRepository {
     @Override
-    public Optional<Specialty> getById(Long aLong) {
+    public Optional<Specialty> getById(Long id) {
         return Optional.empty();
     }
 
@@ -18,17 +18,17 @@ public class SpecialtyRepositoryImpl implements SpecialtyRepository {
     }
 
     @Override
-    public Specialty save(Specialty entity) {
+    public Specialty save(Specialty specialty) {
         return null;
     }
 
     @Override
-    public void deleteBy(Long aLong) {
+    public void deleteBy(Long id) {
 
     }
 
     @Override
-    public Specialty update(Specialty entity) {
+    public Specialty update(Specialty specialty) {
         return null;
     }
 }
