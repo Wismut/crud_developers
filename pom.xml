@@ -12,9 +12,22 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${liquibase.version}</version>
+                <configuration>
+                    <propertyFile>${profile.propertyFile}</propertyFile>
+                    <changeLogFile>${profile.changeLogFile}</changeLogFile>
+                    <verbose>${profile.verbose}</verbose>
+                    <logging>${profile.logging}</logging>
+                    <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                 </configuration>
             </plugin>
         </plugins>
@@ -24,6 +37,11 @@
         <mockito.version>3.3.3</mockito.version>
         <junit.version>5.6.2</junit.version>
         <mysql.connector.version>8.0.20</mysql.connector.version>
+        <liquibase.version>3.9.0</liquibase.version>
+        <profile.propertyFile>dev/liquibase.properties</profile.propertyFile>
+        <profile.changeLogFile>dev/changelog.yaml</profile.changeLogFile>
+        <profile.verbose>true</profile.verbose>
+        <profile.logging>debug</profile.logging>
     </properties>
 
     <dependencies>
@@ -43,6 +61,11 @@
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
         </dependency>
     </dependencies>
 </project>
