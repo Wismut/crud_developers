@@ -19,6 +19,10 @@ public class Specialty {
         this(null, name, description);
     }
 
+    public Specialty(String name) {
+        this(name, "");
+    }
+
     public Long getId() {
         return id;
     }

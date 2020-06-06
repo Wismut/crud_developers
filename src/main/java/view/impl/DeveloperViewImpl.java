@@ -6,6 +6,8 @@ import controller.DeveloperController;
 import controller.SkillController;
 import controller.SpecialtyController;
 import model.Developer;
+import model.Skill;
+import model.Specialty;
 import view.DeveloperView;
 import view.View;
 
@@ -44,23 +46,32 @@ public class DeveloperViewImpl implements DeveloperView {
     private void saveAndPrint() {
         String firstName = null;
         try {
+            List<Skill> allSkills = skillController.getAll();
+            List<Specialty> specialties = specialtyController.getAll();
             System.out.println("Type firstName");
             firstName = MainView.getReader().readLine();
             System.out.println("Type lastName");
             String lastName = MainView.getReader().readLine();
             System.out.println("Type skill names");
-            List<Long> skillIds = Arrays.stream(MainView.getReader().readLine().split(DELIMITER))
-                    .mapToLong(s -> {
-                        skillController.getByName(s)
-                    }
-                            .boxed()
-                            .collect(Collectors.toList());
-            skillIds.forEach(id -> {
-
-            });
+            List<Skill> skills = Arrays.stream(MainView.getReader().readLine().split(DELIMITER))
+                    .map(skillName -> {
+                        Optional<Skill> skill = allSkills.stream()
+                                .filter(s -> s.getName().equalsIgnoreCase(skillName))
+                                .findFirst();
+                        return skill.orElseGet(() -> skillController.save(new Skill(skillName)));
+                    })
+                    .collect(Collectors.toList());
             System.out.println("Type specialty name");
             String specialtyName = MainView.getReader().readLine();
-            Developer developer = new Developer(firstName, lastName);
+            Specialty specialty;
+            Optional<Specialty> specialtyOptional = specialties.stream()
+                    .filter(s -> s.getName().equalsIgnoreCase(specialtyName))
+                    .findAny();
+            specialty = specialtyOptional.orElseGet(() -> specialtyController.save(new Specialty(specialtyName)));
+            Developer developer = new Developer(firstName,
+                    lastName,
+                    specialty,
+                    skills);
             Developer savedDeveloper = developerController.save(developer);
             System.out.println("New developer with firstName = '" + firstName + "' and id = " + savedDeveloper.getId() + " was successfully saved");
         } catch (Exception e) {
