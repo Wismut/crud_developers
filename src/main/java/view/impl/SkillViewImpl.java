@@ -35,7 +35,7 @@ public class SkillViewImpl implements SkillView {
             System.out.println("Type name");
             name = MainView.getReader().readLine();
             Skill skill = skillController.save(new Skill(name));
-            System.out.println("New skill with name " + skill.getName() + " id = " + skill.getId() + " was successfully saved");
+            System.out.println("New skill with name '" + skill.getName() + "' and id = " + skill.getId() + " was successfully saved");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("New skill with name = " + name + " wasn't saved");
@@ -58,14 +58,14 @@ public class SkillViewImpl implements SkillView {
         }
     }
 
-    private void getOneAndPrint() {
+    private void getOneByIdAndPrint() {
         String id = null;
         try {
             System.out.println("Type id");
             id = MainView.getReader().readLine();
-            Optional<Skill> region = skillController.getById(Long.parseLong(id));
-            if (region.isPresent()) {
-                System.out.println(region);
+            Optional<Skill> skill = skillController.getById(Long.parseLong(id));
+            if (skill.isPresent()) {
+                System.out.println(skill);
             } else {
                 System.out.println("Skill with id = " + id + " wasn't found");
             }
@@ -75,13 +75,30 @@ public class SkillViewImpl implements SkillView {
         }
     }
 
+    private void getOneByNameAndPrint() {
+        String name = null;
+        try {
+            System.out.println("Type name");
+            name = MainView.getReader().readLine();
+            Optional<Skill> skill = skillController.getByName(name);
+            if (skill.isPresent()) {
+                System.out.println(skill);
+            } else {
+                System.out.println("Skill with name = " + name + " wasn't found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Skill with name = " + name + " wasn't found");
+        }
+    }
+
     private void getAllAndPrint() {
-        List<Skill> regions = skillController.getAll();
-        if (regions.isEmpty()) {
+        List<Skill> skills = skillController.getAll();
+        if (skills.isEmpty()) {
             System.out.println("Skills list is empty");
         } else {
             System.out.println("Skills:");
-            regions.forEach(System.out::println);
+            skills.forEach(System.out::println);
         }
     }
 
@@ -97,7 +114,10 @@ public class SkillViewImpl implements SkillView {
                 updateAndPrint();
                 return;
             case GET_BY_ID:
-                getOneAndPrint();
+                getOneByIdAndPrint();
+                return;
+            case GET_BY_NAME:
+                getOneByNameAndPrint();
                 return;
             case GET_ALL:
                 getAllAndPrint();
@@ -109,6 +129,6 @@ public class SkillViewImpl implements SkillView {
 
     @Override
     public void printActionsInfo() {
-
+        System.out.println("Type " + GET_BY_NAME_COMMAND_LETTER + " if you want to get one record by id from the database");
     }
 }

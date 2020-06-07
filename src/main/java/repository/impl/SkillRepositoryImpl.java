@@ -15,6 +15,7 @@ public class SkillRepositoryImpl implements SkillRepository {
         Connection connection = ConnectionUtil.getConnection();
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + SkillRepository.TABLE_NAME + " WHERE " + ID_ROW_NAME + " = ?");
+            statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             return Optional.of(new Skill(resultSet.getLong(ID_ROW_NAME),
@@ -62,7 +63,7 @@ public class SkillRepositoryImpl implements SkillRepository {
             statement.execute();
             ResultSet generatedKeys = statement.getGeneratedKeys();
             generatedKeys.next();
-            Long newId = generatedKeys.getLong(ID_ROW_NAME);
+            Long newId = generatedKeys.getLong(1);
             skill.setId(newId);
             return skill;
         } catch (SQLException e) {
@@ -103,6 +104,7 @@ public class SkillRepositoryImpl implements SkillRepository {
                     ID_ROW_NAME +
                     " = ?");
             statement.setString(1, skill.getName());
+            statement.setLong(2, skill.getId());
             statement.execute();
             return skill;
         } catch (SQLException e) {
@@ -115,6 +117,22 @@ public class SkillRepositoryImpl implements SkillRepository {
 
     @Override
     public Optional<Skill> getByName(String name) {
-        return Optional.empty();
+        Connection connection = ConnectionUtil.getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
+                    SkillRepository.TABLE_NAME +
+                    " WHERE " +
+                    NAME_ROW_NAME +
+                    " = ?");
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            return Optional.of(new Skill(resultSet.getLong(ID_ROW_NAME),
+                    resultSet.getString(NAME_ROW_NAME)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        } finally {
+            ConnectionUtil.releaseConnection(connection);
+        }
     }
 }

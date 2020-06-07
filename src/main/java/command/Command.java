@@ -2,9 +2,15 @@ package command;
 
 
 public enum Command {
-    UPDATE("u"), DELETE_BY_ID("d"), SAVE("s"), GET_BY_ID("g"), GET_ALL("a"), GET_BY_CONTENT("c");
+    UPDATE("u"),
+    DELETE_BY_ID("d"),
+    SAVE("s"),
+    GET_BY_ID("g"),
+    GET_BY_NAME("n"),
+    GET_ALL("a"),
+    GET_BY_CONTENT("c");
 
-    private String shortCutLetter;
+    private final String shortCutLetter;
 
     Command(String shortCutLetter) {
         this.shortCutLetter = shortCutLetter;

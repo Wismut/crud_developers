@@ -12,6 +12,7 @@ public interface View {
     String SPECIALTY_NUMBER = "3";
     String SAVE_COMMAND_LETTER = "s";
     String GET_BY_ID_COMMAND_LETTER = "g";
+    String GET_BY_NAME_COMMAND_LETTER = "n";
     String DELETE_COMMAND_LETTER = "d";
     String UPDATE_COMMAND_LETTER = "u";
     String GET_ALL_COMMAND_LETTER = "a";
