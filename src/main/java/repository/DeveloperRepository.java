@@ -4,8 +4,8 @@ import model.Developer;
 
 public interface DeveloperRepository extends GenericRepository<Developer, Long> {
     String TABLE_NAME = "developers";
-    String ID_ROW_NAME = "id";
-    String FIRSTNAME_ROW_NAME = "first_name";
-    String LASTNAME_ROW_NAME = "last_name";
-    String SPECIALTYID_ROW_NAME = "specialty_id";
+    String ID_COLUMN_NAME = "id";
+    String FIRSTNAME_COLUMN_NAME = "first_name";
+    String LASTNAME_COLUMN_NAME = "last_name";
+    String SPECIALTYID_COLUMN_NAME = "specialty_id";
 }

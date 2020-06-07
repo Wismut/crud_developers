@@ -14,13 +14,13 @@ public class SpecialtyRepositoryImpl implements SpecialtyRepository {
     @Override
     public Optional<Specialty> getById(Long id) {
         Connection connection = ConnectionUtil.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + SpecialtyRepository.TABLE_NAME + " WHERE " + ID_ROW_NAME + " = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + SpecialtyRepository.TABLE_NAME + " WHERE " + ID_COLUMN_NAME + " = ?")) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            return Optional.of(new Specialty(resultSet.getLong(ID_ROW_NAME),
-                    resultSet.getString(NAME_ROW_NAME),
-                    resultSet.getString(DESCRIPTION_ROW_NAME)));
+            return Optional.of(new Specialty(resultSet.getLong(ID_COLUMN_NAME),
+                    resultSet.getString(NAME_COLUMN_NAME),
+                    resultSet.getString(DESCRIPTION_COLUMN_NAME)));
         } catch (SQLException e) {
             e.printStackTrace();
             return Optional.empty();
@@ -36,9 +36,9 @@ public class SpecialtyRepositoryImpl implements SpecialtyRepository {
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + SpecialtyRepository.TABLE_NAME)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                specialties.add(new Specialty(resultSet.getLong(ID_ROW_NAME),
-                        resultSet.getString(NAME_ROW_NAME),
-                        resultSet.getString(DESCRIPTION_ROW_NAME)));
+                specialties.add(new Specialty(resultSet.getLong(ID_COLUMN_NAME),
+                        resultSet.getString(NAME_COLUMN_NAME),
+                        resultSet.getString(DESCRIPTION_COLUMN_NAME)));
             }
             return specialties;
         } catch (SQLException e) {
@@ -77,7 +77,7 @@ public class SpecialtyRepositoryImpl implements SpecialtyRepository {
         try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " +
                 SpecialtyRepository.TABLE_NAME +
                 " WHERE " +
-                ID_ROW_NAME +
+                ID_COLUMN_NAME +
                 " = ?")) {
             statement.setLong(1, id);
             statement.execute();
@@ -94,9 +94,9 @@ public class SpecialtyRepositoryImpl implements SpecialtyRepository {
         try (PreparedStatement statement = connection.prepareStatement("UPDATE " +
                 SpecialtyRepository.TABLE_NAME +
                 " SET " +
-                NAME_ROW_NAME +
+                NAME_COLUMN_NAME +
                 " = ? WHERE " +
-                ID_ROW_NAME +
+                ID_COLUMN_NAME +
                 " = ?")) {
             statement.setString(1, specialty.getName());
             statement.setLong(2, specialty.getId());

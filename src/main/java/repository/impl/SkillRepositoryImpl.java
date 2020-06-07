@@ -16,13 +16,13 @@ public class SkillRepositoryImpl implements SkillRepository {
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
                 SkillRepository.TABLE_NAME +
                 " WHERE " +
-                ID_ROW_NAME +
+                ID_COLUMN_NAME +
                 " = ?")) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            return Optional.of(new Skill(resultSet.getLong(ID_ROW_NAME),
-                    resultSet.getString(NAME_ROW_NAME)));
+            return Optional.of(new Skill(resultSet.getLong(ID_COLUMN_NAME),
+                    resultSet.getString(NAME_COLUMN_NAME)));
         } catch (SQLException e) {
             e.printStackTrace();
             return Optional.empty();
@@ -39,8 +39,8 @@ public class SkillRepositoryImpl implements SkillRepository {
                 SkillRepository.TABLE_NAME)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                skills.add(new Skill(resultSet.getLong(ID_ROW_NAME),
-                        resultSet.getString(NAME_ROW_NAME)));
+                skills.add(new Skill(resultSet.getLong(ID_COLUMN_NAME),
+                        resultSet.getString(NAME_COLUMN_NAME)));
             }
             return skills;
         } catch (SQLException e) {
@@ -79,7 +79,7 @@ public class SkillRepositoryImpl implements SkillRepository {
         try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " +
                 SkillRepository.TABLE_NAME +
                 " WHERE " +
-                ID_ROW_NAME +
+                ID_COLUMN_NAME +
                 " = ?")) {
             statement.setLong(1, id);
             statement.execute();
@@ -96,9 +96,9 @@ public class SkillRepositoryImpl implements SkillRepository {
         try (PreparedStatement statement = connection.prepareStatement("UPDATE " +
                 SkillRepository.TABLE_NAME +
                 " SET " +
-                NAME_ROW_NAME +
+                NAME_COLUMN_NAME +
                 " = ? WHERE " +
-                ID_ROW_NAME +
+                ID_COLUMN_NAME +
                 " = ?")) {
             statement.setString(1, skill.getName());
             statement.setLong(2, skill.getId());
@@ -118,12 +118,12 @@ public class SkillRepositoryImpl implements SkillRepository {
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
                 SkillRepository.TABLE_NAME +
                 " WHERE " +
-                NAME_ROW_NAME +
+                NAME_COLUMN_NAME +
                 " = ?")) {
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            return Optional.of(new Skill(resultSet.getLong(ID_ROW_NAME),
-                    resultSet.getString(NAME_ROW_NAME)));
+            return Optional.of(new Skill(resultSet.getLong(ID_COLUMN_NAME),
+                    resultSet.getString(NAME_COLUMN_NAME)));
         } catch (SQLException e) {
             e.printStackTrace();
             return Optional.empty();

@@ -19,9 +19,9 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            return Optional.of(new Developer(resultSet.getLong(ID_ROW_NAME),
-                    resultSet.getString(FIRSTNAME_ROW_NAME),
-                    resultSet.getString(LASTNAME_ROW_NAME)));
+            return Optional.of(new Developer(resultSet.getLong(ID_COLUMN_NAME),
+                    resultSet.getString(FIRSTNAME_COLUMN_NAME),
+                    resultSet.getString(LASTNAME_COLUMN_NAME)));
         } catch (SQLException e) {
             e.printStackTrace();
             return Optional.empty();
@@ -38,9 +38,9 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
                 TABLE_NAME)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                developers.add(new Developer(resultSet.getLong(ID_ROW_NAME),
-                        resultSet.getString(FIRSTNAME_ROW_NAME),
-                        resultSet.getString(LASTNAME_ROW_NAME)));
+                developers.add(new Developer(resultSet.getLong(ID_COLUMN_NAME),
+                        resultSet.getString(FIRSTNAME_COLUMN_NAME),
+                        resultSet.getString(LASTNAME_COLUMN_NAME)));
             }
             return developers;
         } catch (SQLException e) {
@@ -79,7 +79,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " +
                 DeveloperRepository.TABLE_NAME +
                 " WHERE " +
-                ID_ROW_NAME +
+                ID_COLUMN_NAME +
                 " = ?")) {
             statement.setLong(1, id);
             statement.execute();
@@ -96,12 +96,12 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         try (PreparedStatement statement = connection.prepareStatement("UPDATE " +
                 DeveloperRepository.TABLE_NAME +
                 " SET " +
-                FIRSTNAME_ROW_NAME +
+                FIRSTNAME_COLUMN_NAME +
                 " = ?, " +
-                LASTNAME_ROW_NAME +
+                LASTNAME_COLUMN_NAME +
                 " = ?, " +
                 " = ? WHERE " +
-                ID_ROW_NAME +
+                ID_COLUMN_NAME +
                 " = ?")) {
             statement.setString(1, developer.getFirstName());
             statement.setString(2, developer.getLastName());
