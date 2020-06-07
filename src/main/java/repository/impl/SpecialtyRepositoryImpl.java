@@ -1,34 +1,116 @@
 package repository.impl;
 
-import model.Specialty;
-import repository.SpecialtyRepository;
 
+import model.Specialty;
+import repository.SkillRepository;
+import repository.SpecialtyRepository;
+import repository.connectionpool.ConnectionUtil;
+
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class SpecialtyRepositoryImpl implements SpecialtyRepository {
     @Override
     public Optional<Specialty> getById(Long id) {
-        return Optional.empty();
+        Connection connection = ConnectionUtil.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + SpecialtyRepository.TABLE_NAME + " WHERE " + ID_ROW_NAME + " = ?")) {
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            return Optional.of(new Specialty(resultSet.getLong(ID_ROW_NAME),
+                    resultSet.getString(NAME_ROW_NAME),
+                    resultSet.getString(DESCRIPTION_ROW_NAME)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        } finally {
+            ConnectionUtil.releaseConnection(connection);
+        }
     }
 
     @Override
     public List<Specialty> getAll() {
-        return null;
+        Connection connection = ConnectionUtil.getConnection();
+        List<Specialty> specialties = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + SpecialtyRepository.TABLE_NAME)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                specialties.add(new Specialty(resultSet.getLong(ID_ROW_NAME),
+                        resultSet.getString(NAME_ROW_NAME),
+                        resultSet.getString(DESCRIPTION_ROW_NAME)));
+            }
+            return specialties;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return specialties;
+        } finally {
+            ConnectionUtil.releaseConnection(connection);
+        }
     }
 
     @Override
     public Specialty save(Specialty specialty) {
-        return null;
+        Connection connection = ConnectionUtil.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " +
+                        SpecialtyRepository.TABLE_NAME +
+                        " VALUES(0, ?, ?)"
+                , Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, specialty.getName());
+            statement.setString(2, specialty.getDescription());
+            statement.execute();
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            generatedKeys.next();
+            Long newId = generatedKeys.getLong(1);
+            specialty.setId(newId);
+            return specialty;
+        } catch (
+                SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            ConnectionUtil.releaseConnection(connection);
+        }
+
     }
 
     @Override
     public void deleteBy(Long id) {
-
+        Connection connection = ConnectionUtil.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " +
+                SpecialtyRepository.TABLE_NAME +
+                " WHERE " +
+                ID_ROW_NAME +
+                " = ?")) {
+            statement.setLong(1, id);
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionUtil.releaseConnection(connection);
+        }
     }
 
     @Override
     public Specialty update(Specialty specialty) {
-        return null;
+        Connection connection = ConnectionUtil.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE " +
+                SpecialtyRepository.TABLE_NAME +
+                " SET " +
+                NAME_ROW_NAME +
+                " = ? WHERE " +
+                ID_ROW_NAME +
+                " = ?")) {
+            statement.setString(1, specialty.getName());
+            statement.setLong(2, specialty.getId());
+            statement.execute();
+            return specialty;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            ConnectionUtil.releaseConnection(connection);
+        }
     }
 }

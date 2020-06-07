@@ -129,6 +129,6 @@ public class SkillViewImpl implements SkillView {
 
     @Override
     public void printActionsInfo() {
-        System.out.println("Type " + GET_BY_NAME_COMMAND_LETTER + " if you want to get one record by id from the database");
+        System.out.println("Type " + GET_BY_NAME_COMMAND_LETTER + " if you want to get one record by name from the database");
     }
 }

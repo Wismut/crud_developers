@@ -13,8 +13,11 @@ public class SkillRepositoryImpl implements SkillRepository {
     @Override
     public Optional<Skill> getById(Long id) {
         Connection connection = ConnectionUtil.getConnection();
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + SkillRepository.TABLE_NAME + " WHERE " + ID_ROW_NAME + " = ?");
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
+                SkillRepository.TABLE_NAME +
+                " WHERE " +
+                ID_ROW_NAME +
+                " = ?")) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
@@ -32,8 +35,8 @@ public class SkillRepositoryImpl implements SkillRepository {
     public List<Skill> getAll() {
         Connection connection = ConnectionUtil.getConnection();
         List<Skill> skills = new ArrayList<>();
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + SkillRepository.TABLE_NAME);
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
+                SkillRepository.TABLE_NAME)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 skills.add(new Skill(resultSet.getLong(ID_ROW_NAME),
@@ -51,14 +54,10 @@ public class SkillRepositoryImpl implements SkillRepository {
     @Override
     public Skill save(Skill skill) {
         Connection connection = ConnectionUtil.getConnection();
-        try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO " +
-                            SkillRepository.TABLE_NAME +
-                            "(" +
-                            NAME_ROW_NAME +
-                            ")" +
-                            " VALUES(?)"
-                    , Statement.RETURN_GENERATED_KEYS);
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " +
+                        SkillRepository.TABLE_NAME +
+                        " VALUES(0, ?)"
+                , Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, skill.getName());
             statement.execute();
             ResultSet generatedKeys = statement.getGeneratedKeys();
@@ -77,12 +76,11 @@ public class SkillRepositoryImpl implements SkillRepository {
     @Override
     public void deleteBy(Long id) {
         Connection connection = ConnectionUtil.getConnection();
-        try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM " +
-                    SkillRepository.TABLE_NAME +
-                    " WHERE " +
-                    ID_ROW_NAME +
-                    " = ?");
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " +
+                SkillRepository.TABLE_NAME +
+                " WHERE " +
+                ID_ROW_NAME +
+                " = ?")) {
             statement.setLong(1, id);
             statement.execute();
         } catch (SQLException e) {
@@ -95,14 +93,13 @@ public class SkillRepositoryImpl implements SkillRepository {
     @Override
     public Skill update(Skill skill) {
         Connection connection = ConnectionUtil.getConnection();
-        try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE " +
-                    SkillRepository.TABLE_NAME +
-                    " SET " +
-                    NAME_ROW_NAME +
-                    " = ? WHERE " +
-                    ID_ROW_NAME +
-                    " = ?");
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE " +
+                SkillRepository.TABLE_NAME +
+                " SET " +
+                NAME_ROW_NAME +
+                " = ? WHERE " +
+                ID_ROW_NAME +
+                " = ?")) {
             statement.setString(1, skill.getName());
             statement.setLong(2, skill.getId());
             statement.execute();
@@ -118,12 +115,11 @@ public class SkillRepositoryImpl implements SkillRepository {
     @Override
     public Optional<Skill> getByName(String name) {
         Connection connection = ConnectionUtil.getConnection();
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
-                    SkillRepository.TABLE_NAME +
-                    " WHERE " +
-                    NAME_ROW_NAME +
-                    " = ?");
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
+                SkillRepository.TABLE_NAME +
+                " WHERE " +
+                NAME_ROW_NAME +
+                " = ?")) {
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             return Optional.of(new Skill(resultSet.getLong(ID_ROW_NAME),
