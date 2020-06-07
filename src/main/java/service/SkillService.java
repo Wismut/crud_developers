@@ -32,4 +32,8 @@ public class SkillService {
     public Optional<Skill> getById(Long id) {
         return skillRepository.getById(id);
     }
+
+    public Optional<Skill> getByName(String name) {
+        return skillRepository.getByName(name);
+    }
 }

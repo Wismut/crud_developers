@@ -21,19 +21,19 @@ public class SkillController {
         return skillService.save(skill);
     }
 
-    public void update(Skill skill) {
-
+    public Skill update(Skill skill) {
+        return skillService.update(skill);
     }
 
     public Optional<Skill> getById(Long id) {
-        return Optional.empty();
+        return skillService.getById(id);
     }
 
     public List<Skill> getAll() {
-        return null;
+        return skillService.getAll();
     }
 
     public Optional<Skill> getByName(String name) {
-        return null;
+        return skillService.getByName(name);
     }
 }
