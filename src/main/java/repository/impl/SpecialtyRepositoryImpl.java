@@ -2,7 +2,6 @@ package repository.impl;
 
 
 import model.Specialty;
-import repository.SkillRepository;
 import repository.SpecialtyRepository;
 import repository.connectionpool.ConnectionUtil;
 
@@ -65,14 +64,11 @@ public class SpecialtyRepositoryImpl implements SpecialtyRepository {
             Long newId = generatedKeys.getLong(1);
             specialty.setId(newId);
             return specialty;
-        } catch (
-                SQLException e) {
-            e.printStackTrace();
-            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         } finally {
             ConnectionUtil.releaseConnection(connection);
         }
-
     }
 
     @Override
@@ -107,8 +103,7 @@ public class SpecialtyRepositoryImpl implements SpecialtyRepository {
             statement.execute();
             return specialty;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         } finally {
             ConnectionUtil.releaseConnection(connection);
         }

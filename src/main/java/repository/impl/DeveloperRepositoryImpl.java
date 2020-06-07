@@ -4,10 +4,7 @@ import model.Developer;
 import repository.DeveloperRepository;
 import repository.connectionpool.ConnectionUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,14 +13,15 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
     @Override
     public Optional<Developer> getById(Long id) {
         Connection connection = ConnectionUtil.getConnection();
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM developers WHERE id = ?");
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
+                TABLE_NAME +
+                " WHERE id = ?")) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            return Optional.of(new Developer(resultSet.getLong("id"),
-                    resultSet.getString("first_name"),
-                    resultSet.getString("last_name")));
+            return Optional.of(new Developer(resultSet.getLong(ID_ROW_NAME),
+                    resultSet.getString(FIRSTNAME_ROW_NAME),
+                    resultSet.getString(LASTNAME_ROW_NAME)));
         } catch (SQLException e) {
             e.printStackTrace();
             return Optional.empty();
@@ -36,17 +34,16 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
     public List<Developer> getAll() {
         Connection connection = ConnectionUtil.getConnection();
         List<Developer> developers = new ArrayList<>();
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM developers");
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
+                TABLE_NAME)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                developers.add(new Developer(resultSet.getLong("id"),
-                        resultSet.getString("first_name"),
-                        resultSet.getString("last_name")));
+                developers.add(new Developer(resultSet.getLong(ID_ROW_NAME),
+                        resultSet.getString(FIRSTNAME_ROW_NAME),
+                        resultSet.getString(LASTNAME_ROW_NAME)));
             }
             return developers;
         } catch (SQLException e) {
-            e.printStackTrace();
             return developers;
         } finally {
             ConnectionUtil.releaseConnection(connection);
@@ -55,16 +52,66 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
 
     @Override
     public Developer save(Developer developer) {
-        return null;
+        Connection connection = ConnectionUtil.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " +
+                        DeveloperRepository.TABLE_NAME +
+                        " VALUES(0, ?, ?)"
+                , Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, developer.getFirstName());
+            statement.setString(2, developer.getLastName());
+            statement.setLong(3, developer.getSpecialty().getId());
+            statement.execute();
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            generatedKeys.next();
+            Long newId = generatedKeys.getLong(1);
+            developer.setId(newId);
+            return developer;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionUtil.releaseConnection(connection);
+        }
     }
 
     @Override
     public void deleteBy(Long id) {
-
+        Connection connection = ConnectionUtil.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " +
+                DeveloperRepository.TABLE_NAME +
+                " WHERE " +
+                ID_ROW_NAME +
+                " = ?")) {
+            statement.setLong(1, id);
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionUtil.releaseConnection(connection);
+        }
     }
 
     @Override
     public Developer update(Developer developer) {
-        return null;
+        Connection connection = ConnectionUtil.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement("UPDATE " +
+                DeveloperRepository.TABLE_NAME +
+                " SET " +
+                FIRSTNAME_ROW_NAME +
+                " = ?, " +
+                LASTNAME_ROW_NAME +
+                " = ?, " +
+                " = ? WHERE " +
+                ID_ROW_NAME +
+                " = ?")) {
+            statement.setString(1, developer.getFirstName());
+            statement.setString(2, developer.getLastName());
+            statement.setLong(3, developer.getId());
+            statement.execute();
+            return developer;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionUtil.releaseConnection(connection);
+        }
     }
 }
