@@ -39,7 +39,7 @@
         <mysql.connector.version>8.0.20</mysql.connector.version>
         <liquibase.version>3.9.0</liquibase.version>
         <profile.propertyFile>dev/liquibase.properties</profile.propertyFile>
-        <profile.changeLogFile>dev/changelog.yaml</profile.changeLogFile>
+        <profile.changeLogFile>dev/changelog.yml</profile.changeLogFile>
         <profile.verbose>true</profile.verbose>
         <profile.logging>debug</profile.logging>
     </properties>
@@ -66,6 +66,11 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>${liquibase.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.26</version>
         </dependency>
     </dependencies>
 </project>
