@@ -5,7 +5,6 @@ import repository.DeveloperRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class DeveloperService {
     private final DeveloperRepository developerRepository;
@@ -31,9 +30,7 @@ public class DeveloperService {
     }
 
     public List<Developer> getAllBySpeciality(String specialityName) {
-        return developerRepository.getAll().stream()
-                .filter(d -> d.getSpecialty().getName().equalsIgnoreCase(specialityName))
-                .collect(Collectors.toList());
+        return developerRepository.getAllBySpecialty(specialityName);
     }
 
     public List<Developer> getAll() {

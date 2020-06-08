@@ -55,7 +55,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         Connection connection = ConnectionUtil.getConnection();
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " +
                         DeveloperRepository.TABLE_NAME +
-                        " VALUES(0, ?, ?)"
+                        " VALUES(0, ?, ?, ?)"
                 , Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, developer.getFirstName());
             statement.setString(2, developer.getLastName());
@@ -113,5 +113,10 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         } finally {
             ConnectionUtil.releaseConnection(connection);
         }
+    }
+
+    @Override
+    public List<Developer> getAllBySpecialty(String specialityName) {
+        return null;
     }
 }

@@ -3,8 +3,6 @@ package view.impl;
 
 import command.Command;
 import controller.DeveloperController;
-import controller.SkillController;
-import controller.SpecialtyController;
 import model.Developer;
 import model.Skill;
 import model.Specialty;
@@ -14,20 +12,15 @@ import view.View;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static repository.GenericRepository.DELIMITER;
 
 public class DeveloperViewImpl implements DeveloperView {
     private final DeveloperController developerController;
-    private final SkillController skillController;
-    private final SpecialtyController specialtyController;
 
-    public DeveloperViewImpl(DeveloperController developerController, SkillController skillController, SpecialtyController specialtyController) {
+    public DeveloperViewImpl(DeveloperController developerController) {
         this.developerController = developerController;
-        this.skillController = skillController;
-        this.specialtyController = specialtyController;
     }
 
     private void deleteAndPrint() {
@@ -46,28 +39,17 @@ public class DeveloperViewImpl implements DeveloperView {
     private void saveAndPrint() {
         String firstName = null;
         try {
-            List<Skill> allSkills = skillController.getAll();
-            List<Specialty> specialties = specialtyController.getAll();
             System.out.println("Type firstName");
             firstName = MainView.getReader().readLine();
             System.out.println("Type lastName");
             String lastName = MainView.getReader().readLine();
-            System.out.println("Type skill names");
+            System.out.println("Type skill names within comma");
             List<Skill> skills = Arrays.stream(MainView.getReader().readLine().split(DELIMITER))
-                    .map(skillName -> {
-                        Optional<Skill> skill = allSkills.stream()
-                                .filter(s -> s.getName().equalsIgnoreCase(skillName))
-                                .findFirst();
-                        return skill.orElseGet(() -> skillController.save(new Skill(skillName)));
-                    })
+                    .map(Skill::new)
                     .collect(Collectors.toList());
             System.out.println("Type specialty name");
             String specialtyName = MainView.getReader().readLine();
-            Specialty specialty;
-            Optional<Specialty> specialtyOptional = specialties.stream()
-                    .filter(s -> s.getName().equalsIgnoreCase(specialtyName))
-                    .findAny();
-            specialty = specialtyOptional.orElseGet(() -> specialtyController.save(new Specialty(specialtyName)));
+            Specialty specialty = new Specialty(specialtyName);
             Developer developer = new Developer(firstName,
                     lastName,
                     specialty,

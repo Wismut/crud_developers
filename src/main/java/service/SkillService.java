@@ -5,6 +5,7 @@ import repository.SkillRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SkillService {
     private final SkillRepository skillRepository;
@@ -35,5 +36,15 @@ public class SkillService {
 
     public Optional<Skill> getByName(String name) {
         return skillRepository.getByName(name);
+    }
+
+    public List<Long> saveIfAbsent(List<Skill> skills) {
+        List<Skill> skillsByNames = skillRepository.getAllByNames(skills.stream()
+                .map(Skill::getName)
+                .collect(Collectors.toList()));
+        List<Skill> skillsToSave = skills.stream()
+                .filter(s -> !skillsByNames.contains(s))
+                .collect(Collectors.toList());
+        return skillRepository.saveBatch(skillsToSave);
     }
 }

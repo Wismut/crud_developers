@@ -106,7 +106,7 @@ public class SkillRepositoryImpl implements SkillRepository {
             return skill;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         } finally {
             ConnectionUtil.releaseConnection(connection);
         }
@@ -127,6 +127,58 @@ public class SkillRepositoryImpl implements SkillRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             return Optional.empty();
+        } finally {
+            ConnectionUtil.releaseConnection(connection);
+        }
+    }
+
+    @Override
+    public List<Skill> getAllByNames(List<String> names) {
+        Connection connection = ConnectionUtil.getConnection();
+        List<Skill> skills = new ArrayList<>();
+        String namesForQuery = names.stream()
+                .map(n -> "'" + n + "'")
+                .reduce((a, b) -> a + ',' + b)
+                .map(s -> '(' + s + ')')
+                .orElseThrow(RuntimeException::new);
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
+                SkillRepository.TABLE_NAME +
+                " WHERE " +
+                NAME_COLUMN_NAME +
+                " IN " +
+                namesForQuery)) {
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            return skills;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return skills;
+        } finally {
+            ConnectionUtil.releaseConnection(connection);
+        }
+    }
+
+    @Override
+    public List<Long> saveBatch(List<Skill> skills) {
+        Connection connection = ConnectionUtil.getConnection();
+        List<Long> generatedIds = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " +
+                        SkillRepository.TABLE_NAME +
+                        " VALUES(0, ?)"
+                , Statement.RETURN_GENERATED_KEYS)) {
+            for (Skill skill : skills) {
+                statement.setString(1, skill.getName());
+                statement.addBatch();
+                statement.clearParameters();
+            }
+            statement.executeBatch();
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            while (generatedKeys.next()) {
+                generatedIds.add(generatedKeys.getLong(1));
+            }
+            return generatedIds;
+        } catch (SQLException e) {
+            return generatedIds;
         } finally {
             ConnectionUtil.releaseConnection(connection);
         }

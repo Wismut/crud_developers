@@ -32,4 +32,8 @@ public class SpecialtyService {
     public Optional<Specialty> getById(Long id) {
         return specialtyRepository.getById(id);
     }
+
+    public void saveIfAbsent(Specialty specialty) {
+        specialtyRepository.save(specialty);
+    }
 }

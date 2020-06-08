@@ -2,15 +2,21 @@ package controller;
 
 import model.Developer;
 import service.DeveloperService;
+import service.SkillService;
+import service.SpecialtyService;
 
 import java.util.List;
 import java.util.Optional;
 
 public class DeveloperController {
     private final DeveloperService developerService;
+    private final SkillService skillService;
+    private final SpecialtyService specialtyService;
 
-    public DeveloperController(DeveloperService developerService) {
+    public DeveloperController(DeveloperService developerService, SkillService skillService, SpecialtyService specialtyService) {
         this.developerService = developerService;
+        this.skillService = skillService;
+        this.specialtyService = specialtyService;
     }
 
     public void deleteById(Long id) {
@@ -22,6 +28,8 @@ public class DeveloperController {
     }
 
     public Developer save(Developer developer) {
+        List<Long> skillIds = skillService.saveIfAbsent(developer.getSkills());
+        specialtyService.saveIfAbsent(developer.getSpecialty());
         return developerService.save(developer);
     }
 

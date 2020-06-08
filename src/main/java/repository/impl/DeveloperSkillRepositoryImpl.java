@@ -71,7 +71,6 @@ public class DeveloperSkillRepositoryImpl implements DeveloperSkillRepository {
             statement.setLong(2, skillId);
             return statement.executeQuery().next();
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             ConnectionUtil.releaseConnection(connection);
