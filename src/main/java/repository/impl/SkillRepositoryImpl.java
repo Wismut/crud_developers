@@ -148,7 +148,10 @@ public class SkillRepositoryImpl implements SkillRepository {
                 " IN " +
                 namesForQuery)) {
             ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
+            while (resultSet.next()) {
+                skills.add(new Skill(resultSet.getLong(ID_COLUMN_NAME),
+                        resultSet.getString(NAME_COLUMN_NAME)));
+            }
             return skills;
         } catch (SQLException e) {
             e.printStackTrace();

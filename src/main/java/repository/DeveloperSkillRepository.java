@@ -14,4 +14,6 @@ public interface DeveloperSkillRepository {
     List<DeveloperSkill> getAllBySkillId(Long skillId);
 
     boolean isDeveloperHasSkill(Long developerId, Long skillId);
+
+    DeveloperSkill save(DeveloperSkill developerSkill);
 }

@@ -45,6 +45,10 @@ public class SkillService {
         List<Skill> skillsToSave = skills.stream()
                 .filter(s -> !skillsByNames.contains(s))
                 .collect(Collectors.toList());
-        return skillRepository.saveBatch(skillsToSave);
+        List<Long> savedIds = skillRepository.saveBatch(skillsToSave);
+        savedIds.addAll(skillsByNames.stream()
+                .map(Skill::getId)
+                .collect(Collectors.toList()));
+        return savedIds;
     }
 }

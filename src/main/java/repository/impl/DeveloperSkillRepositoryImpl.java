@@ -76,4 +76,22 @@ public class DeveloperSkillRepositoryImpl implements DeveloperSkillRepository {
             ConnectionUtil.releaseConnection(connection);
         }
     }
+
+    @Override
+    public DeveloperSkill save(DeveloperSkill developerSkill) {
+        Connection connection = ConnectionUtil.getConnection();
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " +
+                DeveloperSkillRepository.TABLE_NAME +
+                " VALUES(?, ?)")) {
+            statement.setLong(1, developerSkill.getDeveloperId());
+            statement.setLong(2, developerSkill.getSkillId());
+            statement.execute();
+            return developerSkill;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            ConnectionUtil.releaseConnection(connection);
+        }
+    }
 }
