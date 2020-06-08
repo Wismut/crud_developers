@@ -72,5 +72,9 @@ public class SkillServiceTest {
 
     @Test
     void saveIfAbsent() {
+        Skill skill = new Skill("xdfvsf");
+        when(skillRepository.save(any(Skill.class))).thenReturn(skill);
+        Skill savedSkill = skillService.save(skill);
+        assertEquals(skill, savedSkill);
     }
 }
