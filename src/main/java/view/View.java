@@ -16,7 +16,7 @@ public interface View {
     String DELETE_COMMAND_LETTER = "d";
     String UPDATE_COMMAND_LETTER = "u";
     String GET_ALL_COMMAND_LETTER = "a";
-    String GET_BY_CONTENT_COMMAND_LETTER = "c";
+    String GET_BY_SPECIALTY = "s";
 
     default Command getCommand() {
         Command command;

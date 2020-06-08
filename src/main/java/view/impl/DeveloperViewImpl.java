@@ -99,7 +99,7 @@ public class DeveloperViewImpl implements DeveloperView {
         }
     }
 
-    private void getAllByContentAndPrint() {
+    private void getAllBySpecialtyAndPrint() {
         String specialityName = null;
         try {
             System.out.println("Type content");
@@ -140,8 +140,8 @@ public class DeveloperViewImpl implements DeveloperView {
             case GET_BY_ID:
                 getOneByIdAndPrint();
                 return;
-            case GET_BY_CONTENT:
-                getAllByContentAndPrint();
+            case GET_BY_SPECIALTY:
+                getAllBySpecialtyAndPrint();
                 return;
             case GET_ALL:
                 getAllAndPrint();
@@ -153,6 +153,6 @@ public class DeveloperViewImpl implements DeveloperView {
 
     @Override
     public void printActionsInfo() {
-        System.out.println("Type " + View.GET_BY_CONTENT_COMMAND_LETTER + " if you want to get all records with some content from the database");
+        System.out.println("Type " + View.GET_BY_SPECIALTY + " if you want to get all records with some specialty from the database");
     }
 }

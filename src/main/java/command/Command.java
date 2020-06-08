@@ -8,7 +8,7 @@ public enum Command {
     GET_BY_ID("g"),
     GET_BY_NAME("n"),
     GET_ALL("a"),
-    GET_BY_CONTENT("c");
+    GET_BY_SPECIALTY("c");
 
     private final String shortCutLetter;
 
