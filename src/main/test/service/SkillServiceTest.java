@@ -2,6 +2,7 @@ package service;
 
 import model.Skill;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,11 +30,7 @@ public class SkillServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @org.junit.jupiter.api.AfterEach
-    void tearDown() {
-    }
-
-    @org.junit.jupiter.api.Test
+    @Test
     void save() {
         Skill skill = new Skill("xdfvsf");
         when(skillRepository.save(any(Skill.class))).thenReturn(skill);
@@ -41,15 +38,15 @@ public class SkillServiceTest {
         assertEquals(skill, savedSkill);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void update() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void deleteBy() {
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getAll() {
         List<Skill> skills = Collections.singletonList(new Skill("dsvs"));
         when(skillRepository.getAll()).thenReturn(skills);
@@ -57,7 +54,7 @@ public class SkillServiceTest {
         assertEquals(skills, allSkills);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getById() {
         Optional<Skill> skill = Optional.of(new Skill(1L, "xdfvsf"));
         when(skillRepository.getById(1L)).thenReturn(skill);
@@ -65,11 +62,15 @@ public class SkillServiceTest {
         assertEquals(skill, foundSkill);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void getByName() {
+        Optional<Skill> skill = Optional.of(new Skill(1L, "xdfvsf"));
+        when(skillRepository.getByName("xdfvsf")).thenReturn(skill);
+        Optional<Skill> foundSkill = skillService.getByName("xdfvsf");
+        assertEquals(skill, foundSkill);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void saveIfAbsent() {
     }
 }
