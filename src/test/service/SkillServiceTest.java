@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SkillServiceTest {
@@ -23,7 +23,7 @@ public class SkillServiceTest {
     SkillRepository skillRepository;
 
     @InjectMocks
-    SkillService skillService;
+    SkillService serviceUnderTest;
 
     @BeforeAll
     void init() {
@@ -32,49 +32,63 @@ public class SkillServiceTest {
 
     @Test
     void save() {
-        Skill skill = new Skill("xdfvsf");
+        Skill skill = buildSkillWithName();
         when(skillRepository.save(any(Skill.class))).thenReturn(skill);
-        Skill savedSkill = skillService.save(skill);
+        Skill savedSkill = serviceUnderTest.save(skill);
         assertEquals(skill, savedSkill);
     }
 
     @Test
     void update() {
+        Skill skill = buildSkillWithName();
+        serviceUnderTest.update(skill);
+        verify(skillRepository, times(1)).update(skill);
     }
 
     @Test
     void deleteBy() {
+        Skill skill = buildSkillWithName();
+        serviceUnderTest.deleteBy(skill.getId());
+        verify(skillRepository, times(1)).deleteBy(skill.getId());
     }
 
     @Test
     void getAll() {
-        List<Skill> skills = Collections.singletonList(new Skill("dsvs"));
+        List<Skill> skills = Collections.singletonList(buildSkillWithName());
         when(skillRepository.getAll()).thenReturn(skills);
-        List<Skill> allSkills = skillService.getAll();
+        List<Skill> allSkills = serviceUnderTest.getAll();
         assertEquals(skills, allSkills);
     }
 
     @Test
     void getById() {
-        Optional<Skill> skill = Optional.of(new Skill(1L, "xdfvsf"));
-        when(skillRepository.getById(1L)).thenReturn(skill);
-        Optional<Skill> foundSkill = skillService.getById(1L);
+        Optional<Skill> skill = Optional.of(buildSkillWithNameAndId());
+        when(skillRepository.getById(skill.get().getId())).thenReturn(skill);
+        Optional<Skill> foundSkill = serviceUnderTest.getById(skill.get().getId());
         assertEquals(skill, foundSkill);
     }
 
     @Test
     void getByName() {
-        Optional<Skill> skill = Optional.of(new Skill(1L, "xdfvsf"));
-        when(skillRepository.getByName("xdfvsf")).thenReturn(skill);
-        Optional<Skill> foundSkill = skillService.getByName("xdfvsf");
+        Optional<Skill> skill = Optional.of(buildSkillWithNameAndId());
+        when(skillRepository.getByName(skill.get().getName())).thenReturn(skill);
+        Optional<Skill> foundSkill = serviceUnderTest.getByName(skill.get().getName());
         assertEquals(skill, foundSkill);
     }
 
     @Test
     void saveIfAbsent() {
-        Skill skill = new Skill("xdfvsf");
+        Skill skill = buildSkillWithName();
         when(skillRepository.save(any(Skill.class))).thenReturn(skill);
-        Skill savedSkill = skillService.save(skill);
+        Skill savedSkill = serviceUnderTest.save(skill);
         assertEquals(skill, savedSkill);
+    }
+
+    private Skill buildSkillWithName() {
+        return new Skill("name_random");
+    }
+
+    private Skill buildSkillWithNameAndId() {
+        return new Skill(23L, "some_name");
     }
 }
