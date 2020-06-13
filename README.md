@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Wismut/crud_developers.svg?branch=master)](https://travis-ci.org/Wismut/crud_developers)
+
 ##Task
 
 Should implement a console CRUD application that interacts with the database and allows to perform all CRUD operations on entities:
