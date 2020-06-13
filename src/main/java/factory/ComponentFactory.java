@@ -1,9 +1,6 @@
 package factory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -11,7 +8,10 @@ import java.util.*;
 
 public class ComponentFactory {
     private static final Map<Class, Object> componentByClass = new HashMap<>();
-    private static final String[] layouts = {"repository\\impl", "service", "controller", "view\\impl"};
+    private static final String[] layouts = {"repository" + File.separatorChar + "impl",
+            "service",
+            "controller",
+            "view" + File.separatorChar + "impl"};
 
     static {
         try {
@@ -61,7 +61,7 @@ public class ComponentFactory {
     private static List<Class> getClasses(ClassLoader cl, String currentPackage) {
         List<Class> classes = new ArrayList<>();
         URL upackage = cl.getResource(currentPackage);
-        String dottedCurrentPackage = currentPackage.replace('\\', '.');
+        String dottedCurrentPackage = currentPackage.replace(File.separatorChar, '.');
         if (upackage != null) {
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader((InputStream) upackage.getContent()));
