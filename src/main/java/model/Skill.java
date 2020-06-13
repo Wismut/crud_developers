@@ -1,10 +1,23 @@
 package model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Skill {
+    @Id
     private Long id;
     private String name;
+
+    @ManyToMany(mappedBy = "skills")
+    private List<Developer> developers;
+
+    public Skill() {
+
+    }
 
     public Skill(Long id, String name) {
         this.id = id;

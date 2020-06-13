@@ -1,14 +1,27 @@
 package model;
 
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
 
+@Entity
 public class Developer {
+    @Id
     private Long id;
     private String firstName;
     private String lastName;
+
+    @ManyToOne
+    @JoinColumn(name = "specialty_id", nullable = false)
     private Specialty specialty;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "developer_skill", joinColumns = @JoinColumn(name = "developer_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private List<Skill> skills;
+
+    public Developer() {
+
+    }
 
     public Developer(Long id, String firstName, String lastName, Specialty specialty, List<Skill> skills) {
         this.id = id;

@@ -1,9 +1,15 @@
 package repository.impl;
 
+import hibernate.HibernateUtil;
 import model.Developer;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import repository.DeveloperRepository;
 import repository.connectionpool.ConnectionUtil;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,22 +38,29 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
 
     @Override
     public List<Developer> getAll() {
-        Connection connection = ConnectionUtil.getConnection();
-        List<Developer> developers = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
-                TABLE_NAME)) {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                developers.add(new Developer(resultSet.getLong(ID_COLUMN_NAME),
-                        resultSet.getString(FIRSTNAME_COLUMN_NAME),
-                        resultSet.getString(LASTNAME_COLUMN_NAME)));
-            }
-            return developers;
-        } catch (SQLException e) {
-            return developers;
-        } finally {
-            ConnectionUtil.releaseConnection(connection);
-        }
+        Session session = HibernateUtil.getSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Developer> criteriaQuery = criteriaBuilder.createQuery(Developer.class);
+        Root<Developer> from = criteriaQuery.from(Developer.class);
+        criteriaQuery.select(from);
+        Query<Developer> query = session.createQuery(criteriaQuery);
+        return query.getResultList();
+//        Connection connection = ConnectionUtil.getConnection();
+//        List<Developer> developers = new ArrayList<>();
+//        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
+//                TABLE_NAME)) {
+//            ResultSet resultSet = statement.executeQuery();
+//            while (resultSet.next()) {
+//                developers.add(new Developer(resultSet.getLong(ID_COLUMN_NAME),
+//                        resultSet.getString(FIRSTNAME_COLUMN_NAME),
+//                        resultSet.getString(LASTNAME_COLUMN_NAME)));
+//            }
+//            return developers;
+//        } catch (SQLException e) {
+//            return developers;
+//        } finally {
+//            ConnectionUtil.releaseConnection(connection);
+//        }
     }
 
     @Override

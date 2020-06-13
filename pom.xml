@@ -27,6 +27,7 @@
         <mysql.connector.version>8.0.20</mysql.connector.version>
         <liquibase.version>3.9.0</liquibase.version>
         <snakeyaml.version>1.26</snakeyaml.version>
+        <hibernate.version>5.4.17.Final</hibernate.version>
     </properties>
 
     <dependencies>
@@ -54,6 +55,11 @@
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>${snakeyaml.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
     </dependencies>
 </project>

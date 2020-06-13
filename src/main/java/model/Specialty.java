@@ -1,9 +1,23 @@
 package model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.List;
+
+@Entity
 public class Specialty {
+    @Id
     private Long id;
     private String name;
     private String description;
+
+    @OneToMany(mappedBy = "specialty")
+    private List<Developer> developers;
+
+    public Specialty() {
+
+    }
 
     public Specialty(Long id, String name, String description) {
         this.id = id;
