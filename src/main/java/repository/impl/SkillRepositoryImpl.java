@@ -1,6 +1,11 @@
 package repository.impl;
 
+import hibernate.HibernateUtil;
 import model.Skill;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import repository.SkillRepository;
 import repository.connectionpool.ConnectionUtil;
 
@@ -134,31 +139,36 @@ public class SkillRepositoryImpl implements SkillRepository {
 
     @Override
     public List<Skill> getAllByNames(List<String> names) {
-        Connection connection = ConnectionUtil.getConnection();
-        List<Skill> skills = new ArrayList<>();
-        String namesForQuery = names.stream()
-                .map(n -> "'" + n + "'")
-                .reduce((a, b) -> a + ',' + b)
-                .map(s -> '(' + s + ')')
-                .orElseThrow(RuntimeException::new);
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
-                SkillRepository.TABLE_NAME +
-                " WHERE " +
-                NAME_COLUMN_NAME +
-                " IN " +
-                namesForQuery)) {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                skills.add(new Skill(resultSet.getLong(ID_COLUMN_NAME),
-                        resultSet.getString(NAME_COLUMN_NAME)));
-            }
-            return skills;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return skills;
-        } finally {
-            ConnectionUtil.releaseConnection(connection);
-        }
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        Criteria criteria = session.createCriteria(Skill.class);
+        criteria.add(Restrictions.in("name", names));
+        return criteria.list();
+//        Connection connection = ConnectionUtil.getConnection();
+//        List<Skill> skills = new ArrayList<>();
+//        String namesForQuery = names.stream()
+//                .map(n -> "'" + n + "'")
+//                .reduce((a, b) -> a + ',' + b)
+//                .map(s -> '(' + s + ')')
+//                .orElseThrow(RuntimeException::new);
+//        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
+//                SkillRepository.TABLE_NAME +
+//                " WHERE " +
+//                NAME_COLUMN_NAME +
+//                " IN " +
+//                namesForQuery)) {
+//            ResultSet resultSet = statement.executeQuery();
+//            while (resultSet.next()) {
+//                skills.add(new Skill(resultSet.getLong(ID_COLUMN_NAME),
+//                        resultSet.getString(NAME_COLUMN_NAME)));
+//            }
+//            return skills;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return skills;
+//        } finally {
+//            ConnectionUtil.releaseConnection(connection);
+//        }
     }
 
     @Override
