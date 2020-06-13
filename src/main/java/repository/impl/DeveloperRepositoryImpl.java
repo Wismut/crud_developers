@@ -22,22 +22,13 @@ import java.util.Optional;
 public class DeveloperRepositoryImpl implements DeveloperRepository {
     @Override
     public Optional<Developer> getById(Long id) {
-        Connection connection = ConnectionUtil.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
-                TABLE_NAME +
-                " WHERE id = ?")) {
-            statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            return Optional.of(new Developer(resultSet.getLong(ID_COLUMN_NAME),
-                    resultSet.getString(FIRSTNAME_COLUMN_NAME),
-                    resultSet.getString(LASTNAME_COLUMN_NAME)));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return Optional.empty();
-        } finally {
-            ConnectionUtil.releaseConnection(connection);
-        }
+        Session session = HibernateUtil.getSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Developer> criteriaQuery = criteriaBuilder.createQuery(Developer.class);
+        Root<Developer> from = criteriaQuery.from(Developer.class);
+        criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("id"), id));
+        Query<Developer> query = session.createQuery(criteriaQuery);
+        return query.uniqueResultOptional();
     }
 
     @Override
