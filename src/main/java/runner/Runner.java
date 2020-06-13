@@ -1,11 +1,10 @@
 package runner;
 
-import liquibase.LiquibaseUtil;
 import view.impl.MainView;
 
 public class Runner {
     public static void main(String[] args) {
-        LiquibaseUtil.updateDB();
+//        LiquibaseUtil.updateDB();
         MainView mainView = new MainView();
         mainView.run();
     }

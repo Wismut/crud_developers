@@ -1,11 +1,17 @@
 package repository.impl;
 
 
+import hibernate.HibernateUtil;
 import model.Specialty;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import repository.SpecialtyRepository;
 import repository.connectionpool.ConnectionUtil;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,24 +57,11 @@ public class SpecialtyRepositoryImpl implements SpecialtyRepository {
 
     @Override
     public Specialty save(Specialty specialty) {
-        Connection connection = ConnectionUtil.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " +
-                        SpecialtyRepository.TABLE_NAME +
-                        " VALUES(0, ?, ?)"
-                , Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, specialty.getName());
-            statement.setString(2, specialty.getDescription());
-            statement.execute();
-            ResultSet generatedKeys = statement.getGeneratedKeys();
-            generatedKeys.next();
-            Long newId = generatedKeys.getLong(1);
-            specialty.setId(newId);
-            return specialty;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            ConnectionUtil.releaseConnection(connection);
-        }
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(specialty);
+        transaction.commit();
+        return null;
     }
 
     @Override

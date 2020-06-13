@@ -3,6 +3,7 @@ package repository.impl;
 import hibernate.HibernateUtil;
 import model.Developer;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import repository.DeveloperRepository;
 import repository.connectionpool.ConnectionUtil;
@@ -10,7 +11,10 @@ import repository.connectionpool.ConnectionUtil;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,45 +49,15 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
         criteriaQuery.select(from);
         Query<Developer> query = session.createQuery(criteriaQuery);
         return query.getResultList();
-//        Connection connection = ConnectionUtil.getConnection();
-//        List<Developer> developers = new ArrayList<>();
-//        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
-//                TABLE_NAME)) {
-//            ResultSet resultSet = statement.executeQuery();
-//            while (resultSet.next()) {
-//                developers.add(new Developer(resultSet.getLong(ID_COLUMN_NAME),
-//                        resultSet.getString(FIRSTNAME_COLUMN_NAME),
-//                        resultSet.getString(LASTNAME_COLUMN_NAME)));
-//            }
-//            return developers;
-//        } catch (SQLException e) {
-//            return developers;
-//        } finally {
-//            ConnectionUtil.releaseConnection(connection);
-//        }
     }
 
     @Override
     public Developer save(Developer developer) {
-        Connection connection = ConnectionUtil.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO " +
-                        DeveloperRepository.TABLE_NAME +
-                        " VALUES(0, ?, ?, ?)"
-                , Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, developer.getFirstName());
-            statement.setString(2, developer.getLastName());
-            statement.setLong(3, developer.getSpecialty().getId());
-            statement.execute();
-            ResultSet generatedKeys = statement.getGeneratedKeys();
-            generatedKeys.next();
-            Long newId = generatedKeys.getLong(1);
-            developer.setId(newId);
-            return developer;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            ConnectionUtil.releaseConnection(connection);
-        }
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(developer);
+        transaction.commit();
+        return null;
     }
 
     @Override
