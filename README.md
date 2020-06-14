@@ -37,6 +37,9 @@ For example: Developer, DeveloperRepository, DeveloperController, DeveloperView,
 ###Directory layout
 
      .
+     ├── dev
+          ├── changelog.yaml             # Liquibase changelog
+          └── db.properties              # DB properties
      ├── src
           ├── main
                ├── java
@@ -69,12 +72,8 @@ https://github.com/Wismut/crud_developers
 
 1. ```git clone https://github.com/Wismut/crud_developers```
 2. ```cd crud_developers```
-3. for Windows 
-```dir /s /B *.java > sources.txt```
-
-   for Linux/MacOS 
-```find -name "*.java" > sources.txt```
-4. ```javac @sources.txt```
+3. ```mvn clean package```
+4. ``````
 
 ###Running
 
