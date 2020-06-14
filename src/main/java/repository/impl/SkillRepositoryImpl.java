@@ -18,30 +18,33 @@ import java.util.stream.Collectors;
 public class SkillRepositoryImpl implements SkillRepository {
     @Override
     public Optional<Skill> getById(Long id) {
-        Session session = HibernateUtil.getSession();
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Skill> criteriaQuery = criteriaBuilder.createQuery(Skill.class);
-        Root<Skill> from = criteriaQuery.from(Skill.class);
-        criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("id"), id));
-        Query<Skill> query = session.createQuery(criteriaQuery);
-        return query.uniqueResultOptional();
+        try (Session session = HibernateUtil.getSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Skill> criteriaQuery = criteriaBuilder.createQuery(Skill.class);
+            Root<Skill> from = criteriaQuery.from(Skill.class);
+            criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("id"), id));
+            Query<Skill> query = session.createQuery(criteriaQuery);
+            return query.uniqueResultOptional();
+        }
     }
 
     @Override
     public List<Skill> getAll() {
-        Session session = HibernateUtil.getSession();
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Skill> criteriaQuery = criteriaBuilder.createQuery(Skill.class);
-        Root<Skill> from = criteriaQuery.from(Skill.class);
-        CriteriaQuery<Skill> findAll = criteriaQuery.select(from);
-        Query<Skill> query = session.createQuery(findAll);
-        return query.getResultList();
+        try (Session session = HibernateUtil.getSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Skill> criteriaQuery = criteriaBuilder.createQuery(Skill.class);
+            Root<Skill> from = criteriaQuery.from(Skill.class);
+            CriteriaQuery<Skill> findAll = criteriaQuery.select(from);
+            Query<Skill> query = session.createQuery(findAll);
+            return query.getResultList();
+        }
     }
 
     @Override
     public Skill save(Skill skill) {
-        Session session = HibernateUtil.getSession();
-        session.save(skill);
+        try (Session session = HibernateUtil.getSession()) {
+            session.save(skill);
+        }
         return skill;
     }
 
@@ -63,8 +66,8 @@ public class SkillRepositoryImpl implements SkillRepository {
             session.beginTransaction();
             session.update(skill);
             session.getTransaction().commit();
+            return skill;
         }
-        return skill;
     }
 
     @Override

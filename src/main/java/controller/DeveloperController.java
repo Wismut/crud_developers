@@ -28,8 +28,6 @@ public class DeveloperController {
     }
 
     public Developer save(Developer developer) {
-        List<Long> skillIds = skillService.saveIfAbsent(developer.getSkills());
-        specialtyService.saveIfAbsent(developer.getSpecialty());
         developerService.save(developer);
         return developer;
     }
