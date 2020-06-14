@@ -9,10 +9,10 @@ import view.SpecialityView;
 import java.util.List;
 import java.util.Optional;
 
-public class SpecialityViewImpl implements SpecialityView {
+public class SpecialtyViewImpl implements SpecialityView {
     private final SpecialtyController specialtyController;
 
-    public SpecialityViewImpl(SpecialtyController specialtyController) {
+    public SpecialtyViewImpl(SpecialtyController specialtyController) {
         this.specialtyController = specialtyController;
     }
 
