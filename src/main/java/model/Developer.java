@@ -49,6 +49,10 @@ public class Developer {
         this(id, firstName, lastName, null, Collections.emptyList());
     }
 
+    public Developer(Long id, String firstName, String lastName, String specialtyName) {
+        this(id, firstName, lastName, new Specialty(specialtyName), Collections.emptyList());
+    }
+
     public Long getId() {
         return id;
     }

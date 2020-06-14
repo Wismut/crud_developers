@@ -102,17 +102,17 @@ public class DeveloperViewImpl implements DeveloperView {
     private void getAllBySpecialtyAndPrint() {
         String specialityName = null;
         try {
-            System.out.println("Type content");
+            System.out.println("Type specialty name");
             specialityName = MainView.getReader().readLine();
             List<Developer> post = developerController.getAllBySpeciality(specialityName);
             if (!post.isEmpty()) {
                 System.out.println(post);
             } else {
-                System.out.println("Developers with speciality '" + specialityName + "' wasn't found");
+                System.out.println("Developers with specialty '" + specialityName + "' wasn't found");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Developers with speciality '" + specialityName + "' wasn't found");
+            System.out.println("Developers with specialty '" + specialityName + "' wasn't found");
         }
     }
 

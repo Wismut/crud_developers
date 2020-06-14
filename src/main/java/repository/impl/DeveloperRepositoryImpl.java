@@ -66,7 +66,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
     public List<Developer> getAllBySpecialty(String specialtyName) {
         Session session = HibernateUtil.getSession();
         Transaction transaction = session.beginTransaction();
-        String sqlQuery = "SELECT new Developer(d.firstName, d.lastName) FROM Developer d JOIN Specialty s ON d.specialty = s.id AND s.name =:specialtyName";
+        String sqlQuery = "SELECT new Developer(d.id, d.firstName, d.lastName, s.name) FROM Developer d JOIN Specialty s ON d.specialty = s.id AND s.name =:specialtyName";
         Query<Developer> query = session.createQuery(sqlQuery, Developer.class);
         query.setParameter("specialtyName", specialtyName);
         List<Developer> developers = query.list();
