@@ -6,16 +6,10 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import repository.DeveloperRepository;
-import repository.connectionpool.ConnectionUtil;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,66 +47,30 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
 
     @Override
     public void deleteBy(Long id) {
-        Connection connection = ConnectionUtil.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement("DELETE FROM " +
-                DeveloperRepository.TABLE_NAME +
-                " WHERE " +
-                ID_COLUMN_NAME +
-                " = ?")) {
-            statement.setLong(1, id);
-            statement.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            ConnectionUtil.releaseConnection(connection);
-        }
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(id);
+        transaction.commit();
     }
 
     @Override
     public Developer update(Developer developer) {
-        Connection connection = ConnectionUtil.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE " +
-                DeveloperRepository.TABLE_NAME +
-                " SET " +
-                FIRSTNAME_COLUMN_NAME +
-                " = ?, " +
-                LASTNAME_COLUMN_NAME +
-                " = ?, " +
-                " = ? WHERE " +
-                ID_COLUMN_NAME +
-                " = ?")) {
-            statement.setString(1, developer.getFirstName());
-            statement.setString(2, developer.getLastName());
-            statement.setLong(3, developer.getId());
-            statement.execute();
-            return developer;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            ConnectionUtil.releaseConnection(connection);
-        }
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(developer);
+        transaction.commit();
+        return null;
     }
 
     @Override
-    public List<Developer> getAllBySpecialty(String specialityName) {
-        Connection connection = ConnectionUtil.getConnection();
-        List<Developer> developers = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " +
-                TABLE_NAME +
-                " WHERE " +
-                SPECIALTYID_COLUMN_NAME +
-                " = ?")) {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                developers.add(new Developer(resultSet.getLong(ID_COLUMN_NAME),
-                        resultSet.getString(FIRSTNAME_COLUMN_NAME),
-                        resultSet.getString(LASTNAME_COLUMN_NAME)));
-            }
-            return developers;
-        } catch (SQLException e) {
-            return developers;
-        } finally {
-            ConnectionUtil.releaseConnection(connection);
-        }
+    public List<Developer> getAllBySpecialty(String specialtyName) {
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        String sqlQuery = "SELECT new Developer(d.firstName, d.lastName) FROM Developer d JOIN Specialty s ON d.specialty = s.id AND s.name =:specialtyName";
+        Query<Developer> query = session.createQuery(sqlQuery, Developer.class);
+        query.setParameter("specialtyName", specialtyName);
+        List<Developer> developers = query.list();
+        transaction.commit();
+        return developers;
     }
 }
