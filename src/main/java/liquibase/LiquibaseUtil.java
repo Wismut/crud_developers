@@ -5,7 +5,7 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.FileSystemResourceAccessor;
-import repository.connectionpool.ConnectionUtil;
+import repository.pool.ConnectionUtil;
 
 import java.sql.Connection;
 

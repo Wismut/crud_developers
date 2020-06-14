@@ -1,4 +1,4 @@
-package repository.connectionpool;
+package repository.pool;
 
 import java.io.IOException;
 import java.nio.file.Files;

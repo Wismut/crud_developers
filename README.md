@@ -9,13 +9,18 @@ Should implement a console CRUD application that interacts with the database and
 * Skill (id, name)
 
  Requirements:
+* All CRUD operations for each entity
 * Stick to the MVC pattern (packages model, repository, service, controller, view)
+* To build the project use Maven
 * To migrate the database use https://www.liquibase.org/
 * The application service layer should be covered with unit tests (junit + mockito).
 * To import libraries use Maven
-* The result of the project should be a separate repository on github, with a description of the task, project and instructions for launching the project locally.
-
- Technologies: Java, MySQL, JDBC, Maven, Liquibase, JUnit, Mockito
+* To interact with the database - Hibernate
+* To configure Hibernate - annotations
+* Database initialization must be implemented using liquibase
+* The result of the task should be a repository on github, using Travis (https://travis-ci.org/) and displaying the build status of the project.
+ 
+ Technologies: Java, MySQL, JDBC, Maven, Liquibase, JUnit, Mockito, Hibernate
  
  Layers:
 
@@ -38,18 +43,22 @@ For example: Developer, DeveloperRepository, DeveloperController, DeveloperView,
                     ├── command          # Actions with database
                     ├── controller       # Controllers layout
                     ├── factory          # DI container
+                    ├── hibernate        # Hibernate utils
+                    ├── liquibase        # Liquibase utils
                     ├── model            # Models layout
                     ├── repository       # Repositories layout
-                         ├── csv         # CSV implementations of repositories
-                         └── io          # IO implementations of repositories
+                         ├── impl        # Implementations of repositories within Hibernate
+                         └── pool        # Connection pool implementation
                     ├── runner           # Class with main method
+                    ├── service          # Service layout
                     └── view             # Views layout
                          └── impl        # Views implementations
           ├── resources                  # Resources
-               └── files                 # Data warehouse
-                    ├── csv              # CSV data warehouses
-                    └── io               # TXT data warehouses
+               ├── hibernate.cfg.xml     # Hibernate configs
+               └── logback.xml           # Log configs
      ├── .gitignore
+     ├── .travis.yml
+     ├── pom.xml
      └── README.md
 
 ###Repository
@@ -69,5 +78,5 @@ https://github.com/Wismut/crud_developers
 
 ###Running
 
-1. ```java -cp src\main\java\ runner.Runner```
+1. ```java -cp src\main\java\runner.Runner```
 2. Follow the instructions in the console
