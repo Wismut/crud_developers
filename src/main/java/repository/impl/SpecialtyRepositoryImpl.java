@@ -2,6 +2,7 @@ package repository.impl;
 
 
 import hibernate.HibernateUtil;
+import liquibase.util.StringUtils;
 import model.Specialty;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -65,7 +66,14 @@ public class SpecialtyRepositoryImpl implements SpecialtyRepository {
     public Specialty update(Specialty specialty) {
         try (Session session = HibernateUtil.getSession()) {
             session.beginTransaction();
-            session.update(specialty);
+            Specialty savedSpecialty = session.get(Specialty.class, specialty.getId());
+            if (StringUtils.isNotEmpty(specialty.getName())) {
+                savedSpecialty.setName(specialty.getName());
+            }
+            if (StringUtils.isNotEmpty(specialty.getDescription())) {
+                savedSpecialty.setDescription(specialty.getDescription());
+            }
+            session.update(savedSpecialty);
             session.getTransaction().commit();
             return specialty;
         }

@@ -4,13 +4,10 @@ package view.impl;
 import command.Command;
 import controller.SpecialtyController;
 import model.Specialty;
-import repository.GenericRepository;
 import view.SpecialityView;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class SpecialityViewImpl implements SpecialityView {
     private final SpecialtyController specialtyController;
@@ -56,6 +53,9 @@ public class SpecialityViewImpl implements SpecialityView {
             String name = MainView.getReader().readLine();
             System.out.println("Type new description");
             String description = MainView.getReader().readLine();
+            if (description.isEmpty()) {
+                description = null;
+            }
             specialtyController.update(new Specialty(Long.parseLong(id),
                     name,
                     description));
