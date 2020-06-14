@@ -43,11 +43,12 @@ public class SpecialtyRepositoryImpl implements SpecialtyRepository {
 
     @Override
     public Specialty save(Specialty specialty) {
-        Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
-        session.persist(specialty);
-        transaction.commit();
-        return specialty;
+        try (Session session = HibernateUtil.getSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.persist(specialty);
+            transaction.commit();
+            return specialty;
+        }
     }
 
     @Override

@@ -44,8 +44,8 @@ public class SkillRepositoryImpl implements SkillRepository {
     public Skill save(Skill skill) {
         try (Session session = HibernateUtil.getSession()) {
             session.save(skill);
+            return skill;
         }
-        return skill;
     }
 
     @Override
@@ -72,26 +72,28 @@ public class SkillRepositoryImpl implements SkillRepository {
 
     @Override
     public Optional<Skill> getByName(String name) {
-        Session session = HibernateUtil.getSession();
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Skill> criteriaQuery = criteriaBuilder.createQuery(Skill.class);
-        Root<Skill> from = criteriaQuery.from(Skill.class);
-        criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("name"), name));
-        Query<Skill> query = session.createQuery(criteriaQuery);
-        return query.uniqueResultOptional();
+        try (Session session = HibernateUtil.getSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Skill> criteriaQuery = criteriaBuilder.createQuery(Skill.class);
+            Root<Skill> from = criteriaQuery.from(Skill.class);
+            criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("name"), name));
+            Query<Skill> query = session.createQuery(criteriaQuery);
+            return query.uniqueResultOptional();
+        }
     }
 
     @Override
     public List<Skill> getAllByNames(List<String> names) {
-        Session session = HibernateUtil.getSession();
-        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Skill> criteriaQuery = criteriaBuilder.createQuery(Skill.class);
-        Root<Skill> from = criteriaQuery.from(Skill.class);
-        Predicate predicate = from.get("name").in(names);
-        CriteriaQuery<Skill> findAll = criteriaQuery.select(from)
-                .where(predicate);
-        Query<Skill> query = session.createQuery(findAll);
-        return query.getResultList();
+        try (Session session = HibernateUtil.getSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Skill> criteriaQuery = criteriaBuilder.createQuery(Skill.class);
+            Root<Skill> from = criteriaQuery.from(Skill.class);
+            Predicate predicate = from.get("name").in(names);
+            CriteriaQuery<Skill> findAll = criteriaQuery.select(from)
+                    .where(predicate);
+            Query<Skill> query = session.createQuery(findAll);
+            return query.getResultList();
+        }
     }
 
     @Override
