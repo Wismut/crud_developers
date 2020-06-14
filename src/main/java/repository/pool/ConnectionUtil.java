@@ -1,26 +1,21 @@
 package repository.pool;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import org.hibernate.cfg.Configuration;
+
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Properties;
 
 public class ConnectionUtil {
     private static final ConnectionPool connectionPool;
 
     static {
         try {
-            Map<String, String> properties = Files.lines(Paths.get("dev/db.properties"))
-                    .filter(l -> !l.trim().startsWith("#"))
-                    .collect(Collectors.toMap(l -> l.substring(0, l.indexOf('=')),
-                            l -> l.substring(l.indexOf('=') + 1)));
-            connectionPool = BasicConnectionPool.create(properties.get("url"),
-                    properties.get("username"),
-                    properties.get("password"));
-        } catch (IOException | SQLException e) {
+            Properties properties = new Configuration().configure().getProperties();
+            connectionPool = BasicConnectionPool.create(properties.getProperty("hibernate.connection.url"),
+                    properties.getProperty("hibernate.connection.username"),
+                    properties.getProperty("hibernate.connection.password"));
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

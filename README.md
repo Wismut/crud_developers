@@ -37,9 +37,6 @@ For example: Developer, DeveloperRepository, DeveloperController, DeveloperView,
 ###Directory layout
 
      .
-     ├── dev
-          ├── changelog.yaml             # Liquibase changelog
-          └── db.properties              # DB properties
      ├── src
           ├── main
                ├── java
@@ -56,7 +53,8 @@ For example: Developer, DeveloperRepository, DeveloperController, DeveloperView,
                     ├── service          # Service layout
                     └── view             # Views layout
                          └── impl        # Views implementations
-          ├── resources                  # Resources
+          └── resources                  # Resources
+               ├── changelog.yaml        # Liquibase changelog
                ├── hibernate.cfg.xml     # Hibernate configs
                └── logback.xml           # Log configs
      ├── .gitignore
@@ -68,14 +66,18 @@ For example: Developer, DeveloperRepository, DeveloperController, DeveloperView,
 
 https://github.com/Wismut/crud_developers
 
-###Compiling
+###Requirements
+
+* Installed Java 8
+* Installed and running MySQL Server 8
+
+###Building
 
 1. ```git clone https://github.com/Wismut/crud_developers```
 2. ```cd crud_developers```
 3. ```mvn clean package```
-4. ``````
 
 ###Running
 
-1. ```java -cp src\main\java\runner.Runner```
+1. ```java -jar target\crud.developers-1.0-SNAPSHOT-jar-with-dependencies.jar```
 2. Follow the instructions in the console
