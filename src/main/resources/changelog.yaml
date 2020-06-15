@@ -108,3 +108,23 @@ databaseChangeLog:
             constraintName: fk_developers_specialties
             referencedColumnNames: id
             referencedTableName: specialties
+  - changeSet:
+      id: developer-skill-table-7
+      author: root
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: developer_id
+            baseTableName: developer_skill
+            constraintName: fk_developers_developer_skill
+            referencedColumnNames: id
+            referencedTableName: developers
+  - changeSet:
+      id: developer-skill-table-8
+      author: root
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: skill_id
+            baseTableName: developer_skill
+            constraintName: fk_skills_developer_skill
+            referencedColumnNames: id
+            referencedTableName: skills
