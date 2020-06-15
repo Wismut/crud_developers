@@ -5,7 +5,6 @@ import hibernate.HibernateUtil;
 import liquibase.util.StringUtils;
 import model.Specialty;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import repository.SpecialtyRepository;
 
@@ -44,9 +43,7 @@ public class SpecialtyRepositoryImpl implements SpecialtyRepository {
     @Override
     public Specialty save(Specialty specialty) {
         try (Session session = HibernateUtil.getSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.persist(specialty);
-            transaction.commit();
+            session.save(specialty);
             return specialty;
         }
     }
