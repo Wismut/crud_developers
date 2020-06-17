@@ -16,7 +16,7 @@ public class ComponentFactory {
     static {
         try {
             for (String layout : layouts) {
-                createAndPutComponentsFrom(getClasses(ComponentFactory.class.getClassLoader(), layout));
+                createAndPutComponentsFrom(getWebClasses(ComponentFactory.class.getClassLoader(), layout));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,6 +72,25 @@ public class ComponentFactory {
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return classes;
+    }
+
+    private static List<Class> getWebClasses(ClassLoader cl, String currentPackage) {
+        List<Class> classes = new ArrayList<>();
+        URL upackage = cl.getResource(currentPackage);
+        String dottedCurrentPackage = currentPackage.replace(File.separatorChar, '.');
+        if (upackage != null) {
+            try {
+                String[] fileNames = new File(upackage.getPath()).list();
+                for (String fileName : fileNames) {
+                    if (fileName.endsWith(".class") && !fileName.contains("$")) {
+                        classes.add(Class.forName(dottedCurrentPackage + "." + fileName.substring(0, fileName.lastIndexOf('.'))));
+                    }
+                }
+            } catch (NullPointerException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }

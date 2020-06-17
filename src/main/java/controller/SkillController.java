@@ -2,6 +2,7 @@ package controller;
 
 import factory.ComponentFactory;
 import model.Skill;
+import org.json.JSONObject;
 import service.SkillService;
 
 import javax.servlet.ServletException;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,12 +29,18 @@ public class SkillController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("doGet");
-        resp.setContentType("text/html");
-
+        resp.setContentType("application/json");
+        PrintWriter writer = resp.getWriter();
         switch (req.getParameter("action")) {
             case "save":
-                save(new Skill(req.getParameter("name")));
+                Skill probablySavedSkill = save(new Skill(req.getParameter("name")));
+                if (probablySavedSkill.getId() != null) {
+                    writer.println(new JSONObject().append("Result", "Skill with id = " +
+                            probablySavedSkill.getId() +
+                            "was saved"));
+                } else {
+                    writer.println(new JSONObject().append("Result", "Skill was not saved"));
+                }
                 break;
             case "update":
                 update(new Skill(Long.parseLong(req.getParameter("id")),
@@ -47,21 +53,6 @@ public class SkillController extends HttpServlet {
                 getById(Long.parseLong(req.getParameter("id")));
                 break;
         }
-
-        String docType = "<!DOCTYPE html>";
-        String title = "Date and Time Demo";
-        Date currentDate = new Date();
-
-        PrintWriter writer = resp.getWriter();
-
-        writer.println(docType + "<html>" +
-                "<head>" +
-                "<title>" + title + "</title>" +
-                "</head>" +
-                "<body>" +
-                currentDate.toString() +
-                "</body>" +
-                "</html>");
     }
 
     @Override
