@@ -33,60 +33,54 @@ public class SkillController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        StringBuilder result = new StringBuilder();
-        JSONObject jsonObject = new JSONObject();
         String id = req.getParameter("id");
         if (StringUtils.isNotBlank(id)) {
             Optional<Skill> skill = getById(Long.parseLong(id));
             if (skill.isPresent()) {
-                result.append(skill.get());
+                objectMapper.writeValue(resp.getWriter(), skill.get());
             } else {
-                result.append("Skill with id = ").append(id).append(" was not found");
+                objectMapper.writeValue(resp.getWriter(), "Skill with id = " + id + " was not found");
             }
         } else {
             List<Skill> skills = getAll();
             if (skills.isEmpty()) {
-                result.append("Skills list is empty");
+                objectMapper.writeValue(resp.getWriter(), "Skills list is empty");
             } else {
                 objectMapper.writeValue(resp.getWriter(), skills);
-//                System.out.println(s);
-//                JSONArray jsonArray = new JSONArray();
-//                skills.forEach(jsonArray::put);
-//                jsonObject.put("Result", jsonArray);
             }
-        }
-        try (PrintWriter writer = resp.getWriter()) {
-            writer.write(jsonObject.toString());
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        String result = null;
         String name = req.getParameter("name");
         if (StringUtils.isBlank(name)) {
-            result = "Necessary parameter 'name' is absent";
+            objectMapper.writeValue(resp.getWriter(), "Necessary parameter 'name' is absent");
         } else {
             Skill probablySavedSkill = save(new Skill(name));
             if (probablySavedSkill.getId() != null) {
-                result = "Skill with id = " +
+                objectMapper.writeValue(resp.getWriter(), "Skill with id = " +
                         probablySavedSkill.getId() +
-                        " was saved";
+                        " was saved");
             } else {
-                result = "Skill was not saved";
+                objectMapper.writeValue(resp.getWriter(), "Skill was not saved");
             }
         }
-        PrintWriter writer = resp.getWriter();
-        JSONObject jsonObject = new JSONObject(result);
-        writer.write(jsonObject.toString());
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if ("update".equalsIgnoreCase(req.getParameter("action"))) {
-            Skill updatedSkill = update(new Skill(Long.parseLong(req.getParameter("id")),
-                    req.getParameter("name")));
+        String id = req.getParameter("id");
+        String name = req.getParameter("name");
+        if (StringUtils.isBlank(id)) {
+            objectMapper.writeValue(resp.getWriter(), "Necessary parameter 'id' is absent");
+        } else if (StringUtils.isBlank(name)) {
+            objectMapper.writeValue(resp.getWriter(), "Necessary parameter 'name' is absent");
+        } else {
+            Skill updatedSkill = update(new Skill(Long.parseLong(id),
+                    name));
+            objectMapper.writeValue(resp.getWriter(), "Skill was updated");
         }
     }
 
