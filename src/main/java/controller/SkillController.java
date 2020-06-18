@@ -3,6 +3,7 @@ package controller;
 import factory.ComponentFactory;
 import model.Skill;
 import org.json.JSONObject;
+import org.junit.platform.commons.util.StringUtils;
 import service.SkillService;
 
 import javax.servlet.ServletException;
@@ -30,18 +31,22 @@ public class SkillController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        String result = null;
-        switch (req.getParameter("action")) {
-            case "getById":
-                Optional<Skill> skill = getById(Long.parseLong(req.getParameter("id")));
-                if (skill.isPresent()) {
-                    result = skill.toString();
-                } else {
-                    result = "Skill with id = " +
-                            req.getParameter("id") +
-                    " was not found";
-                }
-                break;
+        StringBuilder result = new StringBuilder();
+        String id = req.getParameter("id");
+        if (StringUtils.isNotBlank(id)) {
+            Optional<Skill> skill = getById(Long.parseLong(id));
+            if (skill.isPresent()) {
+                result.append(skill);
+            } else {
+                result.append("Skill with id = ").append(id).append(" was not found");
+            }
+        } else {
+            List<Skill> skills = getAll();
+            if (skills.isEmpty()) {
+                result.append("Skills list is empty");
+            } else {
+                skills.forEach(result::append);
+            }
         }
         PrintWriter writer = resp.getWriter();
         JSONObject jsonObject = new JSONObject(result);
@@ -79,9 +84,20 @@ public class SkillController extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if ("delete".equalsIgnoreCase(req.getParameter("action"))) {
-            deleteById(Long.parseLong(req.getParameter("id")));
+        resp.setContentType("application/json");
+        String result = null;
+        String id = req.getParameter("id");
+        if (StringUtils.isBlank(id)) {
+            result = "Necessary parameter 'id' is absent";
+        } else {
+            deleteById(Long.parseLong(id));
+            result = "Skill with id = " +
+                    id +
+                    " was deleted";
         }
+        PrintWriter writer = resp.getWriter();
+        JSONObject jsonObject = new JSONObject(result);
+        writer.write(jsonObject.toString());
     }
 
     public void deleteById(Long id) {
