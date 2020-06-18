@@ -1,5 +1,6 @@
 package controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import factory.ComponentFactory;
 import model.Skill;
 import org.json.JSONObject;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @WebServlet(name = "SkillController", urlPatterns = "/skills")
 public class SkillController extends HttpServlet {
     private final SkillService skillService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public SkillController(SkillService skillService) {
         this.skillService = skillService;
@@ -32,11 +34,12 @@ public class SkillController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         StringBuilder result = new StringBuilder();
+        JSONObject jsonObject = new JSONObject();
         String id = req.getParameter("id");
         if (StringUtils.isNotBlank(id)) {
             Optional<Skill> skill = getById(Long.parseLong(id));
             if (skill.isPresent()) {
-                result.append(skill);
+                result.append(skill.get());
             } else {
                 result.append("Skill with id = ").append(id).append(" was not found");
             }
@@ -45,29 +48,34 @@ public class SkillController extends HttpServlet {
             if (skills.isEmpty()) {
                 result.append("Skills list is empty");
             } else {
-                skills.forEach(result::append);
+                objectMapper.writeValue(resp.getWriter(), skills);
+//                System.out.println(s);
+//                JSONArray jsonArray = new JSONArray();
+//                skills.forEach(jsonArray::put);
+//                jsonObject.put("Result", jsonArray);
             }
         }
-        PrintWriter writer = resp.getWriter();
-        JSONObject jsonObject = new JSONObject(result);
-        writer.write(jsonObject.toString());
+        try (PrintWriter writer = resp.getWriter()) {
+            writer.write(jsonObject.toString());
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String result = null;
-        switch (req.getParameter("action")) {
-            case "save":
-                Skill probablySavedSkill = save(new Skill(req.getParameter("name")));
-                if (probablySavedSkill.getId() != null) {
-                    result = "Skill with id = " +
-                            probablySavedSkill.getId() +
-                            " was saved";
-                } else {
-                    result = "Skill was not saved";
-                }
-                break;
+        String name = req.getParameter("name");
+        if (StringUtils.isBlank(name)) {
+            result = "Necessary parameter 'name' is absent";
+        } else {
+            Skill probablySavedSkill = save(new Skill(name));
+            if (probablySavedSkill.getId() != null) {
+                result = "Skill with id = " +
+                        probablySavedSkill.getId() +
+                        " was saved";
+            } else {
+                result = "Skill was not saved";
+            }
         }
         PrintWriter writer = resp.getWriter();
         JSONObject jsonObject = new JSONObject(result);
