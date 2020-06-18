@@ -30,34 +30,58 @@ public class SkillController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        PrintWriter writer = resp.getWriter();
+        String result = null;
         switch (req.getParameter("action")) {
-            case "save":
-                Skill probablySavedSkill = save(new Skill(req.getParameter("name")));
-                if (probablySavedSkill.getId() != null) {
-                    writer.println(new JSONObject().append("Result", "Skill with id = " +
-                            probablySavedSkill.getId() +
-                            "was saved"));
+            case "getById":
+                Optional<Skill> skill = getById(Long.parseLong(req.getParameter("id")));
+                if (skill.isPresent()) {
+                    result = skill.toString();
                 } else {
-                    writer.println(new JSONObject().append("Result", "Skill was not saved"));
+                    result = "Skill with id = " +
+                            req.getParameter("id") +
+                    " was not found";
                 }
                 break;
-            case "update":
-                update(new Skill(Long.parseLong(req.getParameter("id")),
-                        req.getParameter("name")));
-                break;
-            case "delete":
-                deleteById(Long.parseLong(req.getParameter("id")));
-                break;
-            case "getById":
-                getById(Long.parseLong(req.getParameter("id")));
-                break;
         }
+        PrintWriter writer = resp.getWriter();
+        JSONObject jsonObject = new JSONObject(result);
+        writer.write(jsonObject.toString());
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("doPost");
+        resp.setContentType("application/json");
+        String result = null;
+        switch (req.getParameter("action")) {
+            case "save":
+                Skill probablySavedSkill = save(new Skill(req.getParameter("name")));
+                if (probablySavedSkill.getId() != null) {
+                    result = "Skill with id = " +
+                            probablySavedSkill.getId() +
+                            " was saved";
+                } else {
+                    result = "Skill was not saved";
+                }
+                break;
+        }
+        PrintWriter writer = resp.getWriter();
+        JSONObject jsonObject = new JSONObject(result);
+        writer.write(jsonObject.toString());
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if ("update".equalsIgnoreCase(req.getParameter("action"))) {
+            Skill updatedSkill = update(new Skill(Long.parseLong(req.getParameter("id")),
+                    req.getParameter("name")));
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if ("delete".equalsIgnoreCase(req.getParameter("action"))) {
+            deleteById(Long.parseLong(req.getParameter("id")));
+        }
     }
 
     public void deleteById(Long id) {

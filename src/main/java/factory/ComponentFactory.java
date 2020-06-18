@@ -8,10 +8,10 @@ import java.util.*;
 
 public class ComponentFactory {
     private static final Map<Class, Object> componentByClass = new HashMap<>();
-    private static final String[] layouts = {"repository" + File.separatorChar + "impl",
+    private static final String[] layouts = {"repository" + "/" + "impl",
             "service",
             "controller",
-            "view" + File.separatorChar + "impl"};
+            "view" + "/" + "impl"};
 
     static {
         try {
@@ -61,7 +61,7 @@ public class ComponentFactory {
     private static List<Class> getClasses(ClassLoader cl, String currentPackage) {
         List<Class> classes = new ArrayList<>();
         URL upackage = cl.getResource(currentPackage);
-        String dottedCurrentPackage = currentPackage.replace(File.separatorChar, '.');
+        String dottedCurrentPackage = currentPackage.replace('/', '.');
         if (upackage != null) {
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader((InputStream) upackage.getContent()));
@@ -81,7 +81,7 @@ public class ComponentFactory {
     private static List<Class> getWebClasses(ClassLoader cl, String currentPackage) {
         List<Class> classes = new ArrayList<>();
         URL upackage = cl.getResource(currentPackage);
-        String dottedCurrentPackage = currentPackage.replace(File.separatorChar, '.');
+        String dottedCurrentPackage = currentPackage.replace('/', '.');
         if (upackage != null) {
             try {
                 String[] fileNames = new File(upackage.getPath()).list();
