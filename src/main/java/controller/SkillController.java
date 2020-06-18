@@ -3,7 +3,6 @@ package controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import factory.ComponentFactory;
 import model.Skill;
-import org.json.JSONObject;
 import org.junit.platform.commons.util.StringUtils;
 import service.SkillService;
 
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,12 +32,20 @@ public class SkillController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = req.getParameter("id");
+        String name = req.getParameter("name");
         if (StringUtils.isNotBlank(id)) {
             Optional<Skill> skill = getById(Long.parseLong(id));
             if (skill.isPresent()) {
                 objectMapper.writeValue(resp.getWriter(), skill.get());
             } else {
                 objectMapper.writeValue(resp.getWriter(), "Skill with id = " + id + " was not found");
+            }
+        } else if (StringUtils.isNotBlank(name)) {
+            Optional<Skill> skill = getByName(name);
+            if (skill.isPresent()) {
+                objectMapper.writeValue(resp.getWriter(), skill.get());
+            } else {
+                objectMapper.writeValue(resp.getWriter(), "Skill with name = " + name + " was not found");
             }
         } else {
             List<Skill> skills = getAll();
@@ -80,26 +86,22 @@ public class SkillController extends HttpServlet {
         } else {
             Skill updatedSkill = update(new Skill(Long.parseLong(id),
                     name));
-            objectMapper.writeValue(resp.getWriter(), "Skill was updated");
+            objectMapper.writeValue(resp.getWriter(), "Skill was updated: " + updatedSkill);
         }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        String result = null;
         String id = req.getParameter("id");
         if (StringUtils.isBlank(id)) {
-            result = "Necessary parameter 'id' is absent";
+            objectMapper.writeValue(resp.getWriter(), "Necessary parameter 'id' is absent");
         } else {
             deleteById(Long.parseLong(id));
-            result = "Skill with id = " +
+            objectMapper.writeValue(resp.getWriter(), "Skill with id = " +
                     id +
-                    " was deleted";
+                    " was deleted");
         }
-        PrintWriter writer = resp.getWriter();
-        JSONObject jsonObject = new JSONObject(result);
-        writer.write(jsonObject.toString());
     }
 
     public void deleteById(Long id) {
