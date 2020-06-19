@@ -6,6 +6,7 @@ import model.Skill;
 import org.junit.platform.commons.util.StringUtils;
 import response.ResponseEntity;
 import service.SkillService;
+import util.ControllerUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet(name = "SkillController", urlPatterns = "/skills")
+@WebServlet(name = "SkillController", urlPatterns = "/skills/*")
 public class SkillController extends HttpServlet {
     private final SkillService skillService;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -32,7 +33,7 @@ public class SkillController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        String id = req.getParameter("id");
+        String id = ControllerUtil.getPathVariableFrom(req);
         String name = req.getParameter("name");
         if (StringUtils.isNotBlank(id)) {
             Optional<Skill> skill = getById(Long.parseLong(id));
@@ -104,9 +105,10 @@ public class SkillController extends HttpServlet {
             objectMapper.writeValue(resp.getWriter(), responseEntity);
         } else {
             deleteById(Long.parseLong(id));
-            objectMapper.writeValue(resp.getWriter(), "Skill with id = " +
-                    id +
-                    " was deleted");
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+//            objectMapper.writeValue(resp.getWriter(), "Skill with id = " +
+//                    id +
+//                    " was deleted");
         }
     }
 

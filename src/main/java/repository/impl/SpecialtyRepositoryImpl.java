@@ -1,12 +1,12 @@
 package repository.impl;
 
 
-import hibernate.HibernateUtil;
 import liquibase.util.StringUtils;
 import model.Specialty;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import repository.SpecialtyRepository;
+import util.HibernateUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;

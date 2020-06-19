@@ -1,12 +1,12 @@
 package repository.impl;
 
-import hibernate.HibernateUtil;
 import liquibase.util.StringUtils;
 import model.Developer;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import repository.DeveloperRepository;
+import util.HibernateUtil;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

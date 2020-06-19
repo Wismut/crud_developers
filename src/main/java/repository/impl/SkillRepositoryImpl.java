@@ -1,10 +1,10 @@
 package repository.impl;
 
-import hibernate.HibernateUtil;
 import model.Skill;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import repository.SkillRepository;
+import util.HibernateUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
