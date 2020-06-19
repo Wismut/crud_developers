@@ -1,12 +1,14 @@
 package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import factory.ComponentFactory;
 import model.Skill;
 import org.junit.platform.commons.util.StringUtils;
 import response.ResponseEntity;
 import service.SkillService;
 import util.ControllerUtil;
+import util.ExceptionHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet(urlPatterns = "/skills/*")
+@WebServlet(urlPatterns = "/api/v1/skills/*")
 public class SkillController extends HttpServlet {
     private final SkillService skillService;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -62,7 +64,14 @@ public class SkillController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        Skill skillFromRequest = objectMapper.readValue(req.getReader(), Skill.class);
+        Skill skillFromRequest;
+        try {
+            skillFromRequest = objectMapper.readValue(req.getReader(), Skill.class);
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            objectMapper.writeValue(resp.getWriter(), ExceptionHandler.handle((UnrecognizedPropertyException) e));
+            return;
+        }
         if (StringUtils.isBlank(skillFromRequest.getName())) {
             objectMapper.writeValue(resp.getWriter(), "Necessary parameter 'name' is absent");
         } else {

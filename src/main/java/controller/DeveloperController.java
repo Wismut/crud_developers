@@ -5,9 +5,11 @@ import service.DeveloperService;
 import service.SkillService;
 import service.SpecialtyService;
 
+import javax.servlet.annotation.WebServlet;
 import java.util.List;
 import java.util.Optional;
 
+@WebServlet(urlPatterns = "/api/v1/developers/*")
 public class DeveloperController {
     private final DeveloperService developerService;
     private final SkillService skillService;
