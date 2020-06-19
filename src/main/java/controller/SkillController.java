@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import factory.ComponentFactory;
 import model.Skill;
 import org.junit.platform.commons.util.StringUtils;
+import response.ResponseEntity;
 import service.SkillService;
 
 import javax.servlet.ServletException;
@@ -77,6 +78,7 @@ public class SkillController extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
         String id = req.getParameter("id");
         String name = req.getParameter("name");
         if (StringUtils.isBlank(id)) {
@@ -95,7 +97,11 @@ public class SkillController extends HttpServlet {
         resp.setContentType("application/json");
         String id = req.getParameter("id");
         if (StringUtils.isBlank(id)) {
-            objectMapper.writeValue(resp.getWriter(), "Necessary parameter 'id' is absent");
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ResponseEntity<String> responseEntity = new ResponseEntity<>("Bad request",
+                    resp.getStatus(),
+                    "Necessary parameter 'id' is absent");
+            objectMapper.writeValue(resp.getWriter(), responseEntity);
         } else {
             deleteById(Long.parseLong(id));
             objectMapper.writeValue(resp.getWriter(), "Skill with id = " +
