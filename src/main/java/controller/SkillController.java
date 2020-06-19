@@ -94,7 +94,14 @@ public class SkillController extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = ControllerUtil.getPathVariableFrom(req);
-        Skill skillFromRequest = objectMapper.readValue(req.getReader(), Skill.class);
+        Skill skillFromRequest;
+        try {
+            skillFromRequest = objectMapper.readValue(req.getReader(), Skill.class);
+        } catch (UnrecognizedPropertyException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            objectMapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
+            return;
+        }
         if (StringUtils.isBlank(id)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             objectMapper.writeValue(resp.getWriter(), "Necessary parameter 'id' is absent");
