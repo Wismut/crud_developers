@@ -62,16 +62,18 @@ public class SkillController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        String name = req.getParameter("name");
-        if (StringUtils.isBlank(name)) {
+        Skill skillFromRequest = objectMapper.readValue(req.getReader(), Skill.class);
+        if (StringUtils.isBlank(skillFromRequest.getName())) {
             objectMapper.writeValue(resp.getWriter(), "Necessary parameter 'name' is absent");
         } else {
-            Skill probablySavedSkill = save(new Skill(name));
+            Skill probablySavedSkill = save(skillFromRequest);
             if (probablySavedSkill.getId() != null) {
+                resp.setStatus(HttpServletResponse.SC_CREATED);
                 objectMapper.writeValue(resp.getWriter(), "Skill with id = " +
                         probablySavedSkill.getId() +
                         " was saved");
             } else {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 objectMapper.writeValue(resp.getWriter(), "Skill was not saved");
             }
         }
