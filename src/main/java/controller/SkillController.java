@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet(name = "SkillController", urlPatterns = "/skills/*")
+@WebServlet(urlPatterns = "/skills/*")
 public class SkillController extends HttpServlet {
     private final SkillService skillService;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -83,14 +83,17 @@ public class SkillController extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = req.getParameter("id");
-        String name = req.getParameter("name");
+        Skill skillFromRequest = objectMapper.readValue(req.getReader(), Skill.class);
         if (StringUtils.isBlank(id)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             objectMapper.writeValue(resp.getWriter(), "Necessary parameter 'id' is absent");
-        } else if (StringUtils.isBlank(name)) {
+        } else if (StringUtils.isBlank(skillFromRequest.getName())) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             objectMapper.writeValue(resp.getWriter(), "Necessary parameter 'name' is absent");
         } else {
+            resp.setStatus(HttpServletResponse.SC_OK);
             Skill updatedSkill = update(new Skill(Long.parseLong(id),
-                    name));
+                    skillFromRequest.getName()));
             objectMapper.writeValue(resp.getWriter(), "Skill was updated: " + updatedSkill);
         }
     }
@@ -108,9 +111,6 @@ public class SkillController extends HttpServlet {
         } else {
             deleteById(Long.parseLong(id));
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-//            objectMapper.writeValue(resp.getWriter(), "Skill with id = " +
-//                    id +
-//                    " was deleted");
         }
     }
 
