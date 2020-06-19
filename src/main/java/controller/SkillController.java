@@ -59,6 +59,7 @@ public class SkillController extends HttpServlet {
                 objectMapper.writeValue(resp.getWriter(), skills);
             }
         }
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override
@@ -67,12 +68,13 @@ public class SkillController extends HttpServlet {
         Skill skillFromRequest;
         try {
             skillFromRequest = objectMapper.readValue(req.getReader(), Skill.class);
-        } catch (IOException e) {
+        } catch (UnrecognizedPropertyException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            objectMapper.writeValue(resp.getWriter(), ExceptionHandler.handle((UnrecognizedPropertyException) e));
+            objectMapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
             return;
         }
         if (StringUtils.isBlank(skillFromRequest.getName())) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             objectMapper.writeValue(resp.getWriter(), "Necessary parameter 'name' is absent");
         } else {
             Skill probablySavedSkill = save(skillFromRequest);
@@ -91,7 +93,7 @@ public class SkillController extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        String id = req.getParameter("id");
+        String id = ControllerUtil.getPathVariableFrom(req);
         Skill skillFromRequest = objectMapper.readValue(req.getReader(), Skill.class);
         if (StringUtils.isBlank(id)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -110,7 +112,7 @@ public class SkillController extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        String id = req.getParameter("id");
+        String id = ControllerUtil.getPathVariableFrom(req);
         if (StringUtils.isBlank(id)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             ResponseEntity<String> responseEntity = new ResponseEntity<>("Bad request",
