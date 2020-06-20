@@ -3,9 +3,7 @@ package controller;
 import constant.Constant;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -96,5 +94,51 @@ class SkillControllerTest {
 
         // Then
         assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void givenRequestWithIdWhenRequestIsExecutedThenStatusNoContent()
+            throws IOException {
+        // Given
+        int id = 32454;
+        HttpDelete request = new HttpDelete(SKILL_API_URL + id);
+
+        // When
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
+        // Then
+        assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void givenRequestWithoutIdWhenRequestIsExecutedThenStatusNoContent()
+            throws IOException {
+        // Given
+        HttpDelete request = new HttpDelete(SKILL_API_URL);
+
+        // When
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
+        // Then
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void givenRequestWithNewFieldsForUpdateWhenRequestIsExecutedThenStatusOk()
+            throws IOException {
+        // Given
+        int id = 1;
+        String requestBody = "{\"name\":\"dfhrgdrh8\"}";
+        HttpPut request = new HttpPut(SKILL_API_URL + id);
+        StringEntity entity = new StringEntity(requestBody);
+        request.setEntity(entity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+
+        // When
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
+        // Then
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 }

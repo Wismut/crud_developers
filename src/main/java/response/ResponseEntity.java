@@ -1,30 +1,20 @@
 package response;
 
 public class ResponseEntity<T> {
-    private String statusMessage;
-    private Integer statusCode;
+    private String message;
     private T data;
 
-    public ResponseEntity(String statusMessage, Integer statusCode, T data) {
-        this.statusMessage = statusMessage;
-        this.statusCode = statusCode;
+    public ResponseEntity(String message, T data) {
+        this.message = message;
         this.data = data;
     }
 
-    public String getStatusMessage() {
-        return statusMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setStatusMessage(String statusMessage) {
-        this.statusMessage = statusMessage;
-    }
-
-    public Integer getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public T getData() {

@@ -39,19 +39,22 @@ public class SpecialtyController extends HttpServlet {
         if (StringUtils.isNotBlank(id)) {
             Optional<Specialty> specialty = getById(Long.parseLong(id));
             if (specialty.isPresent()) {
+                resp.setStatus(HttpServletResponse.SC_OK);
                 mapper.writeValue(resp.getWriter(), specialty.get());
             } else {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 mapper.writeValue(resp.getWriter(), "Specialty with id = " + id + " was not found");
             }
         } else {
             List<Specialty> specialties = getAll();
             if (specialties.isEmpty()) {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 mapper.writeValue(resp.getWriter(), "Specialties list is empty");
             } else {
+                resp.setStatus(HttpServletResponse.SC_OK);
                 mapper.writeValue(resp.getWriter(), specialties);
             }
         }
-        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override
@@ -120,7 +123,6 @@ public class SpecialtyController extends HttpServlet {
         if (StringUtils.isBlank(id)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             ResponseEntity<String> responseEntity = new ResponseEntity<>("Bad request",
-                    resp.getStatus(),
                     "Necessary parameter 'id' is absent");
             mapper.writeValue(resp.getWriter(), responseEntity);
         } else {

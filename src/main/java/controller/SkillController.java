@@ -140,7 +140,6 @@ public class SkillController extends HttpServlet {
         if (StringUtils.isBlank(id)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             ResponseEntity<String> responseEntity = new ResponseEntity<>("Bad request",
-                    resp.getStatus(),
                     "Necessary parameter 'id' is absent");
             objectMapper.writeValue(resp.getWriter(), responseEntity);
         } else {
