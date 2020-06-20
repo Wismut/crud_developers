@@ -85,6 +85,10 @@ public class SkillController extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             objectMapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
             return;
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            objectMapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
+            return;
         }
         if (StringUtils.isBlank(skillFromRequest.getName())) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
