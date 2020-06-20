@@ -41,25 +41,30 @@ public class SkillController extends HttpServlet {
             Optional<Skill> skill = getById(Long.parseLong(id));
             if (skill.isPresent()) {
                 objectMapper.writeValue(resp.getWriter(), skill.get());
+                resp.setStatus(HttpServletResponse.SC_OK);
             } else {
                 objectMapper.writeValue(resp.getWriter(), "Skill with id = " + id + " was not found");
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
         } else if (StringUtils.isNotBlank(name)) {
             Optional<Skill> skill = getByName(name);
             if (skill.isPresent()) {
                 objectMapper.writeValue(resp.getWriter(), skill.get());
+                resp.setStatus(HttpServletResponse.SC_OK);
             } else {
                 objectMapper.writeValue(resp.getWriter(), "Skill with name = " + name + " was not found");
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
         } else {
             List<Skill> skills = getAll();
             if (skills.isEmpty()) {
                 objectMapper.writeValue(resp.getWriter(), "Skills list is empty");
+                resp.setStatus(HttpServletResponse.SC_OK);
             } else {
                 objectMapper.writeValue(resp.getWriter(), skills);
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
         }
-        resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Override
