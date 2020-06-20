@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import factory.ComponentFactory;
 import model.Skill;
+import org.apache.http.HttpStatus;
 import org.junit.platform.commons.util.StringUtils;
 import response.ResponseEntity;
 import service.SkillService;
@@ -38,31 +39,38 @@ public class SkillController extends HttpServlet {
         String id = ControllerUtil.getPathVariableFrom(req);
         String name = req.getParameter("name");
         if (StringUtils.isNotBlank(id)) {
-            Optional<Skill> skill = getById(Long.parseLong(id));
+            Optional<Skill> skill;
+            try {
+                skill = getById(Long.parseLong(id));
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpStatus.SC_BAD_REQUEST);
+                objectMapper.writeValue(resp.getWriter(), "Id must be a number");
+                return;
+            }
             if (skill.isPresent()) {
-                objectMapper.writeValue(resp.getWriter(), skill.get());
                 resp.setStatus(HttpServletResponse.SC_OK);
+                objectMapper.writeValue(resp.getWriter(), skill.get());
             } else {
-                objectMapper.writeValue(resp.getWriter(), "Skill with id = " + id + " was not found");
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                objectMapper.writeValue(resp.getWriter(), "Skill with id = " + id + " was not found");
             }
         } else if (StringUtils.isNotBlank(name)) {
             Optional<Skill> skill = getByName(name);
             if (skill.isPresent()) {
-                objectMapper.writeValue(resp.getWriter(), skill.get());
                 resp.setStatus(HttpServletResponse.SC_OK);
+                objectMapper.writeValue(resp.getWriter(), skill.get());
             } else {
-                objectMapper.writeValue(resp.getWriter(), "Skill with name = " + name + " was not found");
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                objectMapper.writeValue(resp.getWriter(), "Skill with name = " + name + " was not found");
             }
         } else {
             List<Skill> skills = getAll();
             if (skills.isEmpty()) {
-                objectMapper.writeValue(resp.getWriter(), "Skills list is empty");
                 resp.setStatus(HttpServletResponse.SC_OK);
+                objectMapper.writeValue(resp.getWriter(), "Skills list is empty");
             } else {
-                objectMapper.writeValue(resp.getWriter(), skills);
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                objectMapper.writeValue(resp.getWriter(), skills);
             }
         }
     }
