@@ -4,6 +4,7 @@ import constant.Constant;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -17,7 +18,7 @@ class SkillControllerTest {
     private final String SKILL_API_URL = Constant.URL + "/api/v1/skills/";
 
     @Test
-    public void givenSkillDoesNotExists_whenSkillInfoIsRetrieved_then404IsReceived()
+    public void givenSkillDoesNotExistsWhenSkillInfoIsRetrievedThen404IsReceived()
             throws IOException {
         // Given
         int id = 234545223;
@@ -31,7 +32,7 @@ class SkillControllerTest {
     }
 
     @Test
-    public void givenSkillExists_whenSkillInfoIsRetrieved_then200IsReceived()
+    public void givenSkillExistsWhenSkillInfoIsRetrievedThen200IsReceived()
             throws IOException {
         // Given
         int id = 1;
@@ -46,9 +47,8 @@ class SkillControllerTest {
 
     @Test
     public void
-    givenRequestWithNoAcceptHeader_whenRequestIsExecuted_thenDefaultResponseContentTypeIsJson()
+    givenRequestWithNoAcceptHeaderWhenRequestIsExecutedThenDefaultResponseContentTypeIsJson()
             throws IOException {
-
         // Given
         String jsonMimeType = "application/json";
         HttpUriRequest request = new HttpGet(SKILL_API_URL);
@@ -59,5 +59,19 @@ class SkillControllerTest {
         // Then
         String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
         assertEquals(jsonMimeType, mimeType);
+    }
+
+    @Test
+    public void givenRequestWithProperJsonWithSkillNameWhenRequestIsExecutedThenSkillCreated()
+            throws IOException {
+        // Given
+        String requestBody = "{\"name\":\"dfhrgder\"}";
+        HttpPost request = new HttpPost(SKILL_API_URL);
+
+        // When
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
+        // Then
+        assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
     }
 }
