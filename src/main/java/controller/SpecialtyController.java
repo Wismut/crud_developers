@@ -1,11 +1,14 @@
 package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import factory.ComponentFactory;
 import model.Specialty;
 import org.junit.platform.commons.util.StringUtils;
+import response.ResponseEntity;
 import service.SpecialtyService;
 import util.ControllerUtil;
+import util.ExceptionHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -49,6 +52,81 @@ public class SpecialtyController extends HttpServlet {
             }
         }
         resp.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        Specialty specialtyFromRequest;
+        try {
+            specialtyFromRequest = mapper.readValue(req.getReader(), Specialty.class);
+        } catch (UnrecognizedPropertyException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
+            return;
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
+            return;
+        }
+        if (StringUtils.isBlank(specialtyFromRequest.getName())) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), "Necessary parameter 'name' is absent");
+        } else {
+            Specialty probablySavedSpecialty = save(specialtyFromRequest);
+            if (probablySavedSpecialty.getId() != null) {
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+                mapper.writeValue(resp.getWriter(), "Specialty with id = " +
+                        probablySavedSpecialty.getId() +
+                        " was saved");
+            } else {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                mapper.writeValue(resp.getWriter(), "Specialty was not saved");
+            }
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        String id = ControllerUtil.getPathVariableFrom(req);
+        Specialty specialtyFromRequest;
+        try {
+            specialtyFromRequest = mapper.readValue(req.getReader(), Specialty.class);
+        } catch (UnrecognizedPropertyException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
+            return;
+        }
+        if (StringUtils.isBlank(id)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), "Necessary parameter 'id' is absent");
+        } else if (StringUtils.isBlank(specialtyFromRequest.getName())) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), "Necessary parameter 'name' is absent");
+        } else {
+            resp.setStatus(HttpServletResponse.SC_OK);
+            Specialty updatedSpecialty = update(new Specialty(Long.parseLong(id),
+                    specialtyFromRequest.getName(),
+                    specialtyFromRequest.getDescription()));
+            mapper.writeValue(resp.getWriter(), "Specialty was updated: " + updatedSpecialty);
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        String id = ControllerUtil.getPathVariableFrom(req);
+        if (StringUtils.isBlank(id)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ResponseEntity<String> responseEntity = new ResponseEntity<>("Bad request",
+                    resp.getStatus(),
+                    "Necessary parameter 'id' is absent");
+            mapper.writeValue(resp.getWriter(), responseEntity);
+        } else {
+            deleteById(Long.parseLong(id));
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        }
     }
 
     public Specialty save(Specialty specialty) {
