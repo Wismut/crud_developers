@@ -1,27 +1,16 @@
 package response;
 
 public class ResponseEntity<T> {
+    private String type;
     private String message;
     private T data;
 
-    public ResponseEntity(String message, T data) {
-        this.message = message;
-        this.data = data;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
+    public ResponseEntity(String type, String message) {
+        this.type = type;
         this.message = message;
     }
 
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
+    public ResponseEntity(T data) {
         this.data = data;
     }
 }

@@ -1,6 +1,7 @@
 package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import factory.ComponentFactory;
 import model.Skill;
@@ -85,6 +86,10 @@ public class SkillController extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             objectMapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
             return;
+        } catch (MismatchedInputException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            objectMapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
+            return;
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             objectMapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
@@ -92,14 +97,13 @@ public class SkillController extends HttpServlet {
         }
         if (StringUtils.isBlank(skillFromRequest.getName())) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            objectMapper.writeValue(resp.getWriter(), "Necessary parameter 'name' is absent");
+            objectMapper.writeValue(resp.getWriter(), new ResponseEntity<>("Bad request",
+                    "Necessary parameter 'name' is absent or empty"));
         } else {
             Skill probablySavedSkill = save(skillFromRequest);
             if (probablySavedSkill.getId() != null) {
                 resp.setStatus(HttpServletResponse.SC_CREATED);
-                objectMapper.writeValue(resp.getWriter(), "Skill with id = " +
-                        probablySavedSkill.getId() +
-                        " was saved");
+                objectMapper.writeValue(resp.getWriter(), probablySavedSkill);
             } else {
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 objectMapper.writeValue(resp.getWriter(), "Skill was not saved");
@@ -129,7 +133,7 @@ public class SkillController extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
             Skill updatedSkill = update(new Skill(Long.parseLong(id),
                     skillFromRequest.getName()));
-            objectMapper.writeValue(resp.getWriter(), "Skill was updated: " + updatedSkill);
+            objectMapper.writeValue(resp.getWriter(), updatedSkill);
         }
     }
 
