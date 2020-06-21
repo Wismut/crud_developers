@@ -38,7 +38,6 @@ public class DeveloperController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = ControllerUtil.getPathVariableFrom(req);
-        String name = req.getParameter("name");
         if (StringUtils.isNotBlank(id)) {
             Optional<Developer> developer;
             try {
