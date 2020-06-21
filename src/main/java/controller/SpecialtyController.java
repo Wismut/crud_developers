@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import factory.ComponentFactory;
 import model.Specialty;
 import org.junit.platform.commons.util.StringUtils;
-import response.ResponseEntity;
+import response.ResponseEntityWithErrorAndMessage;
 import service.SpecialtyService;
 import util.ControllerUtil;
 import util.ExceptionHandler;
@@ -122,9 +122,9 @@ public class SpecialtyController extends HttpServlet {
         String id = ControllerUtil.getPathVariableFrom(req);
         if (StringUtils.isBlank(id)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ResponseEntity<String> responseEntity = new ResponseEntity<>("Bad request",
+            ResponseEntityWithErrorAndMessage<String> responseEntityWithErrorAndMessage = new ResponseEntityWithErrorAndMessage<>("Bad request",
                     "Necessary parameter 'id' is absent");
-            mapper.writeValue(resp.getWriter(), responseEntity);
+            mapper.writeValue(resp.getWriter(), responseEntityWithErrorAndMessage);
         } else {
             deleteById(Long.parseLong(id));
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

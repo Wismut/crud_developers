@@ -7,7 +7,8 @@ import factory.ComponentFactory;
 import model.Developer;
 import org.apache.http.HttpStatus;
 import org.junit.platform.commons.util.StringUtils;
-import response.ResponseEntity;
+import response.ResponseEntityWithData;
+import response.ResponseEntityWithErrorAndMessage;
 import service.DeveloperService;
 import util.ControllerUtil;
 import util.ExceptionHandler;
@@ -44,7 +45,8 @@ public class DeveloperController extends HttpServlet {
                 developer = getById(Long.parseLong(id));
             } catch (NumberFormatException e) {
                 resp.setStatus(HttpStatus.SC_BAD_REQUEST);
-                mapper.writeValue(resp.getWriter(), "Id must be a number");
+                mapper.writeValue(resp.getWriter(), new ResponseEntityWithErrorAndMessage("Bad request",
+                        "Id must be a number"));
                 return;
             }
             if (developer.isPresent()) {
@@ -52,16 +54,17 @@ public class DeveloperController extends HttpServlet {
                 mapper.writeValue(resp.getWriter(), developer.get());
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                mapper.writeValue(resp.getWriter(), "Developer with id = " + id + " was not found");
+                mapper.writeValue(resp.getWriter(), new ResponseEntityWithErrorAndMessage("Not found",
+                        "Developer with id = " + id + " was not found"));
             }
         } else {
             List<Developer> skills = getAll();
             if (skills.isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_OK);
-                mapper.writeValue(resp.getWriter(), "Developers list is empty");
+                mapper.writeValue(resp.getWriter(), new ResponseEntityWithData<>("Developers list is empty"));
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                mapper.writeValue(resp.getWriter(), skills);
+                mapper.writeValue(resp.getWriter(), new ResponseEntityWithData<>(skills));
             }
         }
     }
@@ -72,36 +75,34 @@ public class DeveloperController extends HttpServlet {
         Developer developerFromRequest;
         try {
             developerFromRequest = mapper.readValue(req.getReader(), Developer.class);
+            if (StringUtils.isBlank(developerFromRequest.getFirstName())) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                mapper.writeValue(resp.getWriter(), new ResponseEntityWithErrorAndMessage("Bad request",
+                        "Necessary parameter 'firstName' is absent or empty"));
+            } else if (StringUtils.isBlank(developerFromRequest.getLastName())) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                mapper.writeValue(resp.getWriter(), new ResponseEntityWithErrorAndMessage("Bad request",
+                        "Necessary parameter 'lastName' is absent or empty"));
+            } else {
+                Developer probablySavedDeveloper = save(developerFromRequest);
+                if (probablySavedDeveloper.getId() != null) {
+                    resp.setStatus(HttpServletResponse.SC_CREATED);
+                    mapper.writeValue(resp.getWriter(), probablySavedDeveloper);
+                } else {
+                    resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    mapper.writeValue(resp.getWriter(), "Developer was not saved");
+                }
+            }
         } catch (UnrecognizedPropertyException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             mapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
-            return;
         } catch (MismatchedInputException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            mapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
-            return;
+            mapper.writeValue(resp.getWriter(), new ResponseEntityWithErrorAndMessage("Bad request",
+                    ExceptionHandler.handle(e)));
         } catch (IOException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             mapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
-            return;
-        }
-        if (StringUtils.isBlank(developerFromRequest.getFirstName())) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            mapper.writeValue(resp.getWriter(), new ResponseEntity<>("Bad request",
-                    "Necessary parameter 'firstName' is absent or empty"));
-        } else if (StringUtils.isBlank(developerFromRequest.getLastName())) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            mapper.writeValue(resp.getWriter(), new ResponseEntity<>("Bad request",
-                    "Necessary parameter 'lastName' is absent or empty"));
-        } else {
-            Developer probablySavedDeveloper = save(developerFromRequest);
-            if (probablySavedDeveloper.getId() != null) {
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-                mapper.writeValue(resp.getWriter(), probablySavedDeveloper);
-            } else {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                mapper.writeValue(resp.getWriter(), "Developer was not saved");
-            }
         }
     }
 
@@ -119,19 +120,19 @@ public class DeveloperController extends HttpServlet {
         }
         if (StringUtils.isBlank(id)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            mapper.writeValue(resp.getWriter(), "Necessary parameter 'id' is absent");
+            mapper.writeValue(resp.getWriter(), new ResponseEntityWithData<>("Necessary parameter 'id' is absent"));
         } else if (StringUtils.isBlank(developerFromRequest.getFirstName())) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            mapper.writeValue(resp.getWriter(), "Necessary parameter 'firstName' is absent");
+            mapper.writeValue(resp.getWriter(), new ResponseEntityWithData<>("Necessary parameter 'firstName' is absent"));
         } else if (StringUtils.isBlank(developerFromRequest.getLastName())) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            mapper.writeValue(resp.getWriter(), "Necessary parameter 'lastName' is absent");
+            mapper.writeValue(resp.getWriter(), new ResponseEntityWithData<>("Necessary parameter 'lastName' is absent"));
         } else {
             resp.setStatus(HttpServletResponse.SC_OK);
             Developer updatedDeveloper = update(new Developer(Long.parseLong(id),
                     developerFromRequest.getFirstName(),
                     developerFromRequest.getLastName()));
-            mapper.writeValue(resp.getWriter(), updatedDeveloper);
+            mapper.writeValue(resp.getWriter(), new ResponseEntityWithData<>(updatedDeveloper));
         }
     }
 
@@ -141,9 +142,8 @@ public class DeveloperController extends HttpServlet {
         String id = ControllerUtil.getPathVariableFrom(req);
         if (StringUtils.isBlank(id)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ResponseEntity<String> responseEntity = new ResponseEntity<>("Bad request",
-                    "Necessary parameter 'id' is absent");
-            mapper.writeValue(resp.getWriter(), responseEntity);
+            mapper.writeValue(resp.getWriter(), new ResponseEntityWithErrorAndMessage("Bad request",
+                    "Necessary parameter 'id' is absent"));
         } else {
             deleteById(Long.parseLong(id));
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

@@ -7,7 +7,7 @@ import factory.ComponentFactory;
 import model.Skill;
 import org.apache.http.HttpStatus;
 import org.junit.platform.commons.util.StringUtils;
-import response.ResponseEntity;
+import response.ResponseEntityWithErrorAndMessage;
 import service.SkillService;
 import util.ControllerUtil;
 import util.ExceptionHandler;
@@ -97,7 +97,7 @@ public class SkillController extends HttpServlet {
         }
         if (StringUtils.isBlank(skillFromRequest.getName())) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            objectMapper.writeValue(resp.getWriter(), new ResponseEntity<>("Bad request",
+            objectMapper.writeValue(resp.getWriter(), new ResponseEntityWithErrorAndMessage<>("Bad request",
                     "Necessary parameter 'name' is absent or empty"));
         } else {
             Skill probablySavedSkill = save(skillFromRequest);
@@ -143,9 +143,9 @@ public class SkillController extends HttpServlet {
         String id = ControllerUtil.getPathVariableFrom(req);
         if (StringUtils.isBlank(id)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ResponseEntity<String> responseEntity = new ResponseEntity<>("Bad request",
+            ResponseEntityWithErrorAndMessage<String> responseEntityWithErrorAndMessage = new ResponseEntityWithErrorAndMessage<>("Bad request",
                     "Necessary parameter 'id' is absent");
-            objectMapper.writeValue(resp.getWriter(), responseEntity);
+            objectMapper.writeValue(resp.getWriter(), responseEntityWithErrorAndMessage);
         } else {
             deleteById(Long.parseLong(id));
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
