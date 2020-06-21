@@ -9,8 +9,6 @@ import org.apache.http.HttpStatus;
 import org.junit.platform.commons.util.StringUtils;
 import response.ResponseEntity;
 import service.DeveloperService;
-import service.SkillService;
-import service.SpecialtyService;
 import util.ControllerUtil;
 import util.ExceptionHandler;
 
@@ -26,20 +24,14 @@ import java.util.Optional;
 @WebServlet(urlPatterns = "/api/v1/developers/*")
 public class DeveloperController extends HttpServlet {
     private final DeveloperService developerService;
-    private final SkillService skillService;
-    private final SpecialtyService specialtyService;
     private final ObjectMapper mapper = new ObjectMapper();
 
     public DeveloperController() {
         this.developerService = ComponentFactory.getBy(DeveloperService.class);
-        this.specialtyService = ComponentFactory.getBy(SpecialtyService.class);
-        this.skillService = ComponentFactory.getBy(SkillService.class);
     }
 
-    public DeveloperController(DeveloperService developerService, SkillService skillService, SpecialtyService specialtyService) {
+    public DeveloperController(DeveloperService developerService) {
         this.developerService = developerService;
-        this.skillService = skillService;
-        this.specialtyService = specialtyService;
     }
 
     @Override
