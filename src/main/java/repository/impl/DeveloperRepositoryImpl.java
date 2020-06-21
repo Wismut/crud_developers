@@ -43,7 +43,6 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
     public Developer save(Developer developer) {
         try (Session session = HibernateUtil.getSession()) {
             Transaction transaction = session.beginTransaction();
-            session.save(developer.getSpecialty());
             session.save(developer);
             transaction.commit();
             return developer;

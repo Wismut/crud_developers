@@ -17,7 +17,7 @@ public class Developer {
     @Column(name = "last_name")
     private String lastName;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "specialty_id", nullable = false)
     private Specialty specialty;
 

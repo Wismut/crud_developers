@@ -1,24 +1,162 @@
 package controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import factory.ComponentFactory;
 import model.Developer;
+import org.apache.http.HttpStatus;
+import org.junit.platform.commons.util.StringUtils;
+import response.ResponseEntity;
 import service.DeveloperService;
 import service.SkillService;
 import service.SpecialtyService;
+import util.ControllerUtil;
+import util.ExceptionHandler;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 @WebServlet(urlPatterns = "/api/v1/developers/*")
-public class DeveloperController {
+public class DeveloperController extends HttpServlet {
     private final DeveloperService developerService;
     private final SkillService skillService;
     private final SpecialtyService specialtyService;
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    public DeveloperController() {
+        this.developerService = ComponentFactory.getBy(DeveloperService.class);
+        this.specialtyService = ComponentFactory.getBy(SpecialtyService.class);
+        this.skillService = ComponentFactory.getBy(SkillService.class);
+    }
 
     public DeveloperController(DeveloperService developerService, SkillService skillService, SpecialtyService specialtyService) {
         this.developerService = developerService;
         this.skillService = skillService;
         this.specialtyService = specialtyService;
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        String id = ControllerUtil.getPathVariableFrom(req);
+        String name = req.getParameter("name");
+        if (StringUtils.isNotBlank(id)) {
+            Optional<Developer> developer;
+            try {
+                developer = getById(Long.parseLong(id));
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpStatus.SC_BAD_REQUEST);
+                mapper.writeValue(resp.getWriter(), "Id must be a number");
+                return;
+            }
+            if (developer.isPresent()) {
+                resp.setStatus(HttpServletResponse.SC_OK);
+                mapper.writeValue(resp.getWriter(), developer.get());
+            } else {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                mapper.writeValue(resp.getWriter(), "Developer with id = " + id + " was not found");
+            }
+        } else {
+            List<Developer> skills = getAll();
+            if (skills.isEmpty()) {
+                resp.setStatus(HttpServletResponse.SC_OK);
+                mapper.writeValue(resp.getWriter(), "Developers list is empty");
+            } else {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                mapper.writeValue(resp.getWriter(), skills);
+            }
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        Developer developerFromRequest;
+        try {
+            developerFromRequest = mapper.readValue(req.getReader(), Developer.class);
+        } catch (UnrecognizedPropertyException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
+            return;
+        } catch (MismatchedInputException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
+            return;
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
+            return;
+        }
+        if (StringUtils.isBlank(developerFromRequest.getFirstName())) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), new ResponseEntity<>("Bad request",
+                    "Necessary parameter 'firstName' is absent or empty"));
+        } else if (StringUtils.isBlank(developerFromRequest.getLastName())) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), new ResponseEntity<>("Bad request",
+                    "Necessary parameter 'lastName' is absent or empty"));
+        } else {
+            Developer probablySavedDeveloper = save(developerFromRequest);
+            if (probablySavedDeveloper.getId() != null) {
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+                mapper.writeValue(resp.getWriter(), probablySavedDeveloper);
+            } else {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                mapper.writeValue(resp.getWriter(), "Developer was not saved");
+            }
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        String id = ControllerUtil.getPathVariableFrom(req);
+        Developer developerFromRequest;
+        try {
+            developerFromRequest = mapper.readValue(req.getReader(), Developer.class);
+        } catch (UnrecognizedPropertyException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), ExceptionHandler.handle(e));
+            return;
+        }
+        if (StringUtils.isBlank(id)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), "Necessary parameter 'id' is absent");
+        } else if (StringUtils.isBlank(developerFromRequest.getFirstName())) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), "Necessary parameter 'firstName' is absent");
+        } else if (StringUtils.isBlank(developerFromRequest.getLastName())) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            mapper.writeValue(resp.getWriter(), "Necessary parameter 'lastName' is absent");
+        } else {
+            resp.setStatus(HttpServletResponse.SC_OK);
+            Developer updatedDeveloper = update(new Developer(Long.parseLong(id),
+                    developerFromRequest.getFirstName(),
+                    developerFromRequest.getLastName()));
+            mapper.writeValue(resp.getWriter(), updatedDeveloper);
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        String id = ControllerUtil.getPathVariableFrom(req);
+        if (StringUtils.isBlank(id)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            ResponseEntity<String> responseEntity = new ResponseEntity<>("Bad request",
+                    "Necessary parameter 'id' is absent");
+            mapper.writeValue(resp.getWriter(), responseEntity);
+        } else {
+            deleteById(Long.parseLong(id));
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        }
     }
 
     public void deleteById(Long id) {
