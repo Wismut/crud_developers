@@ -97,7 +97,7 @@ public class SkillController extends HttpServlet {
         }
         if (StringUtils.isBlank(skillFromRequest.getName())) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            objectMapper.writeValue(resp.getWriter(), new ResponseEntityWithErrorAndMessage<>("Bad request",
+            objectMapper.writeValue(resp.getWriter(), new ResponseEntityWithErrorAndMessage("Bad request",
                     "Necessary parameter 'name' is absent or empty"));
         } else {
             Skill probablySavedSkill = save(skillFromRequest);
@@ -143,9 +143,8 @@ public class SkillController extends HttpServlet {
         String id = ControllerUtil.getPathVariableFrom(req);
         if (StringUtils.isBlank(id)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ResponseEntityWithErrorAndMessage<String> responseEntityWithErrorAndMessage = new ResponseEntityWithErrorAndMessage<>("Bad request",
-                    "Necessary parameter 'id' is absent");
-            objectMapper.writeValue(resp.getWriter(), responseEntityWithErrorAndMessage);
+            objectMapper.writeValue(resp.getWriter(), new ResponseEntityWithErrorAndMessage("Bad request",
+                    "Necessary parameter 'id' is absent"));
         } else {
             deleteById(Long.parseLong(id));
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

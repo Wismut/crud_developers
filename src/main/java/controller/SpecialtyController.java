@@ -122,7 +122,7 @@ public class SpecialtyController extends HttpServlet {
         String id = ControllerUtil.getPathVariableFrom(req);
         if (StringUtils.isBlank(id)) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            ResponseEntityWithErrorAndMessage<String> responseEntityWithErrorAndMessage = new ResponseEntityWithErrorAndMessage<>("Bad request",
+            ResponseEntityWithErrorAndMessage responseEntityWithErrorAndMessage = new ResponseEntityWithErrorAndMessage("Bad request",
                     "Necessary parameter 'id' is absent");
             mapper.writeValue(resp.getWriter(), responseEntityWithErrorAndMessage);
         } else {

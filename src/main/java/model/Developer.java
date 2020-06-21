@@ -21,7 +21,7 @@ public class Developer {
     @JoinColumn(name = "specialty_id", nullable = false)
     private Specialty specialty;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "developer_skill", joinColumns = @JoinColumn(name = "developer_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private List<Skill> skills;
 
