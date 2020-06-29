@@ -8,9 +8,6 @@ import org.hibernate.query.Query;
 import repository.DeveloperRepository;
 import util.HibernateUtil;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,12 +22,9 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
     @Override
     public List<Developer> getAll() {
         try (Session session = HibernateUtil.getSession()) {
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Developer> criteriaQuery = criteriaBuilder.createQuery(Developer.class);
-            Root<Developer> from = criteriaQuery.from(Developer.class);
-            criteriaQuery.select(from);
-            Query<Developer> query = session.createQuery(criteriaQuery);
-            return query.getResultList();
+            return session
+                    .createQuery("FROM Developer", Developer.class)
+                    .getResultList();
         }
     }
 

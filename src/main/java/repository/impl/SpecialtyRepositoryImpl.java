@@ -4,14 +4,10 @@ package repository.impl;
 import liquibase.util.StringUtils;
 import model.Specialty;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 import repository.SpecialtyRepository;
 import util.HibernateUtil;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,24 +15,16 @@ public class SpecialtyRepositoryImpl implements SpecialtyRepository {
     @Override
     public Optional<Specialty> getById(Long id) {
         try (Session session = HibernateUtil.getSession()) {
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Specialty> criteriaQuery = criteriaBuilder.createQuery(Specialty.class);
-            Root<Specialty> from = criteriaQuery.from(Specialty.class);
-            criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("id"), id));
-            Query<Specialty> query = session.createQuery(criteriaQuery);
-            return query.uniqueResultOptional();
+            return Optional.ofNullable(session.get(Specialty.class, id));
         }
     }
 
     @Override
     public List<Specialty> getAll() {
         try (Session session = HibernateUtil.getSession()) {
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Specialty> criteriaQuery = criteriaBuilder.createQuery(Specialty.class);
-            Root<Specialty> from = criteriaQuery.from(Specialty.class);
-            CriteriaQuery<Specialty> findAll = criteriaQuery.select(from);
-            Query<Specialty> query = session.createQuery(findAll);
-            return query.getResultList();
+            return session
+                    .createQuery("FROM Specialty", Specialty.class)
+                    .getResultList();
         }
     }
 

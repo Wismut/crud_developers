@@ -26,12 +26,9 @@ public class SkillRepositoryImpl implements SkillRepository {
     @Override
     public List<Skill> getAll() {
         try (Session session = HibernateUtil.getSession()) {
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Skill> criteriaQuery = criteriaBuilder.createQuery(Skill.class);
-            Root<Skill> from = criteriaQuery.from(Skill.class);
-            CriteriaQuery<Skill> findAll = criteriaQuery.select(from);
-            Query<Skill> query = session.createQuery(findAll);
-            return query.getResultList();
+            return session
+                    .createQuery("FROM Skill", Skill.class)
+                    .getResultList();
         }
     }
 
@@ -68,12 +65,9 @@ public class SkillRepositoryImpl implements SkillRepository {
     @Override
     public Optional<Skill> getByName(String name) {
         try (Session session = HibernateUtil.getSession()) {
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Skill> criteriaQuery = criteriaBuilder.createQuery(Skill.class);
-            Root<Skill> from = criteriaQuery.from(Skill.class);
-            criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("name"), name));
-            Query<Skill> query = session.createQuery(criteriaQuery);
-            return query.uniqueResultOptional();
+            return session.createQuery("FROM Skill s WHERE s.name =: name", Skill.class)
+                    .setParameter("name", name)
+                    .uniqueResultOptional();
         }
     }
 
