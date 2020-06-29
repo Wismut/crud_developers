@@ -18,12 +18,7 @@ public class DeveloperRepositoryImpl implements DeveloperRepository {
     @Override
     public Optional<Developer> getById(Long id) {
         try (Session session = HibernateUtil.getSession()) {
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Developer> criteriaQuery = criteriaBuilder.createQuery(Developer.class);
-            Root<Developer> from = criteriaQuery.from(Developer.class);
-            criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("id"), id));
-            Query<Developer> query = session.createQuery(criteriaQuery);
-            return query.uniqueResultOptional();
+            return Optional.ofNullable(session.get(Developer.class, id));
         }
     }
 

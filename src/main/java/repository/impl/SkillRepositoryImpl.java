@@ -19,12 +19,7 @@ public class SkillRepositoryImpl implements SkillRepository {
     @Override
     public Optional<Skill> getById(Long id) {
         try (Session session = HibernateUtil.getSession()) {
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Skill> criteriaQuery = criteriaBuilder.createQuery(Skill.class);
-            Root<Skill> from = criteriaQuery.from(Skill.class);
-            criteriaQuery.select(from).where(criteriaBuilder.equal(from.get("id"), id));
-            Query<Skill> query = session.createQuery(criteriaQuery);
-            return query.uniqueResultOptional();
+            return Optional.ofNullable(session.get(Skill.class, id));
         }
     }
 

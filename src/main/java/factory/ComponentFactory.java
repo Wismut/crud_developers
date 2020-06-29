@@ -1,6 +1,6 @@
 package factory;
 
-import java.io.*;
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -56,26 +56,6 @@ public class ComponentFactory {
 
     private static <T> Class getKeyBy(Class<T> clazz) {
         return clazz.getInterfaces().length == 0 ? clazz : clazz.getInterfaces()[0];
-    }
-
-    private static List<Class> getClasses(ClassLoader cl, String currentPackage) {
-        List<Class> classes = new ArrayList<>();
-        URL upackage = cl.getResource(currentPackage);
-        String dottedCurrentPackage = currentPackage.replace('/', '.');
-        if (upackage != null) {
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader((InputStream) upackage.getContent()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.endsWith(".class") && !line.contains("$")) {
-                        classes.add(Class.forName(dottedCurrentPackage + "." + line.substring(0, line.lastIndexOf('.'))));
-                    }
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        return classes;
     }
 
     private static List<Class> getWebClasses(ClassLoader cl, String currentPackage) {
