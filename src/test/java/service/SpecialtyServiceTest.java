@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import repository.SpecialtyRepository;
+import service.impl.SpecialtyServiceImpl;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +23,7 @@ class SpecialtyServiceTest {
     SpecialtyRepository specialtyRepository;
 
     @InjectMocks
-    SpecialtyService serviceUnderTest;
+    SpecialtyServiceImpl serviceUnderTest;
 
     @BeforeAll
     void init() {
@@ -41,20 +42,20 @@ class SpecialtyServiceTest {
     void update() {
         Specialty specialty = buildSpecialty();
         serviceUnderTest.update(specialty);
-        verify(specialtyRepository, times(1)).update(specialty);
+        verify(specialtyRepository, times(1)).save(specialty);
     }
 
     @Test
     void deleteBy() {
         Specialty specialty = buildSpecialty();
         serviceUnderTest.deleteBy(specialty.getId());
-        verify(specialtyRepository, times(1)).deleteBy(specialty.getId());
+        verify(specialtyRepository, times(1)).deleteById(specialty.getId());
     }
 
     @Test
     void getAll() {
         List<Specialty> specialties = Collections.singletonList(buildSpecialty());
-        when(specialtyRepository.getAll()).thenReturn(specialties);
+        when(specialtyRepository.findAll()).thenReturn(specialties);
         List<Specialty> allSpecialties = serviceUnderTest.getAll();
         assertEquals(specialties, allSpecialties);
     }
@@ -62,7 +63,7 @@ class SpecialtyServiceTest {
     @Test
     void getById() {
         Optional<Specialty> specialty = Optional.of(buildSpecialty());
-        when(specialtyRepository.getById(specialty.get().getId())).thenReturn(specialty);
+        when(specialtyRepository.findById(specialty.get().getId())).thenReturn(specialty);
         Optional<Specialty> specialtyById = serviceUnderTest.getById(specialty.get().getId());
         assertEquals(specialty, specialtyById);
     }

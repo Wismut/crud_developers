@@ -1,39 +1,21 @@
 package service;
 
 import model.Skill;
-import repository.SkillRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public class SkillService {
-    private final SkillRepository skillRepository;
 
-    public SkillService(SkillRepository skillRepository) {
-        this.skillRepository = skillRepository;
-    }
+public interface SkillService {
+    Skill save(Skill skill);
 
-    public Skill save(Skill skill) {
-        return skillRepository.save(skill);
-    }
+    Skill update(Skill skill);
 
-    public Skill update(Skill skill) {
-        return skillRepository.update(skill);
-    }
+    void deleteBy(Long id);
 
-    public void deleteBy(Long id) {
-        skillRepository.deleteBy(id);
-    }
+    List<Skill> getAll();
 
-    public List<Skill> getAll() {
-        return skillRepository.getAll();
-    }
+    Optional<Skill> getById(Long id);
 
-    public Optional<Skill> getById(Long id) {
-        return skillRepository.getById(id);
-    }
-
-    public Optional<Skill> getByName(String name) {
-        return skillRepository.getByName(name);
-    }
+    Optional<Skill> getByName(String name);
 }

@@ -3,39 +3,35 @@ package controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-import factory.ComponentFactory;
 import model.Developer;
 import org.apache.http.HttpStatus;
 import org.junit.platform.commons.util.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import response.ResponseEntityWithData;
 import response.ResponseEntityWithErrorAndMessage;
-import service.DeveloperService;
+import service.impl.DeveloperServiceImpl;
 import util.ControllerUtil;
 import util.ExceptionHandler;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet(urlPatterns = "/api/v1/developers/*")
-public class DeveloperController extends HttpServlet {
-    private final DeveloperService developerService;
+@Controller
+@RequestMapping("/api/v1/developers/*")
+public class DeveloperController {
+    private final DeveloperServiceImpl developerServiceImpl;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public DeveloperController() {
-        this.developerService = ComponentFactory.getBy(DeveloperService.class);
+    public DeveloperController(DeveloperServiceImpl developerServiceImpl) {
+        this.developerServiceImpl = developerServiceImpl;
     }
 
-    public DeveloperController(DeveloperService developerService) {
-        this.developerService = developerService;
-    }
-
-    @Override
+    @GetMapping
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = ControllerUtil.getPathVariableFrom(req);
@@ -69,7 +65,7 @@ public class DeveloperController extends HttpServlet {
         }
     }
 
-    @Override
+    @PostMapping
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         Developer developerFromRequest;
@@ -106,7 +102,7 @@ public class DeveloperController extends HttpServlet {
         }
     }
 
-    @Override
+    @PutMapping
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = ControllerUtil.getPathVariableFrom(req);
@@ -136,7 +132,7 @@ public class DeveloperController extends HttpServlet {
         }
     }
 
-    @Override
+    @DeleteMapping
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = ControllerUtil.getPathVariableFrom(req);
@@ -151,27 +147,27 @@ public class DeveloperController extends HttpServlet {
     }
 
     public void deleteById(Long id) {
-        developerService.deleteById(id);
+        developerServiceImpl.deleteById(id);
     }
 
     public Developer update(Developer developer) {
-        return developerService.update(developer);
+        return developerServiceImpl.update(developer);
     }
 
     public Developer save(Developer developer) {
-        developerService.save(developer);
+        developerServiceImpl.save(developer);
         return developer;
     }
 
     public Optional<Developer> getById(Long id) {
-        return developerService.getById(id);
+        return developerServiceImpl.getById(id);
     }
 
     public List<Developer> getAllBySpeciality(String specialityName) {
-        return developerService.getAllBySpeciality(specialityName);
+        return developerServiceImpl.getAllBySpeciality(specialityName);
     }
 
     public List<Developer> getAll() {
-        return developerService.getAll();
+        return developerServiceImpl.getAll();
     }
 }

@@ -1,39 +1,20 @@
 package service;
 
 import model.Developer;
-import repository.DeveloperRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public class DeveloperService {
-    private final DeveloperRepository developerRepository;
+public interface DeveloperService {
+    void deleteById(Long id);
 
-    public DeveloperService(DeveloperRepository developerRepository) {
-        this.developerRepository = developerRepository;
-    }
+    Developer update(Developer developer);
 
-    public void deleteById(Long id) {
-        developerRepository.deleteBy(id);
-    }
+    Developer save(Developer developer);
 
-    public Developer update(Developer developer) {
-        return developerRepository.update(developer);
-    }
+    Optional<Developer> getById(Long id);
 
-    public Developer save(Developer developer) {
-        return developerRepository.save(developer);
-    }
+    List<Developer> getAllBySpeciality(String specialityName);
 
-    public Optional<Developer> getById(Long id) {
-        return developerRepository.getById(id);
-    }
-
-    public List<Developer> getAllBySpeciality(String specialityName) {
-        return developerRepository.getAllBySpecialty(specialityName);
-    }
-
-    public List<Developer> getAll() {
-        return developerRepository.getAll();
-    }
+    List<Developer> getAll();
 }

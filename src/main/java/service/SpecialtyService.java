@@ -1,39 +1,20 @@
 package service;
 
 import model.Specialty;
-import repository.SpecialtyRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public class SpecialtyService {
-    private final SpecialtyRepository specialtyRepository;
+public interface SpecialtyService {
+    Specialty save(Specialty specialty);
 
-    public SpecialtyService(SpecialtyRepository specialtyRepository) {
-        this.specialtyRepository = specialtyRepository;
-    }
+    Specialty update(Specialty specialty);
 
-    public Specialty save(Specialty specialty) {
-        return specialtyRepository.save(specialty);
-    }
+    void deleteBy(Long id);
 
-    public Specialty update(Specialty specialty) {
-        return specialtyRepository.update(specialty);
-    }
+    List<Specialty> getAll();
 
-    public void deleteBy(Long id) {
-        specialtyRepository.deleteBy(id);
-    }
+    Optional<Specialty> getById(Long id);
 
-    public List<Specialty> getAll() {
-        return specialtyRepository.getAll();
-    }
-
-    public Optional<Specialty> getById(Long id) {
-        return specialtyRepository.getById(id);
-    }
-
-    public void saveIfAbsent(Specialty specialty) {
-        specialtyRepository.save(specialty);
-    }
+    void saveIfAbsent(Specialty specialty);
 }

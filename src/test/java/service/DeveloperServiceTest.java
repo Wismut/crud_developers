@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import repository.DeveloperRepository;
+import service.impl.DeveloperServiceImpl;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +24,7 @@ class DeveloperServiceTest {
     DeveloperRepository developerRepository;
 
     @InjectMocks
-    DeveloperService serviceUnderTest;
+    DeveloperServiceImpl serviceUnderTest;
 
     @BeforeAll
     void setUp() {
@@ -34,14 +35,14 @@ class DeveloperServiceTest {
     void deleteById() {
         Developer developer = buildDeveloper();
         serviceUnderTest.deleteById(developer.getId());
-        verify(developerRepository, times(1)).deleteBy(developer.getId());
+        verify(developerRepository, times(1)).deleteById(developer.getId());
     }
 
     @Test
     void update() {
         Developer developer = buildDeveloper();
         serviceUnderTest.update(developer);
-        verify(developerRepository, times(1)).update(developer);
+        verify(developerRepository, times(1)).save(developer);
     }
 
     @Test
@@ -55,7 +56,7 @@ class DeveloperServiceTest {
     @Test
     void getById() {
         Optional<Developer> developer = Optional.of(buildDeveloper());
-        when(developerRepository.getById(developer.get().getId())).thenReturn(developer);
+        when(developerRepository.findById(developer.get().getId())).thenReturn(developer);
         Optional<Developer> developerById = serviceUnderTest.getById(developer.get().getId());
         assertEquals(developer, developerById);
     }
@@ -63,7 +64,7 @@ class DeveloperServiceTest {
     @Test
     void getAllBySpeciality() {
         List<Developer> developers = Collections.singletonList(buildDeveloper());
-        when(developerRepository.getAllBySpecialty(developers.get(0).getSpecialty().getName())).thenReturn(developers);
+        when(developerRepository.findAllBySpecialtyName(developers.get(0).getSpecialty().getName())).thenReturn(developers);
         List<Developer> developersBySpecialty = serviceUnderTest.getAllBySpeciality(developers.get(0).getSpecialty().getName());
         assertEquals(developers, developersBySpecialty);
     }
@@ -71,7 +72,7 @@ class DeveloperServiceTest {
     @Test
     void getAll() {
         List<Developer> developers = Collections.singletonList(buildDeveloper());
-        when(developerRepository.getAll()).thenReturn(developers);
+        when(developerRepository.findAll()).thenReturn(developers);
         List<Developer> allDevelopers = serviceUnderTest.getAll();
         assertEquals(developers, allDevelopers);
     }

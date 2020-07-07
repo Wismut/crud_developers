@@ -54,6 +54,8 @@
         <hibernate.version>5.4.17.Final</hibernate.version>
         <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
         <jackson.version>2.11.0</jackson.version>
+        <spring.version>5.2.7.RELEASE</spring.version>
+        <spring.data.jpa.version>2.3.1.RELEASE</spring.data.jpa.version>
     </properties>
 
     <dependencies>
@@ -101,6 +103,26 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring.data.jpa.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
         </dependency>
     </dependencies>
 </project>

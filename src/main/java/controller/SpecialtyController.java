@@ -2,37 +2,31 @@ package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-import factory.ComponentFactory;
 import model.Specialty;
 import org.junit.platform.commons.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 import response.ResponseEntityWithErrorAndMessage;
-import service.SpecialtyService;
+import service.impl.SpecialtyServiceImpl;
 import util.ControllerUtil;
 import util.ExceptionHandler;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet(urlPatterns = "/api/v1/specialties/*")
-public class SpecialtyController extends HttpServlet {
-    private final SpecialtyService specialtyService;
+@RequestMapping("/api/v1/specialties/*")
+public class SpecialtyController {
+    private final SpecialtyServiceImpl specialtyServiceImpl;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public SpecialtyController(SpecialtyService specialtyService) {
-        this.specialtyService = specialtyService;
+    public SpecialtyController(SpecialtyServiceImpl specialtyServiceImpl) {
+        this.specialtyServiceImpl = specialtyServiceImpl;
     }
 
-    public SpecialtyController() {
-        this.specialtyService = ComponentFactory.getBy(SpecialtyService.class);
-    }
-
-    @Override
+    @GetMapping
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = ControllerUtil.getPathVariableFrom(req);
@@ -57,7 +51,7 @@ public class SpecialtyController extends HttpServlet {
         }
     }
 
-    @Override
+    @PostMapping
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         Specialty specialtyFromRequest;
@@ -89,7 +83,7 @@ public class SpecialtyController extends HttpServlet {
         }
     }
 
-    @Override
+    @PutMapping
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = ControllerUtil.getPathVariableFrom(req);
@@ -116,7 +110,7 @@ public class SpecialtyController extends HttpServlet {
         }
     }
 
-    @Override
+    @DeleteMapping
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = ControllerUtil.getPathVariableFrom(req);
@@ -132,22 +126,22 @@ public class SpecialtyController extends HttpServlet {
     }
 
     public Specialty save(Specialty specialty) {
-        return specialtyService.save(specialty);
+        return specialtyServiceImpl.save(specialty);
     }
 
     public Specialty update(Specialty specialty) {
-        return specialtyService.update(specialty);
+        return specialtyServiceImpl.update(specialty);
     }
 
     public void deleteById(Long id) {
-        specialtyService.deleteBy(id);
+        specialtyServiceImpl.deleteBy(id);
     }
 
     public List<Specialty> getAll() {
-        return specialtyService.getAll();
+        return specialtyServiceImpl.getAll();
     }
 
     public Optional<Specialty> getById(Long id) {
-        return specialtyService.getById(id);
+        return specialtyServiceImpl.getById(id);
     }
 }

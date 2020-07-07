@@ -3,38 +3,38 @@ package controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-import factory.ComponentFactory;
 import model.Skill;
 import org.apache.http.HttpStatus;
 import org.junit.platform.commons.util.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import response.ResponseEntityWithErrorAndMessage;
-import service.SkillService;
+import service.impl.SkillServiceImpl;
 import util.ControllerUtil;
 import util.ExceptionHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@WebServlet(urlPatterns = "/api/v1/skills/*")
-public class SkillController extends HttpServlet {
-    private final SkillService skillService;
+@Controller
+@WebServlet("/api/v1/skills/*")
+public class SkillController {
+    private final SkillServiceImpl skillServiceImpl;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public SkillController(SkillService skillService) {
-        this.skillService = skillService;
+    public SkillController(SkillServiceImpl skillServiceImpl) {
+        this.skillServiceImpl = skillServiceImpl;
     }
 
-    public SkillController() {
-        this.skillService = ComponentFactory.getBy(SkillService.class);
-    }
-
-    @Override
+    @GetMapping
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = ControllerUtil.getPathVariableFrom(req);
@@ -76,7 +76,7 @@ public class SkillController extends HttpServlet {
         }
     }
 
-    @Override
+    @PostMapping
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         Skill skillFromRequest;
@@ -111,7 +111,7 @@ public class SkillController extends HttpServlet {
         }
     }
 
-    @Override
+    @PutMapping
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = ControllerUtil.getPathVariableFrom(req);
@@ -137,7 +137,7 @@ public class SkillController extends HttpServlet {
         }
     }
 
-    @Override
+    @DeleteMapping
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String id = ControllerUtil.getPathVariableFrom(req);
@@ -152,26 +152,26 @@ public class SkillController extends HttpServlet {
     }
 
     public void deleteById(Long id) {
-        skillService.deleteBy(id);
+        skillServiceImpl.deleteBy(id);
     }
 
     public Skill save(Skill skill) {
-        return skillService.save(skill);
+        return skillServiceImpl.save(skill);
     }
 
     public Skill update(Skill skill) {
-        return skillService.update(skill);
+        return skillServiceImpl.update(skill);
     }
 
     public Optional<Skill> getById(Long id) {
-        return skillService.getById(id);
+        return skillServiceImpl.getById(id);
     }
 
     public List<Skill> getAll() {
-        return skillService.getAll();
+        return skillServiceImpl.getAll();
     }
 
     public Optional<Skill> getByName(String name) {
-        return skillService.getByName(name);
+        return skillServiceImpl.getByName(name);
     }
 }

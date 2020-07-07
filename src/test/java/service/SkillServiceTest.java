@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import repository.SkillRepository;
+import service.impl.SkillServiceImpl;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +23,7 @@ public class SkillServiceTest {
     SkillRepository skillRepository;
 
     @InjectMocks
-    SkillService serviceUnderTest;
+    SkillServiceImpl serviceUnderTest;
 
     @BeforeAll
     void init() {
@@ -41,20 +42,20 @@ public class SkillServiceTest {
     void update() {
         Skill skill = buildSkillWithName();
         serviceUnderTest.update(skill);
-        verify(skillRepository, times(1)).update(skill);
+        verify(skillRepository, times(1)).save(skill);
     }
 
     @Test
     void deleteBy() {
         Skill skill = buildSkillWithName();
         serviceUnderTest.deleteBy(skill.getId());
-        verify(skillRepository, times(1)).deleteBy(skill.getId());
+        verify(skillRepository, times(1)).deleteById(skill.getId());
     }
 
     @Test
     void getAll() {
         List<Skill> skills = Collections.singletonList(buildSkillWithName());
-        when(skillRepository.getAll()).thenReturn(skills);
+        when(skillRepository.findAll()).thenReturn(skills);
         List<Skill> allSkills = serviceUnderTest.getAll();
         assertEquals(skills, allSkills);
     }
@@ -62,7 +63,7 @@ public class SkillServiceTest {
     @Test
     void getById() {
         Optional<Skill> skill = Optional.of(buildSkillWithNameAndId());
-        when(skillRepository.getById(skill.get().getId())).thenReturn(skill);
+        when(skillRepository.findById(skill.get().getId())).thenReturn(skill);
         Optional<Skill> foundSkill = serviceUnderTest.getById(skill.get().getId());
         assertEquals(skill, foundSkill);
     }
