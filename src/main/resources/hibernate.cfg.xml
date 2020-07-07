@@ -19,8 +19,8 @@
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">root</property>
 
-        <mapping class="model.Developer"/>
-        <mapping class="model.Specialty"/>
-        <mapping class="model.Skill"/>
+        <mapping class="ua.wismut.model.Developer"/>
+        <mapping class="ua.wismut.model.Specialty"/>
+        <mapping class="ua.wismut.model.Skill"/>
     </session-factory>
 </hibernate-configuration>
