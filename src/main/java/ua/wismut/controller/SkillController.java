@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/api/v1/skills/*")
+@RequestMapping("/api/v1/skills/")
 public class SkillController {
     private final SkillServiceImpl skillServiceImpl;
     private final ObjectMapper objectMapper = new ObjectMapper();

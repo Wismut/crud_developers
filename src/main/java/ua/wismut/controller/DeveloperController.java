@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/api/v1/developers/*")
+@RequestMapping("/api/v1/developers/")
 public class DeveloperController {
     private final DeveloperServiceImpl developerServiceImpl;
     private final ObjectMapper mapper = new ObjectMapper();

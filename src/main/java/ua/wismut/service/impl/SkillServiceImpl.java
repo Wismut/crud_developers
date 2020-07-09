@@ -38,6 +38,6 @@ public class SkillServiceImpl {
     }
 
     public Optional<Skill> getByName(String name) {
-        return skillRepository.getByName(name);
+        return skillRepository.findByName(name);
     }
 }

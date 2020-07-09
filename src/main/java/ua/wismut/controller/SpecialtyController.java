@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-@RequestMapping("/api/v1/specialties/*")
+@RequestMapping("/api/v1/specialties/")
 public class SpecialtyController {
     private final SpecialtyServiceImpl specialtyServiceImpl;
     private final ObjectMapper mapper = new ObjectMapper();

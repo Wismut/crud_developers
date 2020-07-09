@@ -2,6 +2,7 @@ package ua.wismut.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ua.wismut.model.User;
 import ua.wismut.service.UserService;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/api/v1/users/")
 public class UserController {
     private final UserService userService;
 
@@ -24,7 +26,6 @@ public class UserController {
     public User save(User user) {
         return userService.save(user);
     }
-
 
     public Optional<User> findById(Long id) {
         return userService.findById(id);

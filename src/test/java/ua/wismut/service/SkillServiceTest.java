@@ -71,7 +71,7 @@ public class SkillServiceTest {
     @Test
     void getByName() {
         Optional<Skill> skill = Optional.of(buildSkillWithNameAndId());
-        when(skillRepository.getByName(skill.get().getName())).thenReturn(skill);
+        when(skillRepository.findByName(skill.get().getName())).thenReturn(skill);
         Optional<Skill> foundSkill = serviceUnderTest.getByName(skill.get().getName());
         assertEquals(skill, foundSkill);
     }
