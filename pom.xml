@@ -56,6 +56,8 @@
         <jackson.version>2.11.0</jackson.version>
         <spring.version>5.2.7.RELEASE</spring.version>
         <spring.data.jpa.version>2.3.1.RELEASE</spring.data.jpa.version>
+        <spring.security.version>5.3.3.RELEASE</spring.security.version>
+        <http.client.version>4.5.12</http.client.version>
     </properties>
 
     <dependencies>
@@ -102,7 +104,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.12</version>
+            <version>${http.client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -128,6 +130,16 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring.security.version}</version>
         </dependency>
     </dependencies>
 </project>
