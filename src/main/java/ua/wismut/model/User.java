@@ -37,6 +37,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(table = "roles", name = "role_id"))
     private Set<Role> roles;
 
+    @Transient
+    private String confirmPassword;
+
     public User() {
     }
 
@@ -110,5 +113,13 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }
