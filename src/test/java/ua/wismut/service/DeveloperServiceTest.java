@@ -78,7 +78,7 @@ class DeveloperServiceTest {
     }
 
     private Developer buildDeveloper() {
-        Developer developer = new Developer("first_name", "last_name", new Specialty("specialty_name"), Collections.emptyList());
+        Developer developer = new Developer("first_name", "last_name", new Specialty("specialty_name"), Collections.emptySet());
         developer.setId(38L);
         return developer;
     }

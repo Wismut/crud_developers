@@ -2,7 +2,7 @@ package ua.wismut.model;
 
 import javax.persistence.*;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "developers")
@@ -23,13 +23,13 @@ public class Developer {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "developer_skill", joinColumns = @JoinColumn(name = "developer_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
-    private List<Skill> skills;
+    private Set<Skill> skills;
 
     public Developer() {
 
     }
 
-    public Developer(Long id, String firstName, String lastName, Specialty specialty, List<Skill> skills) {
+    public Developer(Long id, String firstName, String lastName, Specialty specialty, Set<Skill> skills) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -37,20 +37,20 @@ public class Developer {
         this.skills = skills;
     }
 
-    public Developer(String firstName, String lastName, Specialty specialty, List<Skill> skills) {
+    public Developer(String firstName, String lastName, Specialty specialty, Set<Skill> skills) {
         this(null, firstName, lastName, specialty, skills);
     }
 
     public Developer(String firstName, String lastName) {
-        this(firstName, lastName, null, Collections.emptyList());
+        this(firstName, lastName, null, Collections.emptySet());
     }
 
     public Developer(Long id, String firstName, String lastName) {
-        this(id, firstName, lastName, null, Collections.emptyList());
+        this(id, firstName, lastName, null, Collections.emptySet());
     }
 
     public Developer(Long id, String firstName, String lastName, String specialtyName) {
-        this(id, firstName, lastName, new Specialty(specialtyName), Collections.emptyList());
+        this(id, firstName, lastName, new Specialty(specialtyName), Collections.emptySet());
     }
 
     public Long getId() {
@@ -85,11 +85,11 @@ public class Developer {
         this.specialty = specialty;
     }
 
-    public List<Skill> getSkills() {
+    public Set<Skill> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<Skill> skills) {
+    public void setSkills(Set<Skill> skills) {
         this.skills = skills;
     }
 
