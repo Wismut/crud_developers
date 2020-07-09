@@ -5,6 +5,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -30,9 +31,14 @@ public class User {
 
     private String phoneNumber;
 
+    @ManyToMany
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(table = "users", name = "user_id"),
+            inverseJoinColumns = @JoinColumn(table = "roles", name = "role_id"))
+    private Set<Role> roles;
+
     public User() {
     }
-
 
     public Long getId() {
         return id;
