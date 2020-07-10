@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.wismut.model.Skill;
 import ua.wismut.repository.SkillRepository;
+import ua.wismut.service.SkillService;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SkillServiceImpl {
+public class SkillServiceImpl implements SkillService {
     private final SkillRepository skillRepository;
 
     @Autowired

@@ -6,7 +6,7 @@ import org.junit.platform.commons.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ua.wismut.model.Specialty;
 import ua.wismut.response.ResponseEntityWithErrorAndMessage;
-import ua.wismut.service.impl.SpecialtyServiceImpl;
+import ua.wismut.service.SpecialtyService;
 import ua.wismut.util.ControllerUtil;
 import ua.wismut.util.ExceptionHandler;
 
@@ -19,11 +19,11 @@ import java.util.Optional;
 
 @RequestMapping("/api/v1/specialties/")
 public class SpecialtyController {
-    private final SpecialtyServiceImpl specialtyServiceImpl;
+    private final SpecialtyService specialtyService;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public SpecialtyController(SpecialtyServiceImpl specialtyServiceImpl) {
-        this.specialtyServiceImpl = specialtyServiceImpl;
+    public SpecialtyController(SpecialtyService specialtyService) {
+        this.specialtyService = specialtyService;
     }
 
     @GetMapping
@@ -126,22 +126,22 @@ public class SpecialtyController {
     }
 
     public Specialty save(Specialty specialty) {
-        return specialtyServiceImpl.save(specialty);
+        return specialtyService.save(specialty);
     }
 
     public Specialty update(Specialty specialty) {
-        return specialtyServiceImpl.update(specialty);
+        return specialtyService.update(specialty);
     }
 
     public void deleteById(Long id) {
-        specialtyServiceImpl.deleteBy(id);
+        specialtyService.deleteBy(id);
     }
 
     public List<Specialty> getAll() {
-        return specialtyServiceImpl.getAll();
+        return specialtyService.getAll();
     }
 
     public Optional<Specialty> getById(Long id) {
-        return specialtyServiceImpl.getById(id);
+        return specialtyService.getById(id);
     }
 }
