@@ -26,19 +26,19 @@ public class SkillServiceImpl implements SkillService {
         return skillRepository.save(skill);
     }
 
-    public void deleteBy(Long id) {
+    public void deleteById(Long id) {
         skillRepository.deleteById(id);
     }
 
-    public List<Skill> getAll() {
+    public List<Skill> findAll() {
         return skillRepository.findAll();
     }
 
-    public Optional<Skill> getById(Long id) {
+    public Optional<Skill> findById(Long id) {
         return skillRepository.findById(id);
     }
 
-    public Optional<Skill> getByName(String name) {
+    public Optional<Skill> findByName(String name) {
         return skillRepository.findByName(name);
     }
 }

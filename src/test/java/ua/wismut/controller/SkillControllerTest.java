@@ -1,144 +1,89 @@
 package ua.wismut.controller;
 
-import constant.Constant;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.*;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import ua.wismut.config.SpringWebConfig;
+import ua.wismut.model.Skill;
+import ua.wismut.service.SkillService;
 
-import java.io.IOException;
+import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-class SkillControllerTest {
-    private final String SKILL_API_URL = Constant.URL + "/api/v1/skills/";
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.Tag;
+//import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.TestInstance;
+//import org.junit.jupiter.api.extension.ExtendWith;
+//import org.mockito.junit.jupiter.MockitoExtension;
 
-    @Test
-    public void givenSkillDoesNotExistsWhenSkillInfoIsRetrievedThen404IsReceived()
-            throws IOException {
-        // Given
-        int id = 234545223;
-        HttpUriRequest request = new HttpGet(SKILL_API_URL + id);
+//@ExtendWith(SpringExtension.class)
+//@Tag("Controller")
+//@ExtendWith(MockitoExtension.class)
+//@ContextConfiguration(classes = {SpringWebConfig.class})
+//@TestExecutionListeners({
+//        MyCustomTestExecutionListener.class,
+//        ServletTestExecutionListener.class,
+//        DirtiesContextBeforeModesTestExecutionListener.class,
+//        DependencyInjectionTestExecutionListener.class,
+//        DirtiesContextTestExecutionListener.class,
+//        TransactionalTestExecutionListener.class,
+//        SqlScriptsTestExecutionListener.class
+//})
+//@WebAppConfiguration
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ContextConfiguration(classes = SpringWebConfig.class)
+public class SkillControllerTest {
+    @Autowired
+    private WebApplicationContext wac;
 
-        // When
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+    private MockMvc mockMvc;
 
-        // Then
-        assertEquals(HttpStatus.SC_NOT_FOUND, httpResponse.getStatusLine().getStatusCode());
+    @Before
+    public void setup() {
+        DefaultMockMvcBuilder builder = MockMvcBuilders.webAppContextSetup(this.wac);
+        this.mockMvc = builder.build();
+        MockitoAnnotations.initMocks(this);
     }
 
-    @Test
-    public void givenSkillExistsWhenSkillInfoIsRetrievedThen200IsReceived()
-            throws IOException {
-        // Given
-        int id = 1;
-        HttpUriRequest request = new HttpGet(SKILL_API_URL + id);
-
-        // When
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
-
-        // Then
-        assertEquals(HttpStatus.SC_OK, httpResponse.getStatusLine().getStatusCode());
-    }
+    @Mock
+    private SkillService skillService;
 
     @Test
-    public void
-    givenRequestWithNoAcceptHeaderWhenRequestIsExecutedThenDefaultResponseContentTypeIsJson()
-            throws IOException {
-        // Given
-        String jsonMimeType = "application/json";
-        HttpUriRequest request = new HttpGet(SKILL_API_URL);
+    public void findAll_TodosFound_ShouldReturnFoundTodoEntries() throws Exception {
+        Skill firstSkill = new Skill(1L, "some name");
+        Skill secondSkill = new Skill(2L, "nameSkill");
 
-        // When
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        when(skillService.findAll()).thenReturn(Arrays.asList(firstSkill, secondSkill));
 
-        // Then
-        String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
-        assertEquals(jsonMimeType, mimeType);
-    }
+        mockMvc.perform(get("/api/v1/skills/"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(8)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is("some name")))
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[1].name", is("nameSkill")));
 
-    @Test
-    public void givenRequestWithProperJsonWithSkillNameWhenRequestIsExecutedThenStatusCreated()
-            throws IOException {
-        // Given
-        String requestBody = "{\"name\":\"dfhrgder\"}";
-        HttpPost request = new HttpPost(SKILL_API_URL);
-        StringEntity entity = new StringEntity(requestBody);
-        request.setEntity(entity);
-        request.setHeader("Accept", "application/json");
-        request.setHeader("Content-type", "application/json");
-
-        // When
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-
-        // Then
-        assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
-    }
-
-    @Test
-    public void givenRequestWithNonProperJsonWhenRequestIsExecutedThenStatusBadRequest()
-            throws IOException {
-        // Given
-        String requestBody = "{\"namsdfge\":\"dfhrgder\"}";
-        HttpPost request = new HttpPost(SKILL_API_URL);
-        StringEntity entity = new StringEntity(requestBody);
-        request.setEntity(entity);
-        request.setHeader("Accept", "application/json");
-        request.setHeader("Content-type", "application/json");
-
-        // When
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-
-        // Then
-        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
-    }
-
-    @Test
-    public void givenRequestWithIdWhenRequestIsExecutedThenStatusNoContent()
-            throws IOException {
-        // Given
-        int id = 32454;
-        HttpDelete request = new HttpDelete(SKILL_API_URL + id);
-
-        // When
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-
-        // Then
-        assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
-    }
-
-    @Test
-    public void givenRequestWithoutIdWhenRequestIsExecutedThenStatusNoContent()
-            throws IOException {
-        // Given
-        HttpDelete request = new HttpDelete(SKILL_API_URL);
-
-        // When
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-
-        // Then
-        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
-    }
-
-    @Test
-    public void givenRequestWithNewFieldsForUpdateWhenRequestIsExecutedThenStatusOk()
-            throws IOException {
-        // Given
-        int id = 1;
-        String requestBody = "{\"name\":\"dfhrgdrh8\"}";
-        HttpPut request = new HttpPut(SKILL_API_URL + id);
-        StringEntity entity = new StringEntity(requestBody);
-        request.setEntity(entity);
-        request.setHeader("Accept", "application/json");
-        request.setHeader("Content-type", "application/json");
-
-        // When
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-
-        // Then
-        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        verify(skillService, times(1)).findAll();
+        verifyNoMoreInteractions(skillService);
     }
 }

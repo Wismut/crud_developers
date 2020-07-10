@@ -21,7 +21,7 @@ public class SkillController {
 
     @DeleteMapping("{id}")
     public void deleteById(@PathVariable Long id) {
-        skillService.deleteBy(id);
+        skillService.deleteById(id);
     }
 
     @PostMapping
@@ -36,15 +36,15 @@ public class SkillController {
 
     @GetMapping("{id}")
     public Skill getById(@PathVariable Long id) {
-        return skillService.getById(id).orElseThrow(() -> new SkillNotFoundException(id));
+        return skillService.findById(id).orElseThrow(() -> new SkillNotFoundException(id));
     }
 
     @GetMapping
     public List<Skill> getAll() {
-        return skillService.getAll();
+        return skillService.findAll();
     }
 
     public Optional<Skill> getByName(String name) {
-        return skillService.getByName(name);
+        return skillService.findByName(name);
     }
 }

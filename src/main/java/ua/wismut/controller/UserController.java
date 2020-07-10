@@ -40,7 +40,7 @@ public class UserController {
         return userService.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    @GetMapping
+    @GetMapping("findByUsername")
     public User findByUsername(@RequestParam("username") String username) {
         return userService.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
     }

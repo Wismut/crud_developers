@@ -11,11 +11,11 @@ public interface SkillService {
 
     Skill update(Skill skill);
 
-    void deleteBy(Long id);
+    void deleteById(Long id);
 
-    List<Skill> getAll();
+    List<Skill> findAll();
 
-    Optional<Skill> getById(Long id);
+    Optional<Skill> findById(Long id);
 
-    Optional<Skill> getByName(String name);
+    Optional<Skill> findByName(String name);
 }
