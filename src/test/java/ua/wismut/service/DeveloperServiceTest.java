@@ -6,6 +6,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import ua.wismut.model.Account;
 import ua.wismut.model.Developer;
 import ua.wismut.model.Specialty;
 import ua.wismut.repository.DeveloperRepository;
@@ -78,8 +79,11 @@ class DeveloperServiceTest {
     }
 
     private Developer buildDeveloper() {
-        Developer developer = new Developer("first_name", "last_name", new Specialty("specialty_name"), Collections.emptySet());
-        developer.setId(38L);
-        return developer;
+        return new Developer(38L,
+                "first_name",
+                "last_name",
+                new Specialty("specialty_name"),
+                Collections.emptySet(),
+                new Account());
     }
 }

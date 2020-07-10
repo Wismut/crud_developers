@@ -1,6 +1,7 @@
 package ua.wismut.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,7 +14,7 @@ public class Skill {
     private String name;
 
     @ManyToMany(mappedBy = "skills")
-    private List<Developer> developers;
+    private List<Developer> developers = new ArrayList<>();
 
     public Skill() {
 

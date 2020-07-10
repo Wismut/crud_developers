@@ -23,7 +23,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     public Developer update(Developer developer) {
-        return developerRepository.saveAndFlush(developer);
+        return developerRepository.save(developer);
     }
 
     public Developer save(Developer developer) {

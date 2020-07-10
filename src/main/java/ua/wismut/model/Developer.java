@@ -1,7 +1,7 @@
 package ua.wismut.model;
 
 import javax.persistence.*;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,35 +22,25 @@ public class Developer {
     private Specialty specialty;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "developer_skill", joinColumns = @JoinColumn(name = "developer_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
-    private Set<Skill> skills;
+    @JoinTable(name = "developer_skill",
+            joinColumns = @JoinColumn(name = "developer_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    private Set<Skill> skills = new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Account account;
 
     public Developer() {
 
     }
 
-    public Developer(Long id, String firstName, String lastName, Specialty specialty, Set<Skill> skills) {
+    public Developer(Long id, String firstName, String lastName, Specialty specialty, Set<Skill> skills, Account account) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.specialty = specialty;
         this.skills = skills;
-    }
-
-    public Developer(String firstName, String lastName, Specialty specialty, Set<Skill> skills) {
-        this(null, firstName, lastName, specialty, skills);
-    }
-
-    public Developer(String firstName, String lastName) {
-        this(firstName, lastName, null, Collections.emptySet());
-    }
-
-    public Developer(Long id, String firstName, String lastName) {
-        this(id, firstName, lastName, null, Collections.emptySet());
-    }
-
-    public Developer(Long id, String firstName, String lastName, String specialtyName) {
-        this(id, firstName, lastName, new Specialty(specialtyName), Collections.emptySet());
+        this.account = account;
     }
 
     public Long getId() {
@@ -91,6 +81,14 @@ public class Developer {
 
     public void setSkills(Set<Skill> skills) {
         this.skills = skills;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     @Override
