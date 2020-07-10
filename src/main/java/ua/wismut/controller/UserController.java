@@ -1,22 +1,17 @@
 package ua.wismut.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
+import ua.wismut.exception.UserNotFoundException;
 import ua.wismut.model.User;
 import ua.wismut.service.SecurityService;
 import ua.wismut.service.UserService;
 import ua.wismut.validator.UserValidator;
 
 import java.util.List;
-import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1/users/")
 public class UserController {
     private final UserService userService;
@@ -30,44 +25,33 @@ public class UserController {
         this.userValidator = userValidator;
     }
 
-    @GetMapping("registration")
-    public String registration(Model model) {
-        model.addAttribute("userForm", new User());
-        return "registration";
-    }
-
-    @PostMapping("registration")
-    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult, Model model) {
-        userValidator.validate(userForm, bindingResult);
-        if (bindingResult.hasErrors()) {
-            return "registration";
-        }
-        userService.save(userForm);
-        securityService.autoLogin(userForm.getUsername(), userForm.getConfirmPassword());
-        return "redirect:/welcome";
-    }
-
-    public User update(User user) {
+    @PutMapping
+    public User update(@RequestBody User user) {
         return userService.save(user);
     }
 
-    public User save(User user) {
+    @PostMapping
+    public User save(@RequestBody User user) {
         return userService.save(user);
     }
 
-    public Optional<User> findById(Long id) {
-        return userService.findById(id);
+    @GetMapping("{id}")
+    public User findById(@PathVariable Long id) {
+        return userService.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public Optional<User> findByUsername(String username) {
-        return userService.findByUsername(username);
+    @GetMapping
+    public User findByUsername(@RequestParam("username") String username) {
+        return userService.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
+    @GetMapping
     public List<User> findAll() {
         return userService.findAll();
     }
 
-    public void deleteById(Long id) {
+    @DeleteMapping("{id}")
+    public void deleteById(@PathVariable Long id) {
         userService.deleteById(id);
     }
 }
