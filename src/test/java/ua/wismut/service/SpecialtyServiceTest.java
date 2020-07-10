@@ -56,7 +56,7 @@ class SpecialtyServiceTest {
     void getAll() {
         List<Specialty> specialties = Collections.singletonList(buildSpecialty());
         when(specialtyRepository.findAll()).thenReturn(specialties);
-        List<Specialty> allSpecialties = serviceUnderTest.getAll();
+        List<Specialty> allSpecialties = serviceUnderTest.findAll();
         assertEquals(specialties, allSpecialties);
     }
 
@@ -64,7 +64,7 @@ class SpecialtyServiceTest {
     void getById() {
         Optional<Specialty> specialty = Optional.of(buildSpecialty());
         when(specialtyRepository.findById(specialty.get().getId())).thenReturn(specialty);
-        Optional<Specialty> specialtyById = serviceUnderTest.getById(specialty.get().getId());
+        Optional<Specialty> specialtyById = serviceUnderTest.findById(specialty.get().getId());
         assertEquals(specialty, specialtyById);
     }
 

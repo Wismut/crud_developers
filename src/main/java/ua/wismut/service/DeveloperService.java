@@ -16,5 +16,5 @@ public interface DeveloperService {
 
     List<Developer> getAllBySpeciality(String specialityName);
 
-    List<Developer> getAll();
+    List<Developer> findAll();
 }

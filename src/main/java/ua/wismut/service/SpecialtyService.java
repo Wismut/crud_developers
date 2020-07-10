@@ -12,9 +12,9 @@ public interface SpecialtyService {
 
     void deleteBy(Long id);
 
-    List<Specialty> getAll();
+    List<Specialty> findAll();
 
-    Optional<Specialty> getById(Long id);
+    Optional<Specialty> findById(Long id);
 
     void saveIfAbsent(Specialty specialty);
 }

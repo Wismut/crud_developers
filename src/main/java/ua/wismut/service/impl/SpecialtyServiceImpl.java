@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.wismut.model.Specialty;
 import ua.wismut.repository.SpecialtyRepository;
+import ua.wismut.service.SpecialtyService;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class SpecialtyServiceImpl {
+public class SpecialtyServiceImpl implements SpecialtyService {
     private final SpecialtyRepository specialtyRepository;
 
     @Autowired
@@ -29,11 +30,11 @@ public class SpecialtyServiceImpl {
         specialtyRepository.deleteById(id);
     }
 
-    public List<Specialty> getAll() {
+    public List<Specialty> findAll() {
         return specialtyRepository.findAll();
     }
 
-    public Optional<Specialty> getById(Long id) {
+    public Optional<Specialty> findById(Long id) {
         return specialtyRepository.findById(id);
     }
 

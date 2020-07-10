@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.wismut.model.Developer;
 import ua.wismut.repository.DeveloperRepository;
+import ua.wismut.service.DeveloperService;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DeveloperServiceImpl {
+public class DeveloperServiceImpl implements DeveloperService {
     private final DeveloperRepository developerRepository;
 
     @Autowired
@@ -37,7 +38,7 @@ public class DeveloperServiceImpl {
         return developerRepository.findAllBySpecialtyName(specialityName);
     }
 
-    public List<Developer> getAll() {
+    public List<Developer> findAll() {
         return developerRepository.findAll();
     }
 }

@@ -73,7 +73,7 @@ class DeveloperServiceTest {
     void getAll() {
         List<Developer> developers = Collections.singletonList(buildDeveloper());
         when(developerRepository.findAll()).thenReturn(developers);
-        List<Developer> allDevelopers = serviceUnderTest.getAll();
+        List<Developer> allDevelopers = serviceUnderTest.findAll();
         assertEquals(developers, allDevelopers);
     }
 
