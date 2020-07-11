@@ -1,10 +1,12 @@
 package ua.wismut.service;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import ua.wismut.model.Specialty;
 import ua.wismut.repository.SpecialtyRepository;
@@ -30,12 +32,19 @@ class SpecialtyServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    @BeforeEach
+    public void before() {
+        Mockito.reset(specialtyRepository);
+    }
+
     @Test
     void save() {
         Specialty specialty = buildSpecialty();
         when(specialtyRepository.save(any())).thenReturn(specialty);
         Specialty savedSpecialty = serviceUnderTest.save(specialty);
         assertEquals(specialty, savedSpecialty);
+        verify(specialtyRepository, times(1)).save(specialty);
+        verifyNoMoreInteractions(specialtyRepository);
     }
 
     @Test
@@ -43,6 +52,7 @@ class SpecialtyServiceTest {
         Specialty specialty = buildSpecialty();
         serviceUnderTest.update(specialty);
         verify(specialtyRepository, times(1)).save(specialty);
+        verifyNoMoreInteractions(specialtyRepository);
     }
 
     @Test
@@ -50,22 +60,27 @@ class SpecialtyServiceTest {
         Specialty specialty = buildSpecialty();
         serviceUnderTest.deleteBy(specialty.getId());
         verify(specialtyRepository, times(1)).deleteById(specialty.getId());
+        verifyNoMoreInteractions(specialtyRepository);
     }
 
     @Test
-    void getAll() {
+    void findAll() {
         List<Specialty> specialties = Collections.singletonList(buildSpecialty());
         when(specialtyRepository.findAll()).thenReturn(specialties);
         List<Specialty> allSpecialties = serviceUnderTest.findAll();
         assertEquals(specialties, allSpecialties);
+        verify(specialtyRepository, times(1)).findAll();
+        verifyNoMoreInteractions(specialtyRepository);
     }
 
     @Test
-    void getById() {
+    void findById() {
         Optional<Specialty> specialty = Optional.of(buildSpecialty());
         when(specialtyRepository.findById(specialty.get().getId())).thenReturn(specialty);
         Optional<Specialty> specialtyById = serviceUnderTest.findById(specialty.get().getId());
         assertEquals(specialty, specialtyById);
+        verify(specialtyRepository, times(1)).findById(specialty.get().getId());
+        verifyNoMoreInteractions(specialtyRepository);
     }
 
     @Test
@@ -74,6 +89,8 @@ class SpecialtyServiceTest {
         when(specialtyRepository.save(any())).thenReturn(specialty);
         Specialty savedSpecialty = serviceUnderTest.save(specialty);
         assertEquals(specialty, savedSpecialty);
+        verify(specialtyRepository, times(1)).save(specialty);
+        verifyNoMoreInteractions(specialtyRepository);
     }
 
     private Specialty buildSpecialty() {

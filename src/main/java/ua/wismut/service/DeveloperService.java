@@ -12,9 +12,9 @@ public interface DeveloperService {
 
     Developer save(Developer developer);
 
-    Optional<Developer> getById(Long id);
+    Optional<Developer> findById(Long id);
 
-    List<Developer> getAllBySpeciality(String specialityName);
+    List<Developer> findAllBySpeciality(String specialityName);
 
     List<Developer> findAll();
 }

@@ -30,11 +30,11 @@ public class DeveloperServiceImpl implements DeveloperService {
         return developerRepository.save(developer);
     }
 
-    public Optional<Developer> getById(Long id) {
+    public Optional<Developer> findById(Long id) {
         return developerRepository.findById(id);
     }
 
-    public List<Developer> getAllBySpeciality(String specialityName) {
+    public List<Developer> findAllBySpeciality(String specialityName) {
         return developerRepository.findAllBySpecialtyName(specialityName);
     }
 

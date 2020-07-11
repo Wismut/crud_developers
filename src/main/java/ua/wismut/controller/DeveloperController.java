@@ -35,11 +35,11 @@ public class DeveloperController {
 
     @GetMapping("{id}")
     public Optional<Developer> findById(@PathVariable Long id) {
-        return developerService.getById(id);
+        return developerService.findById(id);
     }
 
     public List<Developer> getAllBySpeciality(String specialityName) {
-        return developerService.getAllBySpeciality(specialityName);
+        return developerService.findAllBySpeciality(specialityName);
     }
 
     @GetMapping
