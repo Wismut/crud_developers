@@ -12,6 +12,7 @@ import ua.wismut.service.SkillService;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -21,13 +22,13 @@ public class SkillControllerTest {
     @InjectMocks
     private SkillController skillController;
 
+    @Mock
+    private SkillService skillService;
+
     @BeforeAll
     public static void setup() {
         MockitoAnnotations.initMocks(SkillControllerTest.class);
     }
-
-    @Mock
-    private SkillService skillService;
 
     @Test
     public void findAllSkillsFoundShouldReturnFoundSkillEntries() throws Exception {
@@ -42,6 +43,20 @@ public class SkillControllerTest {
         assertEquals(skills.get(1).getId().longValue(), 2L);
 
         verify(skillService, times(1)).findAll();
+        verifyNoMoreInteractions(skillService);
+    }
+
+    @Test
+    public void findByIdShouldReturnFoundSkillEntry() throws Exception {
+        Skill skill = new Skill(1L, "some name");
+
+        when(skillService.findById(skill.getId())).thenReturn(Optional.of(skill));
+
+        Skill foundedSkill = skillController.findById(skill.getId());
+        assertEquals(foundedSkill.getId(), skill.getId());
+        assertEquals(foundedSkill.getName(), skill.getName());
+
+        verify(skillService, times(1)).findById(anyLong());
         verifyNoMoreInteractions(skillService);
     }
 }

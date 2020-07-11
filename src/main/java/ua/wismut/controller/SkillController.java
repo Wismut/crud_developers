@@ -35,7 +35,7 @@ public class SkillController {
     }
 
     @GetMapping("{id}")
-    public Skill getById(@PathVariable Long id) {
+    public Skill findById(@PathVariable Long id) {
         return skillService.findById(id).orElseThrow(() -> new SkillNotFoundException(id));
     }
 
@@ -44,7 +44,7 @@ public class SkillController {
         return skillService.findAll();
     }
 
-    public Optional<Skill> getByName(String name) {
+    public Optional<Skill> findByName(String name) {
         return skillService.findByName(name);
     }
 }

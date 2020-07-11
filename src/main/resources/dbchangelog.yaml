@@ -1,0 +1,266 @@
+databaseChangeLog:
+- changeSet:
+    id: 1594365596148-1
+    author: Maksym Ivanov
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: developer_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: skill_id
+            type: BIGINT
+        tableName: developer_skill
+- changeSet:
+    id: 1594365596148-2
+    author: Maksym Ivanov
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: specialty_id
+            type: BIGINT
+        tableName: developers
+- changeSet:
+    id: 1594365596148-3
+    author: Maksym Ivanov
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: roles
+- changeSet:
+    id: 1594365596148-4
+    author: Maksym Ivanov
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: skills
+- changeSet:
+    id: 1594365596148-5
+    author: Maksym Ivanov
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: specialties
+- changeSet:
+    id: 1594365596148-6
+    author: Maksym Ivanov
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: created
+            type: datetime
+        - column:
+            name: lastPasswordChangeDate
+            type: datetime
+        - column:
+            name: password
+            type: VARCHAR(255)
+        - column:
+            name: phoneNumber
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: updated
+            type: datetime
+        - column:
+            name: username
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1594365596148-7
+    author: Maksym Ivanov
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: user_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: role_id
+            type: BIGINT
+        tableName: users_roles
+- changeSet:
+    id: 1594365596148-8
+    author: Maksym Ivanov
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: specialty_id
+        indexName: FK13s3ucl8y2mwdehwfj1ku9mo0
+        tableName: developers
+- changeSet:
+    id: 1594365596148-9
+    author: Maksym Ivanov
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: developer_id
+        indexName: FKdycg1w7ts83bxakdg9i7suqix
+        tableName: developer_skill
+- changeSet:
+    id: 1594365596148-10
+    author: Maksym Ivanov
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: role_id
+        indexName: FKj6m8fwv7oqv74fcehir1a9ffy
+        tableName: users_roles
+- changeSet:
+    id: 1594365596148-11
+    author: Maksym Ivanov
+    changes:
+    - createIndex:
+        columns:
+        - column:
+            name: skill_id
+        indexName: FKkm45jbrawhq5vff94kow0ique
+        tableName: developer_skill
+- changeSet:
+    id: 1594365596148-12
+    author: Maksym Ivanov
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: specialty_id
+        baseTableName: developers
+        constraintName: FK13s3ucl8y2mwdehwfj1ku9mo0
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: specialties
+        validate: true
+- changeSet:
+    id: 1594365596148-13
+    author: Maksym Ivanov
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: users_roles
+        constraintName: FK2o0jvgh89lemvvo17cbqvdxaa
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1594365596148-14
+    author: Maksym Ivanov
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: developer_id
+        baseTableName: developer_skill
+        constraintName: FKdycg1w7ts83bxakdg9i7suqix
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: developers
+        validate: true
+- changeSet:
+    id: 1594365596148-15
+    author: Maksym Ivanov
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: role_id
+        baseTableName: users_roles
+        constraintName: FKj6m8fwv7oqv74fcehir1a9ffy
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: roles
+        validate: true
+- changeSet:
+    id: 1594365596148-16
+    author: Maksym Ivanov
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: skill_id
+        baseTableName: developer_skill
+        constraintName: FKkm45jbrawhq5vff94kow0ique
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: skills
+        validate: true
