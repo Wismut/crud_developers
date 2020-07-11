@@ -1,10 +1,12 @@
 package ua.wismut.service;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import ua.wismut.model.Skill;
 import ua.wismut.repository.SkillRepository;
@@ -30,66 +32,81 @@ public class SkillServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
-    void save() {
-        Skill skill = buildSkillWithName();
-        when(skillRepository.save(any(Skill.class))).thenReturn(skill);
-        Skill savedSkill = serviceUnderTest.save(skill);
-        assertEquals(skill, savedSkill);
+    @BeforeEach
+    void before() {
+        Mockito.reset(skillRepository);
     }
 
     @Test
-    void update() {
-        Skill skill = buildSkillWithName();
-        serviceUnderTest.update(skill);
+    public void save() {
+        Skill skill = buildSkill();
+        when(skillRepository.save(any(Skill.class))).thenReturn(skill);
+        Skill savedSkill = serviceUnderTest.save(skill);
+        assertEquals(skill, savedSkill);
+        verify(skillRepository, times(1)).save(any(Skill.class));
+        verifyNoMoreInteractions(skillRepository);
+    }
+
+    @Test
+    void findAll() {
+        List<Skill> skills = Collections.singletonList(buildSkill());
+        when(skillRepository.findAll()).thenReturn(skills);
+        List<Skill> allSkills = serviceUnderTest.findAll();
+        assertEquals(skills, allSkills);
+        verify(skillRepository, times(1)).findAll();
+        verifyNoMoreInteractions(skillRepository);
+    }
+
+    @Test
+    public void update() {
+        Skill skill = buildSkill();
+        when(skillRepository.save(any())).thenReturn(skill);
+        Skill updatedSkill = serviceUnderTest.update(skill);
+        assertEquals(skill, updatedSkill);
         verify(skillRepository, times(1)).save(skill);
         verifyNoMoreInteractions(skillRepository);
     }
 
     @Test
     void deleteBy() {
-        Skill skill = buildSkillWithName();
+        Skill skill = buildSkill();
         serviceUnderTest.deleteById(skill.getId());
         verify(skillRepository, times(1)).deleteById(skill.getId());
+        verifyNoMoreInteractions(skillRepository);
     }
 
-    @Test
-    void getAll() {
-        List<Skill> skills = Collections.singletonList(buildSkillWithName());
-        when(skillRepository.findAll()).thenReturn(skills);
-        List<Skill> allSkills = serviceUnderTest.findAll();
-        assertEquals(skills, allSkills);
-    }
 
     @Test
-    void getById() {
-        Optional<Skill> skill = Optional.of(buildSkillWithNameAndId());
+    void findById() {
+        Optional<Skill> skill = Optional.of(buildSkill());
         when(skillRepository.findById(skill.get().getId())).thenReturn(skill);
         Optional<Skill> foundSkill = serviceUnderTest.findById(skill.get().getId());
         assertEquals(skill, foundSkill);
+        verify(skillRepository, times(1)).findById(anyLong());
+        verifyNoMoreInteractions(skillRepository);
     }
 
     @Test
-    void getByName() {
-        Optional<Skill> skill = Optional.of(buildSkillWithNameAndId());
+    void findByName() {
+        Optional<Skill> skill = Optional.of(buildSkill());
         when(skillRepository.findByName(skill.get().getName())).thenReturn(skill);
         Optional<Skill> foundSkill = serviceUnderTest.findByName(skill.get().getName());
         assertEquals(skill, foundSkill);
+        verify(skillRepository, times(1)).findByName(anyString());
+        verifyNoMoreInteractions(skillRepository);
     }
 
-    @Test
+        @Test
     void saveIfAbsent() {
-        Skill skill = buildSkillWithName();
+        Skill skill = buildSkill();
         when(skillRepository.save(any(Skill.class))).thenReturn(skill);
         Skill savedSkill = serviceUnderTest.save(skill);
         assertEquals(skill, savedSkill);
+        verify(skillRepository, times(1)).save(any(Skill.class));
+        verifyNoMoreInteractions(skillRepository);
     }
 
-    private Skill buildSkillWithName() {
-        return new Skill("name_random");
-    }
-
-    private Skill buildSkillWithNameAndId() {
+    private Skill buildSkill() {
         return new Skill(23L, "some_name");
     }
 }
