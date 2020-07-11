@@ -72,9 +72,4 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
         properties.setProperty("hibernate.use_sql_comments", "true");
         return properties;
     }
-
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-//    }
 }

@@ -40,7 +40,7 @@ public class SkillController {
     }
 
     @GetMapping
-    public List<Skill> getAll() {
+    public List<Skill> findAll() {
         return skillService.findAll();
     }
 
