@@ -60,7 +60,9 @@ class UserServiceTest {
     @Test
     void update() {
         User user = buildUser();
-        serviceUnderTest.update(user);
+        when(userRepository.save(any())).thenReturn(user);
+        User updatedUser = serviceUnderTest.update(user);
+        assertEquals(user, updatedUser);
         verify(userRepository, times(1)).save(user);
         verifyNoMoreInteractions(userRepository);
     }
@@ -80,8 +82,8 @@ class UserServiceTest {
     void findById() {
         Optional<User> user = Optional.of(buildUser());
         when(userRepository.findById(user.get().getId())).thenReturn(user);
-        Optional<User> UserById = serviceUnderTest.findById(user.get().getId());
-        assertEquals(user, UserById);
+        Optional<User> userById = serviceUnderTest.findById(user.get().getId());
+        assertEquals(user, userById);
         verify(userRepository, times(1)).findById(user.get().getId());
         verifyNoMoreInteractions(userRepository);
     }
