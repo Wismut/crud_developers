@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class SkillControllerTest {
     @InjectMocks
-    private SkillController skillController;
+    private SkillController controllerUnderTest;
 
     @Mock
     private SkillService skillService;
@@ -37,7 +37,7 @@ public class SkillControllerTest {
 
         when(skillService.findAll()).thenReturn(Arrays.asList(firstSkill, secondSkill));
 
-        List<Skill> skills = skillController.findAll();
+        List<Skill> skills = controllerUnderTest.findAll();
         assertEquals(skills.size(), 2);
         assertEquals(skills.get(0).getId().longValue(), 1L);
         assertEquals(skills.get(1).getId().longValue(), 2L);
@@ -52,11 +52,25 @@ public class SkillControllerTest {
 
         when(skillService.findById(skill.getId())).thenReturn(Optional.of(skill));
 
-        Skill foundedSkill = skillController.findById(skill.getId());
+        Skill foundedSkill = controllerUnderTest.findById(skill.getId());
         assertEquals(foundedSkill.getId(), skill.getId());
         assertEquals(foundedSkill.getName(), skill.getName());
 
         verify(skillService, times(1)).findById(anyLong());
+        verifyNoMoreInteractions(skillService);
+    }
+
+    @Test
+    public void saveShouldReturnFoundSkillEntry() throws Exception {
+        Skill skill = new Skill("some name");
+
+        when(skillService.save(skill)).thenReturn(skill);
+
+        Skill savedSkill = controllerUnderTest.save(skill);
+        assertEquals(savedSkill.getId(), skill.getId());
+        assertEquals(savedSkill.getName(), skill.getName());
+
+        verify(skillService, times(1)).save(any());
         verifyNoMoreInteractions(skillService);
     }
 }

@@ -43,6 +43,7 @@ public class SkillServiceTest {
         Skill skill = buildSkillWithName();
         serviceUnderTest.update(skill);
         verify(skillRepository, times(1)).save(skill);
+        verifyNoMoreInteractions(skillRepository);
     }
 
     @Test
