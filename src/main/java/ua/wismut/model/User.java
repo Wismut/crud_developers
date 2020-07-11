@@ -43,6 +43,19 @@ public class User {
     public User() {
     }
 
+    public User(Long id, String username, String password, LocalDateTime created, LocalDateTime updated, LocalDateTime lastPasswordChangeDate, Status status, String phoneNumber, Set<Role> roles, String confirmPassword) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.created = created;
+        this.updated = updated;
+        this.lastPasswordChangeDate = lastPasswordChangeDate;
+        this.status = status;
+        this.phoneNumber = phoneNumber;
+        this.roles = roles;
+        this.confirmPassword = confirmPassword;
+    }
+
     public Long getId() {
         return id;
     }
