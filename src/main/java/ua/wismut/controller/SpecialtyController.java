@@ -2,11 +2,11 @@ package ua.wismut.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ua.wismut.exception.SpecialtyNotFoundException;
 import ua.wismut.model.Specialty;
 import ua.wismut.service.SpecialtyService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/specialties/")
@@ -39,7 +39,7 @@ public class SpecialtyController {
     }
 
     @GetMapping("{id}")
-    public Optional<Specialty> findById(@PathVariable Long id) {
-        return specialtyService.findById(id);
+    public Specialty findById(@PathVariable Long id) {
+        return specialtyService.findById(id).orElseThrow(() -> new SpecialtyNotFoundException(id));
     }
 }
