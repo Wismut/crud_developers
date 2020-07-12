@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ua.wismut.exception.UserNotFoundException;
 import ua.wismut.model.User;
-import ua.wismut.service.SecurityService;
 import ua.wismut.service.UserService;
 import ua.wismut.validator.UserValidator;
 
@@ -15,13 +14,11 @@ import java.util.List;
 @RequestMapping("/api/v1/users/")
 public class UserController {
     private final UserService userService;
-    private final SecurityService securityService;
     private final UserValidator userValidator;
 
     @Autowired
-    public UserController(UserService userService, SecurityService securityService, UserValidator userValidator) {
+    public UserController(UserService userService, UserValidator userValidator) {
         this.userService = userService;
-        this.securityService = securityService;
         this.userValidator = userValidator;
     }
 

@@ -2,11 +2,11 @@ package ua.wismut.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ua.wismut.exception.DeveloperNotFoundException;
 import ua.wismut.model.Developer;
 import ua.wismut.service.DeveloperService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/developers/")
@@ -34,8 +34,8 @@ public class DeveloperController {
     }
 
     @GetMapping("{id}")
-    public Optional<Developer> findById(@PathVariable Long id) {
-        return developerService.findById(id);
+    public Developer findById(@PathVariable Long id) {
+        return developerService.findById(id).orElseThrow(() -> new DeveloperNotFoundException(id));
     }
 
     public List<Developer> getAllBySpeciality(String specialityName) {

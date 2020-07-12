@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-class SkillNotFoundAdvice {
+class DeveloperNotFoundAdvice {
     @ResponseBody
-    @ExceptionHandler(SkillNotFoundException.class)
+    @ExceptionHandler(DeveloperNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    ResponseEntity<Object> skillNotFoundHandler(SkillNotFoundException ex) {
+    ResponseEntity<Object> developerNotFoundHandler(DeveloperNotFoundException ex) {
         return new ResponseEntity<>(new JsonResponse(ex.getMessage(),
                 HttpStatus.NOT_FOUND.getReasonPhrase()),
                 HttpStatus.NOT_FOUND);
