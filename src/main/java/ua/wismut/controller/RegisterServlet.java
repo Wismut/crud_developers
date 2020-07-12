@@ -1,7 +1,11 @@
 package ua.wismut.controller;
 
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ua.wismut.model.User;
 import ua.wismut.model.VerificationResult;
 import ua.wismut.service.FlashMessageHandler;
@@ -11,35 +15,29 @@ import ua.wismut.service.impl.AuthService;
 
 import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/register")
+@RestController
+@RequestMapping("/api/v1/register/")
 public class RegisterServlet extends HttpServlet {
-
     private final UserService userService;
     private final AuthService authService;
     private final VerificationService verificationService;
-    private final BCryptPasswordEncoder passwordEncoder;
 
-//    @SuppressWarnings("unused")
-//    public RegisterServlet() {
-//        this(new UserService(), new AuthService(), new TwilioVerification());
-//    }
-
+    @Autowired
     public RegisterServlet(UserService userService, AuthService authService,
-                           VerificationService verificationService, BCryptPasswordEncoder passwordEncoder) {
+                           VerificationService verificationService) {
         this.userService = userService;
         this.authService = authService;
         this.verificationService = verificationService;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response) throws ServletException, IOException {
+    @PostMapping
+    public void register(HttpServletRequest request,
+                         HttpServletResponse response) throws ServletException, IOException {
 
         String phone = request.getParameter("full_phone");
         String username = request.getParameter("username");
@@ -65,7 +63,7 @@ public class RegisterServlet extends HttpServlet {
         authService.login(request.getSession(), user);
 
         VerificationResult result = verificationService.startVerification(phone, channel);
-        if(result.isValid()) {
+        if (result.isValid()) {
             response.sendRedirect("/verify");
         } else {
             userService.delete(user);
@@ -74,6 +72,7 @@ public class RegisterServlet extends HttpServlet {
         }
     }
 
+    @GetMapping
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("message", FlashMessageHandler.getMessage(request));
