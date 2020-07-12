@@ -1,5 +1,6 @@
 package ua.wismut.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -9,21 +10,30 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.util.Properties;
 
 @EnableWebMvc
 @Configuration
-//@EnableWebSecurity
+@EnableWebSecurity
 @ComponentScan({"ua.wismut"})
 @EnableJpaRepositories(basePackages = "ua.wismut.repository")
-public class SpringWebConfig implements WebMvcConfigurer {
+public class SpringWebConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth)
+            throws Exception {
+        auth.inMemoryAuthentication().withUser("user")
+                .password(passwordEncoder().encode("password")).roles("USER");
+    }
+
     @Bean
     public PlatformTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -33,8 +43,8 @@ public class SpringWebConfig implements WebMvcConfigurer {
 
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
-        return null;
-//        return authenticationManagerBean();
+//        return null;
+        return authenticationManagerBean();
     }
 
     @Bean
