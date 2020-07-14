@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -40,7 +41,12 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/*", "/**").hasRole("ADMIN");
+                .antMatchers(HttpMethod.GET, "/api/v1/developers/**",
+                        "/api/v1/accounts/**",
+                        "/api/v1/skills/**").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/api/v1/**").hasRole("MODERATOR")
+                .antMatchers("/api/v1/developers/**", "/api/v1/accounts/**").hasRole("MODERATOR")
+                .antMatchers("/api/v1/**").hasRole("ADMIN");
     }
 
     @Bean
