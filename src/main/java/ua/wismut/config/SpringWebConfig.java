@@ -11,6 +11,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -26,6 +27,7 @@ import java.util.Properties;
 @Configuration
 @EnableWebSecurity
 @ComponentScan({"ua.wismut"})
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableJpaRepositories(basePackages = "ua.wismut.repository")
 public class SpringWebConfig extends WebSecurityConfigurerAdapter {
     @Autowired
@@ -38,8 +40,7 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .anyRequest().authenticated()
-                .and().httpBasic();
+                .antMatchers("/*", "/**").hasRole("ADMIN");
     }
 
     @Bean
@@ -51,7 +52,6 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
-//        return null;
         return authenticationManagerBean();
     }
 
