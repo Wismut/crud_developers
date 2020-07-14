@@ -1,6 +1,7 @@
 package ua.wismut.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import ua.wismut.security.JwtConfigurer;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -32,6 +34,9 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = "ua.wismut.repository")
 public class SpringWebConfig extends WebSecurityConfigurerAdapter {
     @Autowired
+    ApplicationContext context;
+
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
         auth.inMemoryAuthentication().withUser("user")
@@ -41,12 +46,16 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/api/v1/skills/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/developers/**",
                         "/api/v1/accounts/**",
                         "/api/v1/skills/**").hasRole("USER")
                 .antMatchers(HttpMethod.GET, "/api/v1/**").hasRole("MODERATOR")
                 .antMatchers("/api/v1/developers/**", "/api/v1/accounts/**").hasRole("MODERATOR")
-                .antMatchers("/api/v1/**").hasRole("ADMIN");
+                .antMatchers("/api/v1/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
+                .and()
+                .apply(context.getBean(JwtConfigurer.class));
     }
 
     @Bean
