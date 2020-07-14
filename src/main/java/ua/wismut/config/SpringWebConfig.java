@@ -46,7 +46,7 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/api/v1/skills/**").permitAll()
+                .antMatchers("/api/v1/skills/**", "/api/v1/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/developers/**",
                         "/api/v1/accounts/**",
                         "/api/v1/skills/**").hasRole("USER")
