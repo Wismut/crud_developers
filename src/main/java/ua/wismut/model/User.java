@@ -31,7 +31,7 @@ public class User {
 
     private String phoneNumber;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(table = "users", name = "user_id"),
             inverseJoinColumns = @JoinColumn(table = "roles", name = "role_id"))

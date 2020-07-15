@@ -66,4 +66,10 @@ public class UserServiceImpl implements UserService {
     public void delete(User user) {
         userRepository.delete(user);
     }
+
+    @Override
+    public Optional<User> findByUsernameAndPassword(String username, String password) {
+        System.out.println(passwordEncoder.encode(password));
+        return userRepository.findByUsernameAndPassword(username, passwordEncoder.encode(password));
+    }
 }

@@ -19,4 +19,6 @@ public interface UserService {
     void deleteById(Long id);
 
     void delete(User user);
+
+    Optional<User> findByUsernameAndPassword(String username, String password);
 }
