@@ -25,7 +25,7 @@ public class SkillController {
     }
 
     @PostMapping
-    public Skill save(Skill skill) {
+    public Skill save(@RequestBody Skill skill) {
         return skillService.save(skill);
     }
 

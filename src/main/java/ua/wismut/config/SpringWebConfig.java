@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -37,9 +36,12 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/auth/**").permitAll()
+        http.csrf().disable()
+                .authorizeRequests()
+//                .antMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
+//                .antMatchers(HttpMethod.GET, "/api/v1/auth/**").permitAll()
+                .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers("/api/v1/skills/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(context.getBean(JwtConfigurer.class));
