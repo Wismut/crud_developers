@@ -1,5 +1,6 @@
 package ua.wismut.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import constant.Constant;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -7,14 +8,40 @@ import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SkillControllerIntegrationTest {
     private final String SKILL_API_URL = Constant.URL + "/api/v1/skills/";
+
+    private static String token;
+
+    @BeforeAll
+    public static void init() throws IOException {
+        String requestBody = "{\"username\":\"user\",\"password\":\"test\"}";
+        HttpPost request = new HttpPost(Constant.URL + "/api/v1/auth/login");
+        StringEntity stringEntity = new StringEntity(requestBody);
+        request.setEntity(stringEntity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        token = new ObjectMapper()
+                .readTree(
+                        new BufferedReader(
+                                new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n")
+                        )
+                )
+                .get("token")
+                .toPrettyString()
+                .replaceAll("\"", "");
+    }
 
     @Test
     public void givenSkillDoesNotExistsWhenSkillInfoIsRetrievedThen404IsReceived()
@@ -22,6 +49,7 @@ class SkillControllerIntegrationTest {
         // Given
         int id = 234545223;
         HttpUriRequest request = new HttpGet(SKILL_API_URL + id);
+        request.setHeader("Authorization", "Bearer_" + token);
 
         // When
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -36,6 +64,7 @@ class SkillControllerIntegrationTest {
         // Given
         int id = 1;
         HttpUriRequest request = new HttpGet(SKILL_API_URL + id);
+        request.setHeader("Authorization", "Bearer_" + token);
 
         // When
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -51,6 +80,7 @@ class SkillControllerIntegrationTest {
         // Given
         String jsonMimeType = "application/json";
         HttpUriRequest request = new HttpGet(SKILL_API_URL);
+        request.setHeader("Authorization", "Bearer_" + token);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -70,6 +100,7 @@ class SkillControllerIntegrationTest {
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
+        request.setHeader("Authorization", "Bearer_" + token);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -88,6 +119,7 @@ class SkillControllerIntegrationTest {
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
+        request.setHeader("Authorization", "Bearer_" + token);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -102,6 +134,7 @@ class SkillControllerIntegrationTest {
         // Given
         int id = 32454;
         HttpDelete request = new HttpDelete(SKILL_API_URL + id);
+        request.setHeader("Authorization", "Bearer_" + token);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -115,6 +148,7 @@ class SkillControllerIntegrationTest {
             throws IOException {
         // Given
         HttpDelete request = new HttpDelete(SKILL_API_URL);
+        request.setHeader("Authorization", "Bearer_" + token);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -134,6 +168,7 @@ class SkillControllerIntegrationTest {
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
+        request.setHeader("Authorization", "Bearer_" + token);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
