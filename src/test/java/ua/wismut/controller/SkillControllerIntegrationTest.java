@@ -133,7 +133,7 @@ class SkillControllerIntegrationTest {
     }
 
     @Test
-    public void givenRequestWithIdWhenRequestIsExecutedThenStatusNoContent()
+    public void givenRequestWithIdWhenTryToDeleteAbsentSkillThenStatusNotFound()
             throws IOException {
         // Given
         int id = 32454;
@@ -144,7 +144,7 @@ class SkillControllerIntegrationTest {
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
     }
 
     @Test

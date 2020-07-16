@@ -66,7 +66,7 @@ public class SkillControllerTest {
 
         when(skillService.save(skill)).thenReturn(skill);
 
-        Skill savedSkill = controllerUnderTest.save(skill);
+        Skill savedSkill = controllerUnderTest.save(skill, null);
         assertEquals(savedSkill.getId(), skill.getId());
         assertEquals(savedSkill.getName(), skill.getName());
 

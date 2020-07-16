@@ -32,7 +32,7 @@ public class SkillController {
     public Skill save(@RequestBody Skill skill, BindingResult bindingResult) {
         skillValidator.validate(skill, bindingResult);
         if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException(skill.toString());
+            throw new IllegalArgumentException("Skill name can't be null or empty");
         }
         return skillService.save(skill);
     }
