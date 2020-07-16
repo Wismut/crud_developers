@@ -1,5 +1,6 @@
 package ua.wismut.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import constant.Constant;
 import org.apache.http.HttpResponse;
@@ -10,6 +11,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ActiveProfiles("test")
 class SkillControllerIntegrationTest {
     private final String SKILL_API_URL = Constant.URL + "/api/v1/skills/";
 
@@ -32,12 +35,13 @@ class SkillControllerIntegrationTest {
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        token = new ObjectMapper()
+        JsonNode jsonNode = new ObjectMapper()
                 .readTree(
                         new BufferedReader(
                                 new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n")
                         )
-                )
+                );
+        token = jsonNode
                 .get("token")
                 .toPrettyString()
                 .replaceAll("\"", "");

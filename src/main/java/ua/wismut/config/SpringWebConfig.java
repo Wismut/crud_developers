@@ -5,8 +5,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -20,7 +20,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import ua.wismut.security.JwtConfigurer;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -37,18 +36,18 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/v1/auth/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/developers/**",
-                        "/api/v1/accounts/**",
-                        "/api/v1/skills/**").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "/api/v1/**").hasRole("MODERATOR")
-                .antMatchers("/api/v1/developers/**", "/api/v1/accounts/**").hasRole("MODERATOR")
-                .antMatchers("/api/v1/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
-                .apply(context.getBean(JwtConfigurer.class));
+        http.csrf().disable();
+//                .authorizeRequests()
+//                .antMatchers("/api/v1/auth/**").permitAll()
+//                .antMatchers(HttpMethod.GET, "/api/v1/developers/**",
+//                        "/api/v1/accounts/**",
+//                        "/api/v1/skills/**").hasRole("USER")
+//                .antMatchers(HttpMethod.GET, "/api/v1/**").hasRole("MODERATOR")
+//                .antMatchers("/api/v1/developers/**", "/api/v1/accounts/**").hasRole("MODERATOR")
+//                .antMatchers("/api/v1/**").hasRole("ADMIN")
+//                .anyRequest().authenticated()
+//                .and()
+//                .apply(context.getBean(JwtConfigurer.class));
     }
 
     @Bean
@@ -70,6 +69,7 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    @Profile("dev")
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
@@ -80,6 +80,7 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    @Profile("dev")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
@@ -90,6 +91,7 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
         return em;
     }
 
+    @Profile("dev")
     private Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
