@@ -1,10 +1,12 @@
 package ua.wismut.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.wismut.exception.SkillNotFoundException;
 import ua.wismut.model.Skill;
 import ua.wismut.service.SkillService;
+import ua.wismut.validator.SkillValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +15,12 @@ import java.util.Optional;
 @RequestMapping("/api/v1/skills/")
 public class SkillController {
     private final SkillService skillService;
+    private final SkillValidator skillValidator;
 
     @Autowired
-    public SkillController(SkillService skillService) {
+    public SkillController(SkillService skillService, SkillValidator skillValidator) {
         this.skillService = skillService;
+        this.skillValidator = skillValidator;
     }
 
     @DeleteMapping("{id}")
@@ -25,7 +29,11 @@ public class SkillController {
     }
 
     @PostMapping
-    public Skill save(@RequestBody Skill skill) {
+    public Skill save(@RequestBody Skill skill, BindingResult bindingResult) {
+        skillValidator.validate(skill, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new IllegalArgumentException(skill.toString());
+        }
         return skillService.save(skill);
     }
 
