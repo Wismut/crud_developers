@@ -4,11 +4,10 @@ import com.twilio.Twilio;
 import com.twilio.exception.ApiException;
 import com.twilio.rest.preview.accSecurity.service.Verification;
 import com.twilio.rest.preview.accSecurity.service.VerificationCheck;
-import org.springframework.stereotype.Service;
 import ua.wismut.model.VerificationResult;
 import ua.wismut.service.VerificationService;
 
-@Service
+//@Service
 public class TwilioVerification implements VerificationService {
 
     private static final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID") == null ?

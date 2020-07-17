@@ -1,6 +1,8 @@
 package ua.wismut.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.wismut.exception.SkillNotFoundException;
@@ -47,8 +49,8 @@ public class SkillController {
         return skillService.findById(id).orElseThrow(() -> new SkillNotFoundException(id));
     }
 
-    @GetMapping
-    public List<Skill> findAll() {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Skill> findAll(Authentication authentication) {
         return skillService.findAll();
     }
 

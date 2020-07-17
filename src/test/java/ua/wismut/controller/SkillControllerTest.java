@@ -37,7 +37,7 @@ public class SkillControllerTest {
 
         when(skillService.findAll()).thenReturn(Arrays.asList(firstSkill, secondSkill));
 
-        List<Skill> skills = controllerUnderTest.findAll();
+        List<Skill> skills = controllerUnderTest.findAll(null);
         assertEquals(skills.size(), 2);
         assertEquals(skills.get(0).getId().longValue(), 1L);
         assertEquals(skills.get(1).getId().longValue(), 2L);

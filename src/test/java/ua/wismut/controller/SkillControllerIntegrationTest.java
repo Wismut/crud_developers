@@ -68,6 +68,8 @@ class SkillControllerIntegrationTest {
         // Given
         int id = 1;
         HttpUriRequest request = new HttpGet(SKILL_API_URL + id);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
         request.setHeader("Authorization", "Bearer_" + token);
 
         // When
@@ -84,6 +86,8 @@ class SkillControllerIntegrationTest {
         // Given
         String jsonMimeType = "application/json";
         HttpUriRequest request = new HttpGet(SKILL_API_URL);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
         request.setHeader("Authorization", "Bearer_" + token);
 
         // When
@@ -110,11 +114,11 @@ class SkillControllerIntegrationTest {
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
 
     @Test
-    public void givenRequestWithNonProperJsonWhenRequestIsExecutedThenStatusBadRequest()
+    public void givenRequestWithNonProperJsonWhenRequestIsExecutedThenStatusForbidden()
             throws IOException {
         // Given
         String requestBody = "{\"namsdfge\":\"dfhrgder\"}";
@@ -129,7 +133,7 @@ class SkillControllerIntegrationTest {
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -144,7 +148,7 @@ class SkillControllerIntegrationTest {
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -152,13 +156,15 @@ class SkillControllerIntegrationTest {
             throws IOException {
         // Given
         HttpDelete request = new HttpDelete(SKILL_API_URL);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
         request.setHeader("Authorization", "Bearer_" + token);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -178,6 +184,6 @@ class SkillControllerIntegrationTest {
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
     }
 }

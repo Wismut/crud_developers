@@ -8,6 +8,9 @@
     <logger name="org.hibernate.stat" level="debug"/>
     <logger name="org.hibernate" level="info"/>
     <logger name="org.springframework" level="info"/>
+    <logger name="org.junit.jupiter" level="info"/>
+    <logger name="ua.wismut" level="info"/>
+    <logger name="org.apache" level="info"/>
     <root level="debug">
         <appender-ref ref="STDOUT"/>
     </root>
