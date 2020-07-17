@@ -13,14 +13,12 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import ua.wismut.security.JwtConfigurer;
@@ -37,21 +35,6 @@ import java.util.Properties;
 public class SpringWebConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     ApplicationContext context;
-
-    @Autowired
-    @Profile("test")
-    public void configureGlobal(AuthenticationManagerBuilder auth)
-            throws Exception {
-        auth.userDetailsService(inMemoryUserDetailsManager());
-    }
-
-    @Bean
-    @Profile("test")
-    public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
-        final Properties users = new Properties();
-        users.put("user", passwordEncoder().encode("test") + ",ROLE_USER,enabled"); //add whatever other user you need
-        return new InMemoryUserDetailsManager(users);
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

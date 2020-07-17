@@ -24,27 +24,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class SkillControllerIntegrationTest {
     private final String SKILL_API_URL = Constant.URL + "/api/v1/skills/";
 
-    private static String token;
+    private static final String USER_USERNAME = "user";
+    private static final String MODERATOR_USERNAME = "moderator";
+    private static final String ADMIN_USERNAME = "admin";
+    private static final String PASSWORD = "test";
+    private static String userToken;
+    private static String moderatorToken;
+    private static String adminToken;
 
     @BeforeAll
     public static void init() throws IOException {
-        String requestBody = "{\"username\":\"user\",\"password\":\"test\"}";
-        HttpPost request = new HttpPost(Constant.URL + "/api/v1/auth/login");
-        StringEntity stringEntity = new StringEntity(requestBody);
-        request.setEntity(stringEntity);
-        request.setHeader("Accept", "application/json");
-        request.setHeader("Content-type", "application/json");
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        JsonNode jsonNode = new ObjectMapper()
-                .readTree(
-                        new BufferedReader(
-                                new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n")
-                        )
-                );
-        token = jsonNode
-                .get("token")
-                .toPrettyString()
-                .replaceAll("\"", "");
+        userToken = receiveToken(USER_USERNAME, PASSWORD);
+        moderatorToken = receiveToken(MODERATOR_USERNAME, PASSWORD);
+        adminToken = receiveToken(ADMIN_USERNAME, PASSWORD);
     }
 
     @Test
@@ -53,30 +45,13 @@ class SkillControllerIntegrationTest {
         // Given
         int id = 234545223;
         HttpUriRequest request = new HttpGet(SKILL_API_URL + id);
-        request.setHeader("Authorization", "Bearer_" + token);
+        request.setHeader("Authorization", "Bearer_" + userToken);
 
         // When
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
 
         // Then
         assertEquals(HttpStatus.SC_NOT_FOUND, httpResponse.getStatusLine().getStatusCode());
-    }
-
-    @Test
-    public void givenSkillExistsWhenSkillInfoIsRetrievedThen200IsReceived()
-            throws IOException {
-        // Given
-        int id = 1;
-        HttpUriRequest request = new HttpGet(SKILL_API_URL + id);
-        request.setHeader("Accept", "application/json");
-        request.setHeader("Content-type", "application/json");
-        request.setHeader("Authorization", "Bearer_" + token);
-
-        // When
-        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
-
-        // Then
-        assertEquals(HttpStatus.SC_OK, httpResponse.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -88,7 +63,7 @@ class SkillControllerIntegrationTest {
         HttpUriRequest request = new HttpGet(SKILL_API_URL);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
-        request.setHeader("Authorization", "Bearer_" + token);
+        request.setHeader("Authorization", "Bearer_" + userToken);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -108,7 +83,7 @@ class SkillControllerIntegrationTest {
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
-        request.setHeader("Authorization", "Bearer_" + token);
+        request.setHeader("Authorization", "Bearer_" + userToken);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -127,7 +102,7 @@ class SkillControllerIntegrationTest {
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
-        request.setHeader("Authorization", "Bearer_" + token);
+        request.setHeader("Authorization", "Bearer_" + userToken);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -142,7 +117,7 @@ class SkillControllerIntegrationTest {
         // Given
         int id = 32454;
         HttpDelete request = new HttpDelete(SKILL_API_URL + id);
-        request.setHeader("Authorization", "Bearer_" + token);
+        request.setHeader("Authorization", "Bearer_" + userToken);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -158,7 +133,7 @@ class SkillControllerIntegrationTest {
         HttpDelete request = new HttpDelete(SKILL_API_URL);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
-        request.setHeader("Authorization", "Bearer_" + token);
+        request.setHeader("Authorization", "Bearer_" + userToken);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -178,12 +153,49 @@ class SkillControllerIntegrationTest {
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
-        request.setHeader("Authorization", "Bearer_" + token);
+        request.setHeader("Authorization", "Bearer_" + userToken);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
         assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void givenSkillExistsWhenSkillInfoIsRetrievedThen200IsReceived()
+            throws IOException {
+        // Given
+        int id = 1;
+        HttpUriRequest request = new HttpGet(SKILL_API_URL + id);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+        request.setHeader("Authorization", "Bearer_" + userToken);
+
+        // When
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+
+        // Then
+        assertEquals(HttpStatus.SC_OK, httpResponse.getStatusLine().getStatusCode());
+    }
+
+    private static String receiveToken(String username, String password) throws IOException {
+        String requestBody = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
+        HttpPost request = new HttpPost(Constant.URL + "/api/v1/auth/login");
+        StringEntity stringEntity = new StringEntity(requestBody);
+        request.setEntity(stringEntity);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        JsonNode jsonNode = new ObjectMapper()
+                .readTree(
+                        new BufferedReader(
+                                new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n")
+                        )
+                );
+        return jsonNode
+                .get("token")
+                .toPrettyString()
+                .replaceAll("\"", "");
     }
 }
