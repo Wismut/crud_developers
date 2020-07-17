@@ -28,7 +28,9 @@ public class TestDataConfig {
     @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
         final Properties users = new Properties();
-        users.put("user", passwordEncoder().encode("test") + ",ROLE_USER,enabled"); //add whatever other user you need
+        users.put("user", passwordEncoder().encode("test") + ",ROLE_USER,enabled");
+        users.put("moderator", passwordEncoder().encode("test") + ",ROLE_MODERATOR,enabled");
+        users.put("admin", passwordEncoder().encode("test") + ",ROLE_ADMIN,enabled");
         return new InMemoryUserDetailsManager(users);
     }
 

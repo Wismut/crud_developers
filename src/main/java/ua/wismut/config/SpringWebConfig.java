@@ -71,7 +71,7 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @Profile("dev")
+    @Profile("!test")
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
@@ -82,7 +82,7 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @Profile("dev")
+    @Profile("!test")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
@@ -93,7 +93,7 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
         return em;
     }
 
-    @Profile("dev")
+    @Profile("!test")
     private Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
