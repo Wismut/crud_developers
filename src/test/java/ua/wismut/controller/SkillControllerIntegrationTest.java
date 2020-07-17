@@ -307,12 +307,12 @@ class SkillControllerIntegrationTest {
     }
 
     @Test
-    public void givenSkillDoesNotExistsWhenSkillInfoIsRetrievedThen404IsReceived()
+    public void givenSkillDoesNotExistsWhenAdminTryToReceiveThen404IsReceived()
             throws IOException {
         // Given
         int id = 234545223;
         HttpGet request = new HttpGet(SKILL_API_URL + id);
-        request.setHeader("Authorization", "Bearer_" + userToken);
+        request.setHeader("Authorization", "Bearer_" + adminToken);
 
         // When
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -323,14 +323,14 @@ class SkillControllerIntegrationTest {
 
     @Test
     public void
-    givenRequestWithNoAcceptHeaderWhenRequestIsExecutedThenDefaultResponseContentTypeIsJson()
+    givenRequestWithNoAcceptHeaderWhenAdminExecuteThenResponseStatusOK()
             throws IOException {
         // Given
         String jsonMimeType = "application/json";
         HttpGet request = new HttpGet(SKILL_API_URL);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
-        request.setHeader("Authorization", "Bearer_" + userToken);
+        request.setHeader("Authorization", "Bearer_" + adminToken);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -338,10 +338,11 @@ class SkillControllerIntegrationTest {
         // Then
         String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
         assertEquals(jsonMimeType, mimeType);
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 
     @Test
-    public void givenRequestWithProperJsonWithSkillNameWhenRequestIsExecutedThenStatusCreated()
+    public void givenRequestWithProperJsonWithSkillNameWhenAdminExecuteThenStatusCreated()
             throws IOException {
         // Given
         String requestBody = "{\"name\":\"dfhrgder\"}";
@@ -350,17 +351,17 @@ class SkillControllerIntegrationTest {
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
-        request.setHeader("Authorization", "Bearer_" + userToken);
+        request.setHeader("Authorization", "Bearer_" + adminToken);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 
     @Test
-    public void givenRequestWithNonProperJsonWhenRequestIsExecutedThenStatusForbidden()
+    public void givenRequestWithNonProperJsonWhenAdminExecuteThenStatusBadRequest()
             throws IOException {
         // Given
         String requestBody = "{\"namsdfge\":\"dfhrgder\"}";
@@ -369,48 +370,48 @@ class SkillControllerIntegrationTest {
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
-        request.setHeader("Authorization", "Bearer_" + userToken);
+        request.setHeader("Authorization", "Bearer_" + adminToken);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
     }
 
     @Test
-    public void givenRequestWithIdWhenTryToDeleteAbsentSkillThenStatusNotFound()
+    public void givenRequestWithIdWhenAdminTryToDeleteAbsentSkillThenStatusNotFound()
             throws IOException {
         // Given
         int id = 32454;
         HttpDelete request = new HttpDelete(SKILL_API_URL + id);
-        request.setHeader("Authorization", "Bearer_" + userToken);
+        request.setHeader("Authorization", "Bearer_" + adminToken);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine().getStatusCode());
     }
 
     @Test
-    public void givenRequestWithoutIdWhenRequestIsExecutedThenStatusNoContent()
+    public void givenRequestWithoutIdWhenAdminExecuteThenStatusNoContent()
             throws IOException {
         // Given
         HttpDelete request = new HttpDelete(SKILL_API_URL);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
-        request.setHeader("Authorization", "Bearer_" + userToken);
+        request.setHeader("Authorization", "Bearer_" + adminToken);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
     }
 
     @Test
-    public void givenRequestWithNewFieldsForUpdateWhenRequestIsExecutedThenStatusOk()
+    public void givenRequestWithNewFieldsForUpdateWhenAdminExecuteThenStatusOk()
             throws IOException {
         // Given
         int id = 1;
@@ -426,9 +427,8 @@ class SkillControllerIntegrationTest {
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
-
 
     private static String receiveToken(String username, String password) throws IOException {
         String requestBody = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
