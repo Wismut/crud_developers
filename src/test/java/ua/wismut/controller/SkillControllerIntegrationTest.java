@@ -2,6 +2,7 @@ package ua.wismut.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import constant.Constant;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -16,10 +17,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -431,22 +429,19 @@ class SkillControllerIntegrationTest {
     }
 
     private static String receiveToken(String username, String password) throws IOException {
-        String requestBody = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
+        ObjectNode objectNode = new ObjectMapper()
+                .createObjectNode()
+                .put("username", username)
+                .put("password", password);
         HttpPost request = new HttpPost(Constant.URL + "/api/v1/auth/login");
-        StringEntity stringEntity = new StringEntity(requestBody);
-        request.setEntity(stringEntity);
+        request.setEntity(new StringEntity(objectNode.toString()));
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         JsonNode jsonNode = new ObjectMapper()
-                .readTree(
-                        new BufferedReader(
-                                new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n")
-                        )
-                );
+                .readTree(response.getEntity().getContent());
         return jsonNode
                 .get("token")
-                .toPrettyString()
-                .replaceAll("\"", "");
+                .asText();
     }
 }
