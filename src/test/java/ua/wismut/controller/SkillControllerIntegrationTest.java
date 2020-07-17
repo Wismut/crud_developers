@@ -15,6 +15,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
@@ -200,7 +201,6 @@ class SkillControllerIntegrationTest {
     givenRequestWithNoAcceptHeaderWhenModeratorExecuteThenDefaultResponseContentTypeIsJson()
             throws IOException {
         // Given
-        String jsonMimeType = "application/json";
         HttpGet request = new HttpGet(SKILL_API_URL);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
@@ -211,7 +211,7 @@ class SkillControllerIntegrationTest {
 
         // Then
         String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
-        assertEquals(jsonMimeType, mimeType);
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, mimeType);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 
@@ -310,6 +310,8 @@ class SkillControllerIntegrationTest {
         // Given
         int id = 234545223;
         HttpGet request = new HttpGet(SKILL_API_URL + id);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
         request.setHeader("Authorization", "Bearer_" + adminToken);
 
         // When
@@ -324,7 +326,6 @@ class SkillControllerIntegrationTest {
     givenRequestWithNoAcceptHeaderWhenAdminExecuteThenResponseStatusOK()
             throws IOException {
         // Given
-        String jsonMimeType = "application/json";
         HttpGet request = new HttpGet(SKILL_API_URL);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
@@ -334,8 +335,6 @@ class SkillControllerIntegrationTest {
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
-        assertEquals(jsonMimeType, mimeType);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 
@@ -393,7 +392,7 @@ class SkillControllerIntegrationTest {
     }
 
     @Test
-    public void givenRequestWithoutIdWhenAdminExecuteThenStatusNoContent()
+    public void givenRequestWithoutIdWhenAdminExecuteThenStatusNotAllowed()
             throws IOException {
         // Given
         HttpDelete request = new HttpDelete(SKILL_API_URL);
@@ -405,7 +404,7 @@ class SkillControllerIntegrationTest {
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_METHOD_NOT_ALLOWED, response.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -419,7 +418,7 @@ class SkillControllerIntegrationTest {
         request.setEntity(entity);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
-        request.setHeader("Authorization", "Bearer_" + userToken);
+        request.setHeader("Authorization", "Bearer_" + adminToken);
 
         // When
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
