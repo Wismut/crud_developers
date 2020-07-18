@@ -15,7 +15,7 @@ public class TwilioVerification implements VerificationService {
             "AC7746b951ca7493ff165ecb5a371259f6" :
             System.getenv("TWILIO_ACCOUNT_SID");
     private static final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN") == null ?
-            "7f1e91fa33c9d9498c624af4ade969e6" :
+            "79bb2be936076b292e2475e845f9a354" :
             System.getenv("TWILIO_AUTH_TOKEN");
     private static final String VERIFICATION_SID = System.getenv("VERIFICATION_SID") == null ?
             "VA0b5b317f4fb55b9ef54b9025a2018097" :

@@ -1,10 +1,10 @@
 package ua.wismut.model;
 
-import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Set;
 
 @Entity
@@ -17,14 +17,14 @@ public class User {
     private String username;
     private String password;
 
-    @CreatedDate
-    private LocalDateTime created;
+    @CreatedBy
+    private Instant created;
 
     @LastModifiedDate
-    private LocalDateTime updated;
+    private Instant updated;
 
     @LastModifiedDate
-    private LocalDateTime lastPasswordChangeDate;
+    private Instant lastPasswordChangeDate;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -43,7 +43,7 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, LocalDateTime created, LocalDateTime updated, LocalDateTime lastPasswordChangeDate, Status status, String phoneNumber, Set<Role> roles, String confirmPassword) {
+    public User(Long id, String username, String password, Instant created, Instant updated, Instant lastPasswordChangeDate, Status status, String phoneNumber, Set<Role> roles, String confirmPassword) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -80,27 +80,27 @@ public class User {
         this.password = password;
     }
 
-    public LocalDateTime getCreated() {
+    public Instant getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDateTime created) {
+    public void setCreated(Instant created) {
         this.created = created;
     }
 
-    public LocalDateTime getUpdated() {
+    public Instant getUpdated() {
         return updated;
     }
 
-    public void setUpdated(LocalDateTime updated) {
+    public void setUpdated(Instant updated) {
         this.updated = updated;
     }
 
-    public LocalDateTime getLastPasswordChangeDate() {
+    public Instant getLastPasswordChangeDate() {
         return lastPasswordChangeDate;
     }
 
-    public void setLastPasswordChangeDate(LocalDateTime lastPasswordChangeDate) {
+    public void setLastPasswordChangeDate(Instant lastPasswordChangeDate) {
         this.lastPasswordChangeDate = lastPasswordChangeDate;
     }
 
@@ -134,6 +134,11 @@ public class User {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        created = Instant.now();
     }
 
     @Override

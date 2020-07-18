@@ -16,7 +16,6 @@ import ua.wismut.repository.RoleRepository;
 import ua.wismut.repository.UserRepository;
 import ua.wismut.service.impl.UserServiceImpl;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -107,15 +106,15 @@ class UserServiceTest {
         verify(userRepository, times(1)).findAll();
         verifyNoMoreInteractions(userRepository);
     }
-    
+
     private User buildUser() {
         return new User(
                 1L,
                 "name",
                 "12345",
-                LocalDateTime.MIN,
-                LocalDateTime.now(),
-                LocalDateTime.now(),
+                null,
+                null,
+                null,
                 Status.ACTIVE,
                 "23421235",
                 Collections.singleton(new Role()),
