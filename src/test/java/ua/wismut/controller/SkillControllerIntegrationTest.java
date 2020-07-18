@@ -15,7 +15,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
@@ -73,6 +72,7 @@ class SkillControllerIntegrationTest {
         // Then
         String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
         assertEquals(jsonMimeType, mimeType);
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -187,6 +187,8 @@ class SkillControllerIntegrationTest {
         // Given
         int id = 234545223;
         HttpGet request = new HttpGet(SKILL_API_URL + id);
+        request.setHeader("Accept", "application/json");
+        request.setHeader("Content-type", "application/json");
         request.setHeader("Authorization", "Bearer_" + moderatorToken);
 
         // When
@@ -198,7 +200,7 @@ class SkillControllerIntegrationTest {
 
     @Test
     public void
-    givenRequestWithNoAcceptHeaderWhenModeratorExecuteThenDefaultResponseContentTypeIsJson()
+    givenRequestWithNoAcceptHeaderWhenModeratorExecuteThenStatusOK()
             throws IOException {
         // Given
         HttpGet request = new HttpGet(SKILL_API_URL);
@@ -210,8 +212,6 @@ class SkillControllerIntegrationTest {
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, mimeType);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
     }
 
