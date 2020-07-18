@@ -9,7 +9,7 @@ import ua.wismut.service.SpecialtyService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/specialties/")
+@RequestMapping("/api/v1/specialties")
 public class SpecialtyController {
     private final SpecialtyService specialtyService;
 
@@ -23,8 +23,8 @@ public class SpecialtyController {
         return specialtyService.save(specialty);
     }
 
-    @PutMapping
-    public Specialty update(@RequestBody Specialty specialty) {
+    @PutMapping("/{id}")
+    public Specialty update(@RequestBody Specialty specialty, @PathVariable Long id) {
         return specialtyService.update(specialty);
     }
 

@@ -11,7 +11,7 @@ import ua.wismut.validator.UserValidator;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users/")
+@RequestMapping("/api/v1/users")
 public class UserController {
     private final UserService userService;
     private final UserValidator userValidator;
@@ -22,8 +22,8 @@ public class UserController {
         this.userValidator = userValidator;
     }
 
-    @PutMapping
-    public User update(@RequestBody User user) {
+    @PutMapping("{/id}")
+    public User update(@RequestBody User user, @PathVariable Long id) {
         return userService.save(user);
     }
 
@@ -32,12 +32,12 @@ public class UserController {
         return userService.save(user);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("{/id}")
     public User findById(@PathVariable Long id) {
         return userService.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    @GetMapping("findByUsername")
+    @GetMapping("/findByUsername")
     public User findByUsername(@RequestParam("username") String username) {
         return userService.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
     }
@@ -47,7 +47,7 @@ public class UserController {
         return userService.findAll();
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{/id}")
     public void deleteById(@PathVariable Long id) {
         userService.deleteById(id);
     }

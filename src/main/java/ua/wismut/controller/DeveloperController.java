@@ -9,7 +9,7 @@ import ua.wismut.service.DeveloperService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/developers/")
+@RequestMapping("/api/v1/developers")
 public class DeveloperController {
     private final DeveloperService developerService;
 
@@ -18,13 +18,13 @@ public class DeveloperController {
         this.developerService = developerService;
     }
 
-    @DeleteMapping
-    public void deleteById(Long id) {
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id) {
         developerService.deleteById(id);
     }
 
-    @PutMapping
-    public Developer update(@RequestBody Developer developer) {
+    @PutMapping("/{id}")
+    public Developer update(@RequestBody Developer developer, @PathVariable Long id) {
         return developerService.update(developer);
     }
 
@@ -38,7 +38,7 @@ public class DeveloperController {
         return developerService.findById(id).orElseThrow(() -> new DeveloperNotFoundException(id));
     }
 
-    public List<Developer> getAllBySpeciality(String specialityName) {
+    public List<Developer> findAllBySpeciality(String specialityName) {
         return developerService.findAllBySpeciality(specialityName);
     }
 
