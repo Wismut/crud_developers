@@ -17,10 +17,10 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (RuntimeException e) {
+        } catch (JwtAuthenticationException e) {
             JsonResponse errorResponse = new JsonResponse(e.getMessage(),
-                    e.getClass().getName());
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                    e.getClass().getSimpleName());
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.getWriter().write(convertObjectToJson(errorResponse));
         }
     }

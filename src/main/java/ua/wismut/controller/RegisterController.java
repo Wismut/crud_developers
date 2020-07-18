@@ -2,18 +2,16 @@ package ua.wismut.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import ua.wismut.model.User;
+import ua.wismut.model.VerificationResult;
 import ua.wismut.service.UserService;
 import ua.wismut.service.VerificationService;
 import ua.wismut.service.impl.AuthService;
 
 import javax.persistence.RollbackException;
-import javax.servlet.ServletException;
-import java.io.IOException;
 
-//@RestController
+@RestController
 @RequestMapping("/api/v1/register")
 public class RegisterController {
     private final UserService userService;
@@ -29,39 +27,24 @@ public class RegisterController {
     }
 
     @PostMapping
-    public void register() throws ServletException, IOException {
-
-//        String phone = request.getParameter("full_phone");
-//        String username = request.getParameter("username");
-//        String password = request.getParameter("password");
-//        String channel = request.getParameter("channel");
-
-//        String hashed = passwordEncoder.encode(password);
-
-//        User user = new User();
-//        user.setUsername(username);
-//        user.setPhoneNumber(phone);
-//        user.setPassword(password);
+    public void register(@RequestBody User user) {
         try {
-            userService.save(null);
+            user = userService.save(user);
+            System.out.println(user);
         } catch (RollbackException e) {
-
-//            request.setAttribute("message", "User creation failed: " + e.getMessage());
-//            request.getRequestDispatcher("/register.jsp").forward(request, response);
-
             return;
         }
 
 //        authService.login(request.getSession(), user);
 
-//        VerificationResult result = verificationService.startVerification(phone, channel);
-//        if (result.isValid()) {
+        VerificationResult result = verificationService.startVerification(user.getPhoneNumber(), "sms");
+        if (result.isValid()) {
 //            response.sendRedirect("/verify");
-//        } else {
-//            userService.delete(user);
+        } else {
+            userService.delete(user);
 //            request.setAttribute("message", String.join("\n", result.getErrors()));
 //            request.getRequestDispatcher("/register.jsp").forward(request, response);
-//        }
+        }
     }
 
     @GetMapping
