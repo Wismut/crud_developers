@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ua.wismut.exception.SkillNotFoundException;
 import ua.wismut.model.Skill;
 import ua.wismut.service.SkillService;
-import ua.wismut.validator.SkillValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,12 +15,10 @@ import java.util.Optional;
 @RequestMapping("/api/v1/skills")
 public class SkillController {
     private final SkillService skillService;
-    private final SkillValidator skillValidator;
 
     @Autowired
-    public SkillController(SkillService skillService, SkillValidator skillValidator) {
+    public SkillController(SkillService skillService) {
         this.skillService = skillService;
-        this.skillValidator = skillValidator;
     }
 
     @DeleteMapping("/{id}")
@@ -29,14 +26,14 @@ public class SkillController {
         skillService.deleteById(id);
     }
 
-    @PostMapping("/{id}")
-    public Skill save(@RequestBody Skill skill, @PathVariable Long id, BindingResult bindingResult) {
-        return skillService.save(skill, id, bindingResult);
+    @PostMapping
+    public Skill save(@RequestBody Skill skill, BindingResult bindingResult) {
+        return skillService.save(skill, bindingResult);
     }
 
-    @PutMapping
-    public Skill update(@RequestBody Skill skill) {
-        return skillService.update(skill);
+    @PutMapping("/{id}")
+    public Skill update(@RequestBody Skill skill, @PathVariable Long id, BindingResult bindingResult) {
+        return skillService.update(skill, id, bindingResult);
     }
 
     @GetMapping("/{id}")

@@ -22,16 +22,20 @@ public class SkillServiceImpl implements SkillService {
         this.skillValidator = skillValidator;
     }
 
-    public Skill save(Skill skill, Long id, BindingResult bindingResult) {
+    public Skill save(Skill skill, BindingResult bindingResult) {
+        skillValidator.validate(skill, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new IllegalArgumentException("Skill name can't be null or empty");
+        }
+        return skillRepository.save(skill);
+    }
+
+    public Skill update(Skill skill, Long id, BindingResult bindingResult) {
         skillValidator.validate(skill, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException("Skill name can't be null or empty");
         }
         skill.setId(id);
-        return skillRepository.save(skill);
-    }
-
-    public Skill update(Skill skill) {
         return skillRepository.save(skill);
     }
 

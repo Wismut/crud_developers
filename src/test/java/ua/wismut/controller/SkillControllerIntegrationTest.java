@@ -165,10 +165,10 @@ class SkillControllerIntegrationTest {
     }
 
     @Test
-    public void givenSkillExistsWhenSkillInfoIsRetrievedThen200IsReceived()
+    public void givenSkillExistsWhenSkillInfoIsRetrievedThenStatusNotFound()
             throws IOException {
         // Given
-        int id = 1;
+        int id = 45234543;
         HttpGet request = new HttpGet(SKILL_API_URL + id);
         request.setHeader("Accept", "application/json");
         request.setHeader("Content-type", "application/json");
@@ -178,7 +178,7 @@ class SkillControllerIntegrationTest {
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
 
         // Then
-        assertEquals(HttpStatus.SC_OK, httpResponse.getStatusLine().getStatusCode());
+        assertEquals(HttpStatus.SC_NOT_FOUND, httpResponse.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -339,7 +339,7 @@ class SkillControllerIntegrationTest {
     }
 
     @Test
-    public void givenRequestWithProperJsonWithSkillNameWhenAdminExecuteThenStatusCreated()
+    public void givenRequestWithProperJsonWithSkillNameWhenAdminExecuteThenStatusOK()
             throws IOException {
         // Given
         String requestBody = "{\"name\":\"dfhrgder\"}";

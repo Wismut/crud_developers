@@ -8,9 +8,9 @@ import java.util.Optional;
 
 
 public interface SkillService {
-    Skill save(Skill skill, Long id, BindingResult bindingResult);
+    Skill save(Skill skill, BindingResult bindingResult);
 
-    Skill update(Skill skill);
+    Skill update(Skill skill, Long id, BindingResult bindingResult);
 
     void deleteById(Long id);
 
