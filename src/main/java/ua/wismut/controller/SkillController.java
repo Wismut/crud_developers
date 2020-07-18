@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/skills/")
+@RequestMapping("/api/v1/skills")
 public class SkillController {
     private final SkillService skillService;
     private final SkillValidator skillValidator;
@@ -24,26 +24,22 @@ public class SkillController {
         this.skillValidator = skillValidator;
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id) {
         skillService.deleteById(id);
     }
 
-    @PostMapping
-    public Skill save(@RequestBody Skill skill, BindingResult bindingResult) {
-        skillValidator.validate(skill, bindingResult);
-        if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException("Skill name can't be null or empty");
-        }
-        return skillService.save(skill);
+    @PostMapping("/{id}")
+    public Skill save(@RequestBody Skill skill, @PathVariable Long id, BindingResult bindingResult) {
+        return skillService.save(skill, id, bindingResult);
     }
 
     @PutMapping
-    public Skill update(Skill skill) {
+    public Skill update(@RequestBody Skill skill) {
         return skillService.update(skill);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Skill findById(@PathVariable Long id) {
         return skillService.findById(id).orElseThrow(() -> new SkillNotFoundException(id));
     }

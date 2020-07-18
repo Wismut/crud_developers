@@ -2,9 +2,11 @@ package ua.wismut.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import ua.wismut.model.Skill;
 import ua.wismut.repository.SkillRepository;
 import ua.wismut.service.SkillService;
+import ua.wismut.validator.SkillValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,13 +14,20 @@ import java.util.Optional;
 @Service
 public class SkillServiceImpl implements SkillService {
     private final SkillRepository skillRepository;
+    private final SkillValidator skillValidator;
 
     @Autowired
-    public SkillServiceImpl(SkillRepository skillRepository) {
+    public SkillServiceImpl(SkillRepository skillRepository, SkillValidator skillValidator) {
         this.skillRepository = skillRepository;
+        this.skillValidator = skillValidator;
     }
 
-    public Skill save(Skill skill) {
+    public Skill save(Skill skill, Long id, BindingResult bindingResult) {
+        skillValidator.validate(skill, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new IllegalArgumentException("Skill name can't be null or empty");
+        }
+        skill.setId(id);
         return skillRepository.save(skill);
     }
 

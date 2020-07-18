@@ -64,13 +64,13 @@ public class SkillControllerTest {
     public void saveShouldReturnFoundSkillEntry() throws Exception {
         Skill skill = new Skill("some name");
 
-        when(skillService.save(skill)).thenReturn(skill);
+        when(skillService.save(skill, id, bindingResult)).thenReturn(skill);
 
         Skill savedSkill = controllerUnderTest.save(skill, null);
         assertEquals(savedSkill.getId(), skill.getId());
         assertEquals(savedSkill.getName(), skill.getName());
 
-        verify(skillService, times(1)).save(any());
+        verify(skillService, times(1)).save(any(), id, bindingResult);
         verifyNoMoreInteractions(skillService);
     }
 }

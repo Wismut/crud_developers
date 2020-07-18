@@ -43,9 +43,9 @@ public class SpringWebConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/developers/**",
                         "/api/v1/accounts/**",
-                        "/api/v1/skills/**").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "/api/v1/**").hasRole("MODERATOR")
-                .antMatchers("/api/v1/developers/**", "/api/v1/accounts/**").hasRole("MODERATOR")
+                        "/api/v1/skills/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
+                .antMatchers("/api/v1/developers/**", "/api/v1/accounts/**").hasAnyRole("MODERATOR", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/v1/**").hasAnyRole("MODERATOR", "ADMIN")
                 .antMatchers("/api/v1/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()

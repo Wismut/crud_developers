@@ -41,7 +41,7 @@ public class SkillServiceTest {
     public void save() {
         Skill skill = buildSkill();
         when(skillRepository.save(any(Skill.class))).thenReturn(skill);
-        Skill savedSkill = serviceUnderTest.save(skill);
+        Skill savedSkill = serviceUnderTest.save(skill, id, bindingResult);
         assertEquals(skill, savedSkill);
         verify(skillRepository, times(1)).save(any(Skill.class));
         verifyNoMoreInteractions(skillRepository);
@@ -100,7 +100,7 @@ public class SkillServiceTest {
     void saveIfAbsent() {
         Skill skill = buildSkill();
         when(skillRepository.save(any(Skill.class))).thenReturn(skill);
-        Skill savedSkill = serviceUnderTest.save(skill);
+        Skill savedSkill = serviceUnderTest.save(skill, id, bindingResult);
         assertEquals(skill, savedSkill);
         verify(skillRepository, times(1)).save(any(Skill.class));
         verifyNoMoreInteractions(skillRepository);
