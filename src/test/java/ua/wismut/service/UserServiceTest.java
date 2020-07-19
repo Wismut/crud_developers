@@ -16,6 +16,7 @@ import ua.wismut.repository.RoleRepository;
 import ua.wismut.repository.UserRepository;
 import ua.wismut.service.impl.UserServiceImpl;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +54,14 @@ class UserServiceTest {
         User user = buildUser();
         serviceUnderTest.deleteById(user.getId());
         verify(userRepository, times(1)).deleteById(user.getId());
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    @Test
+    void delete() {
+        User user = buildUser();
+        serviceUnderTest.delete(user);
+        verify(userRepository, times(1)).delete(user);
         verifyNoMoreInteractions(userRepository);
     }
 
@@ -112,9 +121,9 @@ class UserServiceTest {
                 1L,
                 "name",
                 "12345",
-                null,
-                null,
-                null,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
                 Status.ACTIVE,
                 "23421235",
                 Collections.singleton(new Role()),

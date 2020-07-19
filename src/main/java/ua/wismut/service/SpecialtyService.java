@@ -15,6 +15,4 @@ public interface SpecialtyService {
     List<Specialty> findAll();
 
     Optional<Specialty> findById(Long id);
-
-    void saveIfAbsent(Specialty specialty);
 }

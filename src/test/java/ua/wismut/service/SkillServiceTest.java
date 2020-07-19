@@ -8,9 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.validation.BindingResult;
 import ua.wismut.model.Skill;
 import ua.wismut.repository.SkillRepository;
 import ua.wismut.service.impl.SkillServiceImpl;
+import ua.wismut.validator.SkillValidator;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +25,12 @@ import static org.mockito.Mockito.*;
 public class SkillServiceTest {
     @Mock
     SkillRepository skillRepository;
+
+    @Mock
+    SkillValidator skillValidator;
+
+    @Mock
+    BindingResult bindingResult;
 
     @InjectMocks
     SkillServiceImpl serviceUnderTest;
@@ -41,7 +49,7 @@ public class SkillServiceTest {
     public void save() {
         Skill skill = buildSkill();
         when(skillRepository.save(any(Skill.class))).thenReturn(skill);
-        Skill savedSkill = serviceUnderTest.save(skill, any());
+        Skill savedSkill = serviceUnderTest.save(skill, bindingResult);
         assertEquals(skill, savedSkill);
         verify(skillRepository, times(1)).save(any(Skill.class));
         verifyNoMoreInteractions(skillRepository);
@@ -61,7 +69,8 @@ public class SkillServiceTest {
     public void update() {
         Skill skill = buildSkill();
         when(skillRepository.save(any())).thenReturn(skill);
-        Skill updatedSkill = serviceUnderTest.update(skill, anyLong(), any());
+        when(bindingResult.hasErrors()).thenReturn(false);
+        Skill updatedSkill = serviceUnderTest.update(skill, 1L, bindingResult);
         assertEquals(skill, updatedSkill);
         verify(skillRepository, times(1)).save(skill);
         verifyNoMoreInteractions(skillRepository);
@@ -75,6 +84,13 @@ public class SkillServiceTest {
         verifyNoMoreInteractions(skillRepository);
     }
 
+    @Test
+    void delete() {
+        Skill skill = buildSkill();
+        serviceUnderTest.delete(skill);
+        verify(skillRepository, times(1)).delete(skill);
+        verifyNoMoreInteractions(skillRepository);
+    }
 
     @Test
     void findById() {
@@ -100,7 +116,7 @@ public class SkillServiceTest {
     void saveIfAbsent() {
         Skill skill = buildSkill();
         when(skillRepository.save(any(Skill.class))).thenReturn(skill);
-        Skill savedSkill = serviceUnderTest.save(skill, any());
+        Skill savedSkill = serviceUnderTest.save(skill, bindingResult);
         assertEquals(skill, savedSkill);
         verify(skillRepository, times(1)).save(any(Skill.class));
         verifyNoMoreInteractions(skillRepository);

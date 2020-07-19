@@ -37,8 +37,4 @@ public class SpecialtyServiceImpl implements SpecialtyService {
     public Optional<Specialty> findById(Long id) {
         return specialtyRepository.findById(id);
     }
-
-    public void saveIfAbsent(Specialty specialty) {
-        specialtyRepository.save(specialty);
-    }
 }

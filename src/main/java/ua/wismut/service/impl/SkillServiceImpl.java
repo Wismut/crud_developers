@@ -54,4 +54,9 @@ public class SkillServiceImpl implements SkillService {
     public Optional<Skill> findByName(String name) {
         return skillRepository.findByName(name);
     }
+
+    @Override
+    public void delete(Skill skill) {
+        skillRepository.delete(skill);
+    }
 }
