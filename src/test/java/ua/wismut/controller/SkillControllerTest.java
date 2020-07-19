@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.validation.BindingResult;
 import ua.wismut.model.Skill;
 import ua.wismut.service.SkillService;
 
@@ -25,6 +26,9 @@ public class SkillControllerTest {
     @Mock
     private SkillService skillService;
 
+    @Mock
+    private BindingResult bindingResult;
+
     @BeforeAll
     public static void setup() {
         MockitoAnnotations.initMocks(SkillControllerTest.class);
@@ -32,8 +36,8 @@ public class SkillControllerTest {
 
     @Test
     public void findAllSkillsFoundShouldReturnFoundSkillEntries() throws Exception {
-        Skill firstSkill = new Skill(1L, "some name");
-        Skill secondSkill = new Skill(2L, "nameSkill");
+        Skill firstSkill = buildSkill(1L, "some name");
+        Skill secondSkill = buildSkill(2L, "nameSkill");
 
         when(skillService.findAll()).thenReturn(Arrays.asList(firstSkill, secondSkill));
 
@@ -48,7 +52,7 @@ public class SkillControllerTest {
 
     @Test
     public void findByIdShouldReturnFoundSkillEntry() throws Exception {
-        Skill skill = new Skill(1L, "some name");
+        Skill skill = buildSkill();
 
         when(skillService.findById(skill.getId())).thenReturn(Optional.of(skill));
 
@@ -61,16 +65,48 @@ public class SkillControllerTest {
     }
 
     @Test
-    public void saveShouldReturnFoundSkillEntry() throws Exception {
-        Skill skill = new Skill("some name");
+    public void saveShouldReturnSavedSkillEntry() throws Exception {
+        Skill skill = buildSkill();
 
-        when(skillService.save(skill, any())).thenReturn(skill);
+        when(skillService.save(skill, bindingResult)).thenReturn(skill);
 
-        Skill savedSkill = controllerUnderTest.save(skill, any());
+        Skill savedSkill = controllerUnderTest.save(skill, bindingResult);
         assertEquals(savedSkill.getId(), skill.getId());
         assertEquals(savedSkill.getName(), skill.getName());
 
         verify(skillService, times(1)).save(any(), any());
         verifyNoMoreInteractions(skillService);
+    }
+
+    @Test
+    public void updateShouldReturnUpdatedSkillEntry() throws Exception {
+        Skill skill = buildSkill();
+
+        when(skillService.update(skill, skill.getId(), bindingResult)).thenReturn(skill);
+
+        Skill updatedSkill = controllerUnderTest.update(skill, skill.getId(), bindingResult);
+        assertEquals(updatedSkill.getId(), skill.getId());
+        assertEquals(updatedSkill.getName(), skill.getName());
+
+        verify(skillService, times(1)).update(any(), anyLong(), any());
+        verifyNoMoreInteractions(skillService);
+    }
+
+    @Test
+    public void deleteById() {
+        Long skillId = 5L;
+
+        controllerUnderTest.deleteById(skillId);
+
+        verify(skillService, times(1)).deleteById(5L);
+        verifyNoMoreInteractions(skillService);
+    }
+
+    private Skill buildSkill() {
+        return new Skill(23L, "some_name");
+    }
+
+    private Skill buildSkill(Long id, String name) {
+        return new Skill(id, name);
     }
 }

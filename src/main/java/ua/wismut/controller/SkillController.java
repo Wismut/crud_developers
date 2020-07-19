@@ -9,7 +9,6 @@ import ua.wismut.model.Skill;
 import ua.wismut.service.SkillService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/skills")
@@ -44,9 +43,5 @@ public class SkillController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Skill> findAll() {
         return skillService.findAll();
-    }
-
-    public Optional<Skill> findByName(String name) {
-        return skillService.findByName(name);
     }
 }

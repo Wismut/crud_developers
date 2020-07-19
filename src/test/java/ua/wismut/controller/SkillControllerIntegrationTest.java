@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import constant.Constant;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpDelete;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("test")
+@Ignore
 class SkillControllerIntegrationTest {
     private final String SKILL_API_URL = Constant.URL + "/api/v1/skills/";
 
