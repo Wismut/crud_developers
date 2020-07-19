@@ -2,24 +2,17 @@ package ua.wismut.service.impl;
 
 import com.twilio.Twilio;
 import com.twilio.exception.ApiException;
-import com.twilio.rest.preview.accSecurity.service.Verification;
-import com.twilio.rest.preview.accSecurity.service.VerificationCheck;
+import com.twilio.rest.verify.v2.service.Verification;
+import com.twilio.rest.verify.v2.service.VerificationCheck;
 import org.springframework.stereotype.Service;
 import ua.wismut.model.VerificationResult;
 import ua.wismut.service.VerificationService;
 
 @Service
 public class TwilioVerification implements VerificationService {
-
-    private static final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID") == null ?
-            "AC7746b951ca7493ff165ecb5a371259f6" :
-            System.getenv("TWILIO_ACCOUNT_SID");
-    private static final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN") == null ?
-            "79bb2be936076b292e2475e845f9a354" :
-            System.getenv("TWILIO_AUTH_TOKEN");
-    private static final String VERIFICATION_SID = System.getenv("VERIFICATION_SID") == null ?
-            "VA0b5b317f4fb55b9ef54b9025a2018097" :
-            System.getenv("VERIFICATION_SID");
+    private static final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
+    private static final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
+    private static final String VERIFICATION_SID = System.getenv("VERIFICATION_SID");
 
     public TwilioVerification() {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);

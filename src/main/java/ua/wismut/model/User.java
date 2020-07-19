@@ -1,10 +1,8 @@
 package ua.wismut.model;
 
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -14,28 +12,27 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String username;
+
+    @Column(nullable = false)
     private String password;
 
-    @CreatedBy
-    private Instant created;
-
-    @LastModifiedDate
-    private Instant updated;
-
-    @LastModifiedDate
-    private Instant lastPasswordChangeDate;
+    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime updated = LocalDateTime.now();
+    private LocalDateTime lastPasswordChangeDate = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.ACTIVE;
 
+    @Column(nullable = false)
     private String phoneNumber;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(table = "users", name = "user_id"),
             inverseJoinColumns = @JoinColumn(table = "roles", name = "role_id"))
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     @Transient
     private String confirmPassword;
@@ -43,7 +40,16 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, Instant created, Instant updated, Instant lastPasswordChangeDate, Status status, String phoneNumber, Set<Role> roles, String confirmPassword) {
+    public User(Long id,
+                String username,
+                String password,
+                LocalDateTime created,
+                LocalDateTime updated,
+                LocalDateTime lastPasswordChangeDate,
+                Status status,
+                String phoneNumber,
+                Set<Role> roles,
+                String confirmPassword) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -80,27 +86,27 @@ public class User {
         this.password = password;
     }
 
-    public Instant getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Instant created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
-    public Instant getUpdated() {
+    public LocalDateTime getUpdated() {
         return updated;
     }
 
-    public void setUpdated(Instant updated) {
+    public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
     }
 
-    public Instant getLastPasswordChangeDate() {
+    public LocalDateTime getLastPasswordChangeDate() {
         return lastPasswordChangeDate;
     }
 
-    public void setLastPasswordChangeDate(Instant lastPasswordChangeDate) {
+    public void setLastPasswordChangeDate(LocalDateTime lastPasswordChangeDate) {
         this.lastPasswordChangeDate = lastPasswordChangeDate;
     }
 
@@ -138,7 +144,7 @@ public class User {
 
     @PrePersist
     public void prePersist() {
-        created = Instant.now();
+
     }
 
     @Override

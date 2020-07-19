@@ -40,7 +40,7 @@ public class RegisterController {
 
 //        authService.login(request.getSession(), user);
 
-        VerificationResult result = verificationService.startVerification(user.getPhoneNumber(), "sms");
+        VerificationResult result = verificationService.startVerification(user.getPhoneNumber(), "call");
         if (result.isValid()) {
 //            response.sendRedirect("/verify");
         } else {
