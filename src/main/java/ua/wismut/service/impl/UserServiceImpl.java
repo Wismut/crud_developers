@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.wismut.model.RoleEnum;
-import ua.wismut.model.Status;
 import ua.wismut.model.User;
 import ua.wismut.repository.RoleRepository;
 import ua.wismut.repository.UserRepository;
@@ -37,7 +36,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setStatus(Status.ACTIVE);
         user.setRoles(Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_USER.name()).get()));
         return userRepository.save(user);
     }
