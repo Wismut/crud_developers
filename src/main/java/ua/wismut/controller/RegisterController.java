@@ -14,7 +14,6 @@ import ua.wismut.model.User;
 import ua.wismut.model.VerificationResult;
 import ua.wismut.service.UserService;
 import ua.wismut.service.VerificationService;
-import ua.wismut.service.impl.AuthService;
 
 import javax.persistence.RollbackException;
 
@@ -23,14 +22,12 @@ import javax.persistence.RollbackException;
 public class RegisterController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
-    private final AuthService authService;
     private final VerificationService verificationService;
 
     @Autowired
-    public RegisterController(UserService userService, AuthService authService,
+    public RegisterController(UserService userService,
                               VerificationService verificationService) {
         this.userService = userService;
-        this.authService = authService;
         this.verificationService = verificationService;
     }
 
@@ -46,9 +43,11 @@ public class RegisterController {
                         .put("message", user.toString())
                         .toString());
             } catch (RollbackException e) {
+                logger.info("In register: user {} did not saved", user);
                 return ResponseEntity.badRequest().build();
             }
         }
+        logger.info("In register: user {} did not saved", user);
         return ResponseEntity.badRequest().build();
     }
 }
