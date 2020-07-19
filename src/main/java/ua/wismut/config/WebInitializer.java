@@ -4,10 +4,9 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 public class WebInitializer extends
         AbstractAnnotationConfigDispatcherServletInitializer {
-
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{SpringWebConfig.class};
+        return new Class[]{WebSecurityConfig.class, WebMvcConfig.class};
     }
 
     @Override

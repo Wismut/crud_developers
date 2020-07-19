@@ -1,74 +1,31 @@
 package ua.wismut.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import ua.wismut.security.JwtConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.util.Properties;
 
 @EnableWebMvc
 @Configuration
-@EnableWebSecurity
-@ComponentScan({"ua.wismut"})
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@ComponentScan("ua.wismut")
 @EnableJpaRepositories(basePackages = "ua.wismut.repository")
-public class SpringWebConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    ApplicationContext context;
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/v1/auth/**",
-                        "/api/v1/register/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/developers/**",
-                        "/api/v1/accounts/**",
-                        "/api/v1/skills/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
-                .antMatchers("/api/v1/developers/**", "/api/v1/accounts/**").hasAnyRole("MODERATOR", "ADMIN")
-                .antMatchers(HttpMethod.GET, "/api/v1/**").hasAnyRole("MODERATOR", "ADMIN")
-                .antMatchers("/api/v1/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
-                .apply(context.getBean(JwtConfigurer.class));
-    }
-
+public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public PlatformTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
