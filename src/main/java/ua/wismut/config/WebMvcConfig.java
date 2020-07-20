@@ -18,6 +18,7 @@ import java.util.Properties;
 
 @EnableWebMvc
 @Configuration
+@Profile("dev")
 @ComponentScan("ua.wismut")
 @EnableJpaRepositories(basePackages = "ua.wismut.repository")
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -29,7 +30,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    @Profile("!test")
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
@@ -40,7 +40,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    @Profile("!test")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
@@ -51,7 +50,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return em;
     }
 
-    @Profile("!test")
     private Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
