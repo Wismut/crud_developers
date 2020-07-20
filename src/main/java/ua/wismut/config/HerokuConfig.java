@@ -10,21 +10,26 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.util.Properties;
 
+@EnableWebMvc
 @Configuration
 @Profile("heroku")
 @ComponentScan("ua.wismut")
 @EnableJpaRepositories(basePackages = "ua.wismut.repository")
-public class HerokuConfig {
+public class HerokuConfig implements WebMvcConfigurer {
     @Bean
     public DataSource dataSource() {
         String dbUrl = System.getenv("JDBC_DATABASE_URL");
         String username = System.getenv("JDBC_DATABASE_USERNAME");
         String password = System.getenv("JDBC_DATABASE_PASSWORD");
-        return new DriverManagerDataSource(dbUrl, username, password);
+        DriverManagerDataSource dataSource = new DriverManagerDataSource(dbUrl, username, password);
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        return dataSource;
     }
 
     @Bean
