@@ -6,7 +6,7 @@ public class WebInitializer extends
         AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{WebSecurityConfig.class, WebMvcConfig.class};
+        return new Class[]{WebSecurityConfig.class, WebMvcConfig.class, HerokuConfig.class};
     }
 
     @Override
@@ -18,5 +18,4 @@ public class WebInitializer extends
     protected Class<?>[] getRootConfigClasses() {
         return null;
     }
-
 }
