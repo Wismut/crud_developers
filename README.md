@@ -4,14 +4,18 @@
 
 Should implement a console CRUD application that interacts with the database and allows to perform all CRUD operations on entities:
 
-* Developer (id, firstName, lastName, List<Skill> skills, Specialty specialty)
+* User (id, username, password, created, updated, lastPasswordChangeDate, Status status, String phoneNumber)
+* Developer (id, firstName, lastName, Set<Skill> skills, Specialty specialty, Account account)
 * Specialty (id, name, description)
 * Skill (id, name)
+* Account (id, accountData)
+Enum Status (ACTIVE, APPROVAL_REQUIRED, DELETED, BANNED)
 
  Requirements:
 * All CRUD operations for each entity
-* Stick to the MVC pattern (packages ua.wismut.model, ua.wismut.repository, ua.wismut.service, ua.wismut.controller, view)
+* Stick to the MVC pattern (packages model, repository, service, controller, view)
 * To build the project use Maven
+* Use Spring(IoC, Security, Data) as a main framework
 * To migrate the database use https://www.liquibase.org/
 * The application ua.wismut.service layer should be covered with unit tests (junit + mockito).
 * To import libraries use Maven
