@@ -26,13 +26,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/v1/auth/**",
-                        "/api/v1/register/**").permitAll()
+                        "/api/v1/register/**",
+                        "/swagger-ui.html",
+                        "/webjars/**",
+                        "/swagger-resources/**",
+                        "/v2/api-docs")
+                .permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/developers/**",
                         "/api/v1/accounts/**",
-                        "/api/v1/skills/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
-                .antMatchers("/api/v1/developers/**", "/api/v1/accounts/**").hasAnyRole("MODERATOR", "ADMIN")
-                .antMatchers(HttpMethod.GET, "/api/v1/**").hasAnyRole("MODERATOR", "ADMIN")
-                .antMatchers("/api/v1/**").hasRole("ADMIN")
+                        "/api/v1/skills/**")
+                .hasAnyRole("USER", "MODERATOR", "ADMIN")
+                .antMatchers("/api/v1/developers/**", "/api/v1/accounts/**")
+                .hasAnyRole("MODERATOR", "ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/v1/**")
+                .hasAnyRole("MODERATOR", "ADMIN")
+                .antMatchers("/api/v1/**")
+                .hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .apply(context.getBean(JwtConfigurer.class));

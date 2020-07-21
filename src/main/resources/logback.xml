@@ -11,6 +11,7 @@
     <logger name="org.junit.jupiter" level="info"/>
     <logger name="ua.wismut" level="info"/>
     <logger name="org.apache" level="info"/>
+    <logger name="io.springfox" level="info"/>
     <root level="debug">
         <appender-ref ref="STDOUT"/>
     </root>
