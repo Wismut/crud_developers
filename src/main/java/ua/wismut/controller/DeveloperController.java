@@ -1,6 +1,7 @@
 package ua.wismut.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.wismut.exception.DeveloperNotFoundException;
 import ua.wismut.model.Developer;
@@ -25,12 +26,12 @@ public class DeveloperController {
 
     @PutMapping("/{id}")
     public Developer update(@RequestBody Developer developer, @PathVariable Long id) {
-        return developerService.update(developer);
+        return developerService.update(developer, developer.getId());
     }
 
     @PostMapping
-    public Developer save(@RequestBody Developer developer) {
-        return developerService.save(developer);
+    public Developer save(@RequestBody Developer developer, BindingResult bindingResult) {
+        return developerService.save(developer, bindingResult);
     }
 
     @GetMapping("{id}")

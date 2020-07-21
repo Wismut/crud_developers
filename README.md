@@ -70,18 +70,13 @@ Enum Status (ACTIVE, APPROVAL_REQUIRED, DELETED, BANNED)
 
 https://github.com/Wismut/crud_developers
 
-###Requirements
-
-* Installed Java 8
-* Installed and running MySQL Server 8
-
-###Building
-
-1. ```git clone https://github.com/Wismut/crud_developers```
-2. ```cd crud_developers```
-3. ```mvn clean package```
-
 ###Running
 
-1. ```java -jar target\crud.developers-1.0-SNAPSHOT-jar-with-dependencies.jar```
-2. Follow the instructions in the console
+Visit http://cruddevelopers.herokuapp.com/swagger-ui.html for full info about each API in project
+
+###Roles
+Login/Password:
+
+* user/test
+* moderator/test
+* admin/test

@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.validation.BindingResult;
 import ua.wismut.model.Account;
 import ua.wismut.model.Developer;
 import ua.wismut.model.Specialty;
@@ -25,6 +26,9 @@ import static org.mockito.Mockito.*;
 class DeveloperServiceTest {
     @Mock
     DeveloperRepository developerRepository;
+
+    @Mock
+    BindingResult bindingResult;
 
     @InjectMocks
     DeveloperServiceImpl serviceUnderTest;
@@ -50,7 +54,7 @@ class DeveloperServiceTest {
     @Test
     void update() {
         Developer developer = buildDeveloper();
-        serviceUnderTest.update(developer);
+        serviceUnderTest.update(developer, developer.getId());
         verify(developerRepository, times(1)).save(developer);
         verifyNoMoreInteractions(developerRepository);
     }
@@ -59,7 +63,7 @@ class DeveloperServiceTest {
     void save() {
         Developer developer = buildDeveloper();
         when(developerRepository.save(any(Developer.class))).thenReturn(developer);
-        Developer savedDeveloper = serviceUnderTest.save(developer);
+        Developer savedDeveloper = serviceUnderTest.save(developer, bindingResult);
         assertEquals(developer, savedDeveloper);
         verify(developerRepository, times(1)).save(developer);
         verifyNoMoreInteractions(developerRepository);
