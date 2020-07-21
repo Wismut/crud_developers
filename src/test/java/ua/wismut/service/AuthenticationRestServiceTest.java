@@ -6,14 +6,18 @@ import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import ua.wismut.dto.AuthenticationRequestDto;
 import ua.wismut.security.JwtTokenProvider;
 import ua.wismut.service.impl.AuthenticationRestServiceImpl;
 
-import javax.naming.AuthenticationException;
+import java.util.Collections;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AuthenticationRestServiceTest {
@@ -26,6 +30,12 @@ class AuthenticationRestServiceTest {
     @Mock
     private JwtTokenProvider jwtTokenProvider;
 
+    @Mock
+    private Authentication authentication;
+
+    @Mock
+    private AuthenticationRequestDto authenticationRequestDto;
+
     @BeforeAll
     void init() {
         MockitoAnnotations.initMocks(this);
@@ -33,8 +43,11 @@ class AuthenticationRestServiceTest {
 
     @Test
     void login() {
-        when(authenticationManager.authenticate(any())).thenThrow(AuthenticationException.class);
-//        assertThrows(AuthenticationException.class, () -> serviceUnderTest.login(any()));
-        serviceUnderTest.login(any());
+        when(authenticationManager.authenticate(any())).thenReturn(authentication);
+        when(jwtTokenProvider.createToken(anyString(), anySet())).thenReturn("sdxfgvdfgs");
+        ResponseEntity<Map<String, String>> responseEntity = serviceUnderTest.login(authenticationRequestDto);
+        verify(authenticationManager, times(1)).authenticate(any());
+        verify(jwtTokenProvider, times(1)).createToken(null, Collections.emptySet());
+        verifyNoMoreInteractions(authenticationManager, jwtTokenProvider);
     }
 }

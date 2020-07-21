@@ -5,9 +5,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ua.wismut.dto.AuthenticationRequestDto;
 import ua.wismut.service.AuthenticationRestService;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -18,10 +18,13 @@ class AuthenticationRestControllerV1Test {
     @Mock
     private AuthenticationRestService authenticationRestService;
 
+    @Mock
+    private AuthenticationRequestDto authenticationRequestDto;
+
     @Test
     void login() {
-        controllerUnderTest.login(any());
-        verify(authenticationRestService, times(1)).login(any());
+        controllerUnderTest.login(authenticationRequestDto);
+        verify(authenticationRestService, times(1)).login(authenticationRequestDto);
         verifyNoMoreInteractions(authenticationRestService);
     }
 }
