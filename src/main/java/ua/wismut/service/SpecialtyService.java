@@ -9,9 +9,9 @@ import java.util.Optional;
 public interface SpecialtyService {
     Specialty save(Specialty specialty, BindingResult bindingResult);
 
-    Specialty update(Specialty specialty);
+    Specialty update(Specialty specialty, Long id);
 
-    void deleteBy(Long id);
+    void deleteById(Long id);
 
     List<Specialty> findAll();
 

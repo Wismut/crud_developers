@@ -3,11 +3,13 @@ package ua.wismut.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import ua.wismut.model.RoleEnum;
 import ua.wismut.model.User;
 import ua.wismut.repository.RoleRepository;
 import ua.wismut.repository.UserRepository;
 import ua.wismut.service.UserService;
+import ua.wismut.validator.UserValidator;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,23 +20,30 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserValidator userValidator;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
-                           RoleRepository roleRepository) {
+                           RoleRepository roleRepository, UserValidator userValidator) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.userValidator = userValidator;
     }
 
     @Override
-    public User update(User user) {
+    public User update(User user, Long id) {
+        user.setId(id);
         return userRepository.save(user);
     }
 
     @Override
-    public User save(User user) {
+    public User save(User user, BindingResult bindingResult) {
+        userValidator.validate(user, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new IllegalArgumentException("Bad request: " + bindingResult.getAllErrors());
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(roleRepository.findByName(RoleEnum.ROLE_USER.name()).get()));
         return userRepository.save(user);

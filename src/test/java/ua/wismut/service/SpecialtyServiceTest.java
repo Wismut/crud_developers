@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.validation.BindingResult;
 import ua.wismut.model.Specialty;
 import ua.wismut.repository.SpecialtyRepository;
 import ua.wismut.service.impl.SpecialtyServiceImpl;
@@ -22,10 +23,13 @@ import static org.mockito.Mockito.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SpecialtyServiceTest {
     @Mock
-    SpecialtyRepository specialtyRepository;
+    private SpecialtyRepository specialtyRepository;
+
+    @Mock
+    private BindingResult bindingResult;
 
     @InjectMocks
-    SpecialtyServiceImpl serviceUnderTest;
+    private SpecialtyServiceImpl serviceUnderTest;
 
     @BeforeAll
     void init() {
@@ -41,7 +45,7 @@ class SpecialtyServiceTest {
     void save() {
         Specialty specialty = buildSpecialty();
         when(specialtyRepository.save(any())).thenReturn(specialty);
-        Specialty savedSpecialty = serviceUnderTest.save(specialty);
+        Specialty savedSpecialty = serviceUnderTest.save(specialty, bindingResult);
         assertEquals(specialty, savedSpecialty);
         verify(specialtyRepository, times(1)).save(specialty);
         verifyNoMoreInteractions(specialtyRepository);
@@ -50,7 +54,7 @@ class SpecialtyServiceTest {
     @Test
     void update() {
         Specialty specialty = buildSpecialty();
-        serviceUnderTest.update(specialty);
+        serviceUnderTest.update(specialty, specialty.getId());
         verify(specialtyRepository, times(1)).save(specialty);
         verifyNoMoreInteractions(specialtyRepository);
     }
@@ -58,7 +62,7 @@ class SpecialtyServiceTest {
     @Test
     void deleteBy() {
         Specialty specialty = buildSpecialty();
-        serviceUnderTest.deleteBy(specialty.getId());
+        serviceUnderTest.deleteById(specialty.getId());
         verify(specialtyRepository, times(1)).deleteById(specialty.getId());
         verifyNoMoreInteractions(specialtyRepository);
     }
@@ -87,7 +91,7 @@ class SpecialtyServiceTest {
     void saveIfAbsent() {
         Specialty specialty = buildSpecialty();
         when(specialtyRepository.save(any())).thenReturn(specialty);
-        Specialty savedSpecialty = serviceUnderTest.save(specialty);
+        Specialty savedSpecialty = serviceUnderTest.save(specialty, bindingResult);
         assertEquals(specialty, savedSpecialty);
         verify(specialtyRepository, times(1)).save(specialty);
         verifyNoMoreInteractions(specialtyRepository);

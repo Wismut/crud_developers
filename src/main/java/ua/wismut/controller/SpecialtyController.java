@@ -1,6 +1,7 @@
 package ua.wismut.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.wismut.exception.SpecialtyNotFoundException;
 import ua.wismut.model.Specialty;
@@ -19,18 +20,18 @@ public class SpecialtyController {
     }
 
     @PostMapping
-    public Specialty save(@RequestBody Specialty specialty) {
-        return specialtyService.save(specialty);
+    public Specialty save(@RequestBody Specialty specialty, BindingResult bindingResult) {
+        return specialtyService.save(specialty, bindingResult);
     }
 
     @PutMapping("/{id}")
     public Specialty update(@RequestBody Specialty specialty, @PathVariable Long id) {
-        return specialtyService.update(specialty);
+        return specialtyService.update(specialty, id);
     }
 
     @DeleteMapping("{id}")
     public void deleteById(@PathVariable Long id) {
-        specialtyService.deleteBy(id);
+        specialtyService.deleteById(id);
     }
 
     @GetMapping

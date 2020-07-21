@@ -142,11 +142,6 @@ public class User {
         this.confirmPassword = confirmPassword;
     }
 
-    @PrePersist
-    public void prePersist() {
-
-    }
-
     @Override
     public String toString() {
         return "User{" +

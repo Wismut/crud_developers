@@ -102,16 +102,16 @@ public class SpecialtyControllerTest {
     private Specialty buildSpecialty() {
         Specialty specialty = new Specialty();
         specialty.setId(7L);
-        specialty.setFirstName("A");
-        specialty.setLastName("B");
+        specialty.setName("A");
+        specialty.setDescription("B");
         return specialty;
     }
 
-    private Specialty buildSpecialty(Long id, String firstName, String lastName) {
+    private Specialty buildSpecialty(Long id, String name, String description) {
         Specialty specialty = new Specialty();
         specialty.setId(id);
-        specialty.setFirstName(firstName);
-        specialty.setLastName(lastName);
+        specialty.setName(name);
+        specialty.setDescription(description);
         return specialty;
     }
 }

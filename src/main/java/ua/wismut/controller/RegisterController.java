@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,11 +34,11 @@ public class RegisterController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> register(@RequestBody User user) {
+    public ResponseEntity<String> register(@RequestBody User user, BindingResult bindingResult) {
         VerificationResult result = verificationService.startVerification(user.getPhoneNumber(), "call");
         if (result.isValid()) {
             try {
-                user = userService.save(user);
+                user = userService.save(user, bindingResult);
                 logger.info("In register: user {} successfully saved", user);
                 return ResponseEntity.ok(new ObjectMapper()
                         .createObjectNode()

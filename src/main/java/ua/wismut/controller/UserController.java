@@ -2,11 +2,11 @@ package ua.wismut.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.wismut.exception.UserNotFoundException;
 import ua.wismut.model.User;
 import ua.wismut.service.UserService;
-import ua.wismut.validator.UserValidator;
 
 import java.util.List;
 
@@ -14,22 +14,20 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 public class UserController {
     private final UserService userService;
-    private final UserValidator userValidator;
 
     @Autowired
-    public UserController(UserService userService, UserValidator userValidator) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userValidator = userValidator;
     }
 
     @PutMapping("{/id}")
     public User update(@RequestBody User user, @PathVariable Long id) {
-        return userService.save(user);
+        return userService.update(user, id);
     }
 
     @PostMapping
-    public User save(@RequestBody User user) {
-        return userService.save(user);
+    public User save(@RequestBody User user, BindingResult bindingResult) {
+        return userService.save(user, bindingResult);
     }
 
     @GetMapping("{/id}")

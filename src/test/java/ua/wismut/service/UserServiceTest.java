@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import ua.wismut.model.Role;
 import ua.wismut.model.Status;
 import ua.wismut.model.User;
@@ -31,13 +32,16 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Mock
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @InjectMocks
     private UserServiceImpl serviceUnderTest;
+
+    @Mock
+    private BindingResult bindingResult;
 
     @BeforeAll
     void setUp() {
@@ -69,7 +73,7 @@ class UserServiceTest {
     void update() {
         User user = buildUser();
         when(userRepository.save(any())).thenReturn(user);
-        User updatedUser = serviceUnderTest.update(user);
+        User updatedUser = serviceUnderTest.update(user, user.getId());
         assertEquals(user, updatedUser);
         verify(userRepository, times(1)).save(user);
         verifyNoMoreInteractions(userRepository);
@@ -80,7 +84,7 @@ class UserServiceTest {
         User user = buildUser();
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(roleRepository.findByName(anyString())).thenReturn(Optional.of(new Role()));
-        User savedUser = serviceUnderTest.save(user);
+        User savedUser = serviceUnderTest.save(user, bindingResult);
         assertEquals(user, savedUser);
         verify(userRepository, times(1)).save(user);
         verifyNoMoreInteractions(userRepository);

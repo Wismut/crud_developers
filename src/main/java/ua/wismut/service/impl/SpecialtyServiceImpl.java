@@ -23,11 +23,11 @@ public class SpecialtyServiceImpl implements SpecialtyService {
         return specialtyRepository.save(specialty);
     }
 
-    public Specialty update(Specialty specialty) {
+    public Specialty update(Specialty specialty, Long id) {
         return specialtyRepository.save(specialty);
     }
 
-    public void deleteBy(Long id) {
+    public void deleteById(Long id) {
         specialtyRepository.deleteById(id);
     }
 
