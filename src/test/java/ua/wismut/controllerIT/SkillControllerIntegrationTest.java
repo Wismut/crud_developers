@@ -1,4 +1,4 @@
-package ua.wismut.controller;
+package ua.wismut.controllerIT;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
