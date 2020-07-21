@@ -16,6 +16,7 @@ import ua.wismut.model.User;
 import ua.wismut.repository.RoleRepository;
 import ua.wismut.repository.UserRepository;
 import ua.wismut.service.impl.UserServiceImpl;
+import ua.wismut.validator.UserValidator;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -36,6 +37,9 @@ class UserServiceTest {
 
     @Mock
     private RoleRepository roleRepository;
+
+    @Mock
+    private UserValidator userValidator;
 
     @InjectMocks
     private UserServiceImpl serviceUnderTest;

@@ -14,6 +14,7 @@ import ua.wismut.model.Developer;
 import ua.wismut.model.Specialty;
 import ua.wismut.repository.DeveloperRepository;
 import ua.wismut.service.impl.DeveloperServiceImpl;
+import ua.wismut.validator.DeveloperValidator;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +30,9 @@ class DeveloperServiceTest {
 
     @Mock
     BindingResult bindingResult;
+
+    @Mock
+    private DeveloperValidator developerValidator;
 
     @InjectMocks
     DeveloperServiceImpl serviceUnderTest;
