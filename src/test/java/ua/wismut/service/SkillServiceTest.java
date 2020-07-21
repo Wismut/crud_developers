@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -52,6 +53,18 @@ public class SkillServiceTest {
         Skill savedSkill = serviceUnderTest.save(skill, bindingResult);
         assertEquals(skill, savedSkill);
         verify(skillRepository, times(1)).save(any(Skill.class));
+        verifyNoMoreInteractions(skillRepository);
+    }
+
+    @Test
+    public void whenSaveWithBadCredentialsThenThrowIllegalArgumentException() {
+        Skill skill = buildSkill();
+        when(skillRepository.save(any(Skill.class))).thenReturn(skill);
+        when(bindingResult.hasErrors()).thenReturn(true);
+        assertThrows(IllegalArgumentException.class,
+                () -> serviceUnderTest.save(skill, bindingResult),
+                "Skill name can't be null or empty");
+        verify(skillRepository, times(0)).save(any(Skill.class));
         verifyNoMoreInteractions(skillRepository);
     }
 
