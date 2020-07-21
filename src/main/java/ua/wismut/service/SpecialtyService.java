@@ -1,12 +1,13 @@
 package ua.wismut.service;
 
+import org.springframework.validation.BindingResult;
 import ua.wismut.model.Specialty;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface SpecialtyService {
-    Specialty save(Specialty specialty);
+    Specialty save(Specialty specialty, BindingResult bindingResult);
 
     Specialty update(Specialty specialty);
 

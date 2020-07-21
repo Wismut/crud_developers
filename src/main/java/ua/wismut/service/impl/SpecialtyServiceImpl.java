@@ -2,6 +2,7 @@ package ua.wismut.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import ua.wismut.model.Specialty;
 import ua.wismut.repository.SpecialtyRepository;
 import ua.wismut.service.SpecialtyService;
@@ -18,7 +19,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
         this.specialtyRepository = specialtyRepository;
     }
 
-    public Specialty save(Specialty specialty) {
+    public Specialty save(Specialty specialty, BindingResult bindingResult) {
         return specialtyRepository.save(specialty);
     }
 

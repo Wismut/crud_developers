@@ -72,7 +72,11 @@ https://github.com/Wismut/crud_developers
 
 ###Running
 
-Visit http://cruddevelopers.herokuapp.com/swagger-ui.html for full info about each API in project
+Visit http://cruddevelopers.herokuapp.com/swagger-ui.html for full info about each API in project.
+First of all, must make POST request to http://cruddevelopers.herokuapp.com/api/v1/auth/login with proper credentials with body
+```{"username":"AAA", "password":"BBB"}```.
+Response will have token. Must add token to all next requests in the Authorization header.
+For example, Bearer_XXXXX where XXXXX is the token received earlier.
 
 ###Roles
 Login/Password:
