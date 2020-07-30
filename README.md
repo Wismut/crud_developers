@@ -14,20 +14,18 @@ Enum Status (ACTIVE, APPROVAL_REQUIRED, DELETED, BANNED)
  Requirements:
 * All CRUD operations for each entity
 * Stick to the MVC pattern (packages model, repository, service, controller, view)
-* To build the project use Maven
 * Use Spring(IoC, Security, Data) as a main framework
-* To migrate the database use https://www.liquibase.org/
+* Use https://www.liquibase.org/ to migrate and initialization the database
 * The application service and controller layers should be covered with unit tests (JUnit + Mockito)
-* To import libraries use Maven
-* To interact with the database - Spring Data
-* Database initialization must be implemented using liquibase
-* Application must have 3 roles:
+* Use Maven to import libraries and to build the project
+* Use Spring Data to interact with the database
+* Application should have 3 roles:
   1. ROLE_ADMIN (has full access for all entities)
   2. ROLE_MODERATOR (has read access to all entities and write access to Developer and Account entities)
   3. ROLE_USER (has read access for Developer, Account and Skill entities)
-* Application must be deployed to https://heroku.com
-* Registration must be approved by phone number. Use https://www.twilio.com
-* Repository  must have Travis (https://travis-ci.org/) badge with status of deploy.
+* Application should be deployed to https://heroku.com
+* Registration should be approved by phone number. Use https://www.twilio.com
+* Repository should have Travis (https://travis-ci.org/) badge with status of deploy.
 
  Technologies: Java, MySQL, Maven, Liquibase, JUnit, Mockito, Spring(IoC, Security, Data)
 
@@ -73,9 +71,9 @@ https://github.com/Wismut/crud_developers
 ###Running
 
 Visit http://cruddevelopers.herokuapp.com/swagger-ui.html for full info about each API in project.
-First of all, must make POST request to http://cruddevelopers.herokuapp.com/api/v1/auth/login with proper credentials with body
+First of all, should make POST request to http://cruddevelopers.herokuapp.com/api/v1/auth/login with proper credentials with body
 ```{"username":"AAA", "password":"BBB"}```.
-Response will have token. Must add token to all next requests in the Authorization header.
+Response will have token. Should add token to all next requests in the Authorization header.
 For example, Bearer_XXXXX where XXXXX is the token received earlier.
 
 ###Roles
