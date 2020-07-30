@@ -6,15 +6,15 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import ua.wismut.model.User;
-import ua.wismut.service.UserService;
+import ua.wismut.repository.UserRepository;
 
 @Component
 public class UserValidator implements Validator {
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserValidator(UserService userService) {
-        this.userService = userService;
+    public UserValidator(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class UserValidator implements Validator {
         if (user.getUsername().length() < 8 || user.getUsername().length() > 32) {
             errors.rejectValue("username", "size.userForm.username");
         }
-        if (userService.findByUsername(user.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             errors.rejectValue("username", "duplicate.userForm.username");
         }
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "required");
