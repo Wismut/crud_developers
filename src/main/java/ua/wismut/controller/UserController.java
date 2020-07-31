@@ -20,9 +20,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PutMapping("{/id}")
-    public User update(@RequestBody User user, @PathVariable Long id) {
-        return userService.update(user, id);
+    @PutMapping
+    public User update(@RequestBody User user) {
+        return userService.update(user);
     }
 
     @PostMapping

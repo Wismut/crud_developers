@@ -23,7 +23,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
         return specialtyRepository.save(specialty);
     }
 
-    public Specialty update(Specialty specialty, Long id) {
+    public Specialty update(Specialty specialty) {
         return specialtyRepository.save(specialty);
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 public interface AccountService {
     Account save(Account skill, BindingResult bindingResult);
 
-    Account update(Account skill, Long id, BindingResult bindingResult);
+    Account update(Account skill, BindingResult bindingResult);
 
     void deleteById(Long id);
 

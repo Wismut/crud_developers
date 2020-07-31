@@ -27,9 +27,9 @@ public class AccountController {
         return accountService.save(account, bindingResult);
     }
 
-    @PutMapping("/{id}")
-    public Account update(@RequestBody Account account, @PathVariable Long id, BindingResult bindingResult) {
-        return accountService.update(account, id, bindingResult);
+    @PutMapping
+    public Account update(@RequestBody Account account, BindingResult bindingResult) {
+        return accountService.update(account, bindingResult);
     }
 
     @GetMapping("/{id}")

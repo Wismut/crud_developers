@@ -82,13 +82,13 @@ public class SkillControllerTest {
     public void updateShouldReturnUpdatedSkillEntry() throws Exception {
         Skill skill = buildSkill();
 
-        when(skillService.update(skill, skill.getId(), bindingResult)).thenReturn(skill);
+        when(skillService.update(skill, bindingResult)).thenReturn(skill);
 
-        Skill updatedSkill = controllerUnderTest.update(skill, skill.getId(), bindingResult);
+        Skill updatedSkill = controllerUnderTest.update(skill, bindingResult);
         assertEquals(updatedSkill.getId(), skill.getId());
         assertEquals(updatedSkill.getName(), skill.getName());
 
-        verify(skillService, times(1)).update(any(), anyLong(), any());
+        verify(skillService, times(1)).update(any(), any());
         verifyNoMoreInteractions(skillService);
     }
 

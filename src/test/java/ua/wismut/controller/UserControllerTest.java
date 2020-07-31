@@ -80,12 +80,12 @@ public class UserControllerTest {
     public void updateShouldReturnUpdatedUserEntry() throws Exception {
         User user = buildUser();
 
-        when(userService.update(user, user.getId())).thenReturn(user);
+        when(userService.update(user)).thenReturn(user);
 
-        User updatedUser = controllerUnderTest.update(user, user.getId());
+        User updatedUser = controllerUnderTest.update(user);
         assertEquals(user, updatedUser);
 
-        verify(userService, times(1)).update(any(), anyLong());
+        verify(userService, times(1)).update(any());
         verifyNoMoreInteractions(userService);
     }
 

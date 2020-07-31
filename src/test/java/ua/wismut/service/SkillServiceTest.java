@@ -83,7 +83,7 @@ public class SkillServiceTest {
         Skill skill = buildSkill();
         when(skillRepository.save(any())).thenReturn(skill);
         when(bindingResult.hasErrors()).thenReturn(false);
-        Skill updatedSkill = serviceUnderTest.update(skill, 1L, bindingResult);
+        Skill updatedSkill = serviceUnderTest.update(skill, bindingResult);
         assertEquals(skill, updatedSkill);
         verify(skillRepository, times(1)).save(skill);
         verifyNoMoreInteractions(skillRepository);

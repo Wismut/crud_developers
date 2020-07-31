@@ -24,9 +24,9 @@ public class DeveloperController {
         developerService.deleteById(id);
     }
 
-    @PutMapping("/{id}")
-    public Developer update(@RequestBody Developer developer, @PathVariable Long id) {
-        return developerService.update(developer, developer.getId());
+    @PutMapping
+    public Developer update(@RequestBody Developer developer) {
+        return developerService.update(developer);
     }
 
     @PostMapping

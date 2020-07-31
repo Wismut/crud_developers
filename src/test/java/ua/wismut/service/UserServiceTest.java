@@ -77,7 +77,7 @@ class UserServiceTest {
     void update() {
         User user = buildUser();
         when(userRepository.save(any())).thenReturn(user);
-        User updatedUser = serviceUnderTest.update(user, user.getId());
+        User updatedUser = serviceUnderTest.update(user);
         assertEquals(user, updatedUser);
         verify(userRepository, times(1)).save(user);
         verifyNoMoreInteractions(userRepository);

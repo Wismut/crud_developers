@@ -22,7 +22,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account update(Account skill, Long id, BindingResult bindingResult) {
+    public Account update(Account skill, BindingResult bindingResult) {
         return accountRepository.save(skill);
     }
 

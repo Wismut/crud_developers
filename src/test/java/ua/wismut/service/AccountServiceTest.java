@@ -61,7 +61,7 @@ public class AccountServiceTest {
     public void update() {
         Account account = buildAccount();
         when(accountRepository.save(any())).thenReturn(account);
-        Account updatedAccount = serviceUnderTest.update(account, eq(1L), null);
+        Account updatedAccount = serviceUnderTest.update(account, null);
         assertEquals(account, updatedAccount);
         verify(accountRepository, times(1)).save(account);
         verifyNoMoreInteractions(accountRepository);

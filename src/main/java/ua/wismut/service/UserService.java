@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    User update(User user, Long id);
+    User update(User user);
 
     User save(User user, BindingResult bindingResult);
 

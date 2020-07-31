@@ -54,7 +54,7 @@ class SpecialtyServiceTest {
     @Test
     void update() {
         Specialty specialty = buildSpecialty();
-        serviceUnderTest.update(specialty, specialty.getId());
+        serviceUnderTest.update(specialty);
         verify(specialtyRepository, times(1)).save(specialty);
         verifyNoMoreInteractions(specialtyRepository);
     }

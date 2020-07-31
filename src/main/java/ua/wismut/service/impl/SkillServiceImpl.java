@@ -30,12 +30,11 @@ public class SkillServiceImpl implements SkillService {
         return skillRepository.save(skill);
     }
 
-    public Skill update(Skill skill, Long id, BindingResult bindingResult) {
+    public Skill update(Skill skill, BindingResult bindingResult) {
         skillValidator.validate(skill, bindingResult);
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException("Skill name can't be null or empty");
         }
-        skill.setId(id);
         return skillRepository.save(skill);
     }
 

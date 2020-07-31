@@ -26,7 +26,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         developerRepository.deleteById(id);
     }
 
-    public Developer update(Developer developer, Long id) {
+    public Developer update(Developer developer) {
         return developerRepository.save(developer);
     }
 

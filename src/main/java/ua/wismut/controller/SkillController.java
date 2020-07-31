@@ -30,9 +30,9 @@ public class SkillController {
         return skillService.save(skill, bindingResult);
     }
 
-    @PutMapping("/{id}")
-    public Skill update(@RequestBody Skill skill, @PathVariable Long id, BindingResult bindingResult) {
-        return skillService.update(skill, id, bindingResult);
+    @PutMapping
+    public Skill update(@RequestBody Skill skill, BindingResult bindingResult) {
+        return skillService.update(skill, bindingResult);
     }
 
     @GetMapping("/{id}")

@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface SpecialtyService {
     Specialty save(Specialty specialty, BindingResult bindingResult);
 
-    Specialty update(Specialty specialty, Long id);
+    Specialty update(Specialty specialty);
 
     void deleteById(Long id);
 

@@ -81,13 +81,13 @@ public class AccountControllerTest {
     public void updateShouldReturnUpdatedAccountEntry() throws Exception {
         Account account = buildAccount();
 
-        when(accountService.update(account, account.getId(), bindingResult)).thenReturn(account);
+        when(accountService.update(account, bindingResult)).thenReturn(account);
 
-        Account updatedAccount = controllerUnderTest.update(account, account.getId(), bindingResult);
+        Account updatedAccount = controllerUnderTest.update(account, bindingResult);
         assertEquals(updatedAccount.getId(), account.getId());
         assertEquals(updatedAccount.getAccountData(), account.getAccountData());
 
-        verify(accountService, times(1)).update(any(), anyLong(), any());
+        verify(accountService, times(1)).update(any(), any());
         verifyNoMoreInteractions(accountService);
     }
 

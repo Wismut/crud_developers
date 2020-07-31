@@ -86,12 +86,12 @@ public class DeveloperControllerTest {
     public void updateShouldReturnUpdatedDeveloperEntry() throws Exception {
         Developer developer = buildDeveloper();
 
-        when(developerService.update(developer, developer.getId())).thenReturn(developer);
+        when(developerService.update(developer)).thenReturn(developer);
 
-        Developer updatedDeveloper = controllerUnderTest.update(developer, developer.getId());
+        Developer updatedDeveloper = controllerUnderTest.update(developer);
         assertEquals(developer, updatedDeveloper);
 
-        verify(developerService, times(1)).update(any(), anyLong());
+        verify(developerService, times(1)).update(any());
         verifyNoMoreInteractions(developerService);
     }
 

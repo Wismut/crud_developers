@@ -58,7 +58,7 @@ class DeveloperServiceTest {
     @Test
     void update() {
         Developer developer = buildDeveloper();
-        serviceUnderTest.update(developer, developer.getId());
+        serviceUnderTest.update(developer);
         verify(developerRepository, times(1)).save(developer);
         verifyNoMoreInteractions(developerRepository);
     }

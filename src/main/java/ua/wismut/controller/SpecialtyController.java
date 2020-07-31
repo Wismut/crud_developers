@@ -24,9 +24,9 @@ public class SpecialtyController {
         return specialtyService.save(specialty, bindingResult);
     }
 
-    @PutMapping("/{id}")
-    public Specialty update(@RequestBody Specialty specialty, @PathVariable Long id) {
-        return specialtyService.update(specialty, id);
+    @PutMapping
+    public Specialty update(@RequestBody Specialty specialty) {
+        return specialtyService.update(specialty);
     }
 
     @DeleteMapping("{id}")

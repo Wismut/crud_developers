@@ -80,12 +80,12 @@ public class SpecialtyControllerTest {
     public void updateShouldReturnUpdatedSpecialtyEntry() throws Exception {
         Specialty specialty = buildSpecialty();
 
-        when(specialtyService.update(specialty, specialty.getId())).thenReturn(specialty);
+        when(specialtyService.update(specialty)).thenReturn(specialty);
 
-        Specialty updatedSpecialty = controllerUnderTest.update(specialty, specialty.getId());
+        Specialty updatedSpecialty = controllerUnderTest.update(specialty);
         assertEquals(specialty, updatedSpecialty);
 
-        verify(specialtyService, times(1)).update(any(), anyLong());
+        verify(specialtyService, times(1)).update(any());
         verifyNoMoreInteractions(specialtyService);
     }
 
