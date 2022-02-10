@@ -78,7 +78,7 @@
         <liquibase.version>3.9.0</liquibase.version>
         <swagger.version>2.8.0</swagger.version>
         <snakeyaml.version>1.26</snakeyaml.version>
-        <hibernate.version>5.4.17.Final</hibernate.version>
+        <hibernate.version>5.4.24.Final</hibernate.version>
         <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
         <jackson.version>2.11.0</jackson.version>
         <spring.version>5.2.7.RELEASE</spring.version>
